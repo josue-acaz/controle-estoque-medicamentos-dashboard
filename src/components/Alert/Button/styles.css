@@ -1,0 +1,59 @@
+.slim-button {
+    border: none;
+    width: auto;
+    padding: .8rem 1.4rem .8rem 1.4rem;
+    border-radius: 0rem;
+    font-size: 14px;
+    font-weight: bold;
+}
+.slim-button:hover {
+    cursor: pointer;
+}
+
+/*Danger*/
+.btn-normal-danger {
+    background-color: #ff1a40;
+    color: #ffffff;
+}
+.btn-normal-danger:hover {
+    background-color: #d81737;
+}
+.btn-slim-danger {
+    background-color: transparent;
+    color: #ff1a40;
+}
+.btn-slim-danger:hover {
+    color: #d81737;
+}
+
+/*Primary*/
+.btn-normal-secondary {
+    background-color: #00B2A9;
+    color: #666666;
+}
+.btn-normal-secondary:hover {
+    background-color: #03948d;
+}
+.btn-slim-secondary {
+    background-color: transparent;
+    color: #00B2A9;
+}
+.btn-slim-secondary:hover {
+    color: #00B2A9;
+}
+
+/*Primary*/
+.btn-normal-primary {
+    background-color: #09354B;
+    color: #ffffff;
+}
+.btn-normal-primary:hover {
+    background-color: #0e4a68;
+}
+.btn-slim-primary {
+    background-color: transparent;
+    color: #09354B;
+}
+.btn-slim-primary:hover {
+    color: #09354B;
+}

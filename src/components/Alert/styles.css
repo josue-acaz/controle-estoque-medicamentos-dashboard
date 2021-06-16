@@ -1,0 +1,19 @@
+.lay-alert .alert-container {
+    width: 100%;
+}
+.lay-alert .title {
+    font-size: 18px;
+    color: #444;
+    font-weight: bold;
+}
+.lay-alert .msg {
+    font-size: 16px;
+    color: #696969;
+}
+.alert-container .alert-actions {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+}
