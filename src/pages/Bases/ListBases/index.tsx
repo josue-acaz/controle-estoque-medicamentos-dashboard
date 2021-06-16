@@ -92,7 +92,7 @@ export default function ListBases(props: RouteChildrenProps) {
             setBases(rows);
             setLoading(false);
         } catch (error) {
-            
+            setLoading(false);
         }
     }
 

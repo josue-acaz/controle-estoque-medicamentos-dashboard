@@ -112,7 +112,7 @@ export default function ListCategories(props: RouteChildrenProps) {
             setProducts(rows);
             setLoading(false);
         } catch (error) {
-            
+            setLoading(false);
         }
     }
 

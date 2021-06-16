@@ -92,7 +92,7 @@ export default function ListDoctors(props: RouteChildrenProps) {
             setDoctors(rows);
             setLoading(false);
         } catch (error) {
-            
+            setLoading(false);
         }
     }
 

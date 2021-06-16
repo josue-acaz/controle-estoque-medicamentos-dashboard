@@ -101,6 +101,7 @@ export default function ListMovements() {
             setInputMovements(rows);
             setLoading(false);
         } catch (error) {
+            setLoading(false);
             console.error(error);
         }
     }

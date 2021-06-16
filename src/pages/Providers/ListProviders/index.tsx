@@ -100,7 +100,7 @@ export default function ListProviders(props: RouteChildrenProps) {
             setProviders(rows);
             setLoading(false);
         } catch (error) {
-            
+            setLoading(false);
         }
     }
 

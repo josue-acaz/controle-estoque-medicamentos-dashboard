@@ -88,7 +88,7 @@ export default function ListDoctors(props: RouteChildrenProps) {
             setAircrafts(rows);
             setLoading(false);
         } catch (error) {
-            
+            setLoading(false);
         }
     }
 

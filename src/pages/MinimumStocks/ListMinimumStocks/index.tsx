@@ -84,7 +84,7 @@ export default function ListMinimumStocks(props: RouteChildrenProps) {
             setBases(rows);
             setLoading(false);
         } catch (error) {
-            
+            setLoading(false);
         }
     }
 
