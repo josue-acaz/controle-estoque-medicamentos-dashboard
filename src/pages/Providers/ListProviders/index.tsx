@@ -88,8 +88,12 @@ export default function ListProviders(props: RouteChildrenProps) {
         handleChangePagination("limit", rows_per_page);
     }
 
-    function handleAddProvider() {
+    function handleAdd() {
         history.push(`${path}/0/edit`);
+    }
+
+    function handleEdit(id: string) {
+        history.push(`${path}/${id}/edit`);
     }
 
     async function index() {
@@ -111,13 +115,13 @@ export default function ListProviders(props: RouteChildrenProps) {
     return(
         <GridContainer>
             <GridToolbar>
-                <ToolbarActions title="Fornecedores" action={EnumActions.LIST} onAdd={handleAddProvider} />
+                <ToolbarActions title="Fornecedores" action={EnumActions.LIST} onAdd={handleAdd} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (
                     <View>
-                        <Table headLabels={headLabels}>
-                            {providers.map(provider => <ProviderRow provider={provider} />)}
+                        <Table headLabels={headLabels} withActions={true}>
+                            {providers.map(provider => <ProviderRow provider={provider} onEdit={handleEdit} />)}
                         </Table>
                     </View>
                 )}

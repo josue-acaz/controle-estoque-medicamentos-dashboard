@@ -24,16 +24,17 @@ import Circular from "../../../../components/spinners/Circular";
 import {
     EditProductOutputView,
     Form,
+    FormActions,
     Title,
     LotOptionView,
     LotSerialNumber,
     LotProductName,
     SelectedLot,
 } from "./styles";
-import {InputLabel, Button, ButtonText} from "../../../../design";
+import {InputLabel, Button, ButtonText, CancelButton} from "../../../../design";
 
 export default function EditProductOutput(props: EditProductOutputProps) {
-    const {output, onSaved} = props;
+    const {output, onSaved, onCancel} = props;
     const feedback = useFeedback();
     const [submitted, setSubmitted] = useState(false);
     const [processing, setProcessing] = useState(false);
@@ -139,9 +140,12 @@ export default function EditProductOutput(props: EditProductOutputProps) {
                     )}
                 </Row>
 
-                <Button onClick={handleSubmit}>
-                    {processing ? <Circular size={30} /> : <ButtonText>SALVAR</ButtonText>}
-                </Button>
+                <FormActions>
+                    <Button onClick={handleSubmit}>
+                        {processing ? <Circular size={30} /> : <ButtonText>SALVAR</ButtonText>}
+                    </Button>
+                    <CancelButton onClick={onCancel}>Cancelar</CancelButton>
+                </FormActions>
             </Form>
         </EditProductOutputView>
     );

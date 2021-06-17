@@ -12,8 +12,14 @@ const Title = styled.p`
 
 const Form = styled.div``;
 
+const FormActions = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
 export {
     ProductInputFormView, 
     Form, 
+    FormActions,
     Title,
 };

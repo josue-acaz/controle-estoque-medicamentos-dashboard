@@ -76,7 +76,7 @@ export default function Entries() {
         setRefresh(refresh => ({...refresh, [key]: !refresh[key]}));
     }
 
-    function handleSavedInput() {
+    function handleSavedInput(input: Input) {
         toggleRefresh("input_list");
     }
     
@@ -93,7 +93,6 @@ export default function Entries() {
     }
 
     function handleSavedOutput(output: Output) {
-        setSelectedOutput(output);
         toggleRefresh("output_list");
     }
 
@@ -115,7 +114,7 @@ export default function Entries() {
                 <Form>
                     <Header>
                         <Configs>
-                            <h2>{action.label}</h2>
+                            <h3>{action.label}</h3>
                         </Configs>
                         <SelectAction>
                             <Select name="action" options={actions} onChange={handleChangeAction} />

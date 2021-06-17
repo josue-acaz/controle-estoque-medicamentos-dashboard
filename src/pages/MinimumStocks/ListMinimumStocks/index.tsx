@@ -72,8 +72,12 @@ export default function ListMinimumStocks(props: RouteChildrenProps) {
         handleChangePagination("limit", rows_per_page);
     }
 
-    function handleAddCategory() {
+    function handleAdd() {
         history.push(`${path}/0/edit`);
+    }
+
+    function handleEdit(id: string) {
+        history.push(`${path}/${id}/edit`);
     }
 
     async function index() {
@@ -95,11 +99,11 @@ export default function ListMinimumStocks(props: RouteChildrenProps) {
     return(
         <GridContainer>
             <GridToolbar>
-                <ToolbarActions title="Estoque mínimo" action={EnumActions.LIST} onAdd={handleAddCategory} />
+                <ToolbarActions title="Estoque mínimo" action={EnumActions.LIST} onAdd={handleAdd} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (
-                    bases.map(base => <MinimumStockView base={base} numSelected={0} selected={false} />)
+                    bases.map(base => <MinimumStockView base={base} numSelected={0} selected={false} onEdit={handleEdit} />)
                 )}
             </GridContent>
             <GridFooter>

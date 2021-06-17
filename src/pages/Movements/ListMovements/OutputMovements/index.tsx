@@ -16,7 +16,7 @@ export default function InputMovements(props: OutputMovementsProps) {
     const headLabels: Array<TableHeadProps> = [
         {
             key: "date",
-            value: "Data",
+            value: "Data da saída",
         },
         {
             key: "aircraft_id",

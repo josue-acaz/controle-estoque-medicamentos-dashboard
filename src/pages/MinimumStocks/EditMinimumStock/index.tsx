@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {Row, Col} from "react-bootstrap";
 import ToolbarAction from "../../../components/ToolbarActions";
@@ -99,6 +99,16 @@ export default function EditMinimumStock(props: RouteChildrenProps) {
         }
     }
 
+    async function show() {
+        try {
+            const minimum_stock = await minimumStockService.getById(id);
+            setInputs(minimum_stock);
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+        }
+    }
+
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setSubmitted(true);
@@ -117,6 +127,12 @@ export default function EditMinimumStock(props: RouteChildrenProps) {
     function handleCancel() {
         setOpen(false);
     }
+
+    useEffect(() => {
+        if(edit) {
+            show();
+        }
+    }, []);
 
     return(
         <GridContainer>
@@ -152,6 +168,7 @@ export default function EditMinimumStock(props: RouteChildrenProps) {
                                             renderOption={(option: any) => (
                                                 <div>{option.name}</div>
                                             )} 
+                                            inputText={inputs.base?.name}
                                             onOptionSelected={handleChange}
                                             error={submitted && !inputs.base_id}
                                         />
@@ -165,6 +182,7 @@ export default function EditMinimumStock(props: RouteChildrenProps) {
                                             renderOption={(option: any) => (
                                                 <div>{option.name}</div>
                                             )} 
+                                            inputText={inputs.product?.name}
                                             onOptionSelected={handleChange}
                                             error={submitted && !inputs.product_id}
                                         />

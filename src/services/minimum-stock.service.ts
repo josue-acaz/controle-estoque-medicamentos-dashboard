@@ -16,6 +16,11 @@ interface BasesReponse {
 class MinimumStockService {
     constructor() {}
 
+    async getById(id: string) {
+        const response = await api.get(`/minimum-stocks/${id}/show`);
+        return response.data;
+    }
+
     async create(data: MinimumStock) {
         const response = await api.post("/minimum-stocks", data, {
             headers: {

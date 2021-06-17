@@ -9,6 +9,7 @@ import {TableHeadProps} from "../../../../components/Table/types";
 
 // components
 import Table from "../../../../components/Table";
+import Actions from "../../../../components/Table/Actions";
 
 // styles
 import {
@@ -49,7 +50,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 }));
 
 export default function MinimumStockView(props: MinimumStockRowProps) {
-    const {base, numSelected, selected} = props;
+    const {base, numSelected, selected, onEdit} = props;
     const classes = useToolbarStyles();
 
     const headLabels: Array<TableHeadProps> = [
@@ -74,11 +75,12 @@ export default function MinimumStockView(props: MinimumStockRowProps) {
                     </ToolbarItem>
                 </ToolbarView>
             </Toolbar>
-            <Table headLabels={headLabels}>
+            <Table headLabels={headLabels} withActions={true}>
                 {base.minimum_stocks?.map(minimum_stock => (
                     <TableRow>
                         <TableCell>{minimum_stock.product?.name}</TableCell>
                         <TableCell>{minimum_stock.quantity}</TableCell>
+                        <Actions onEdit={() => onEdit(minimum_stock.id)} />
                     </TableRow>
                 ))}
             </Table>

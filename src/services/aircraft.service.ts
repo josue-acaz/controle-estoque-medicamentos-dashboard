@@ -10,6 +10,11 @@ interface PaginationResponse {
 class AircraftService {
     constructor() {}
 
+    async getById(id: string) {
+        const response = await api.get(`/aircrafts/${id}/show`);
+        return response.data;
+    }
+
     async create(data: Aircraft) {
         const response = await api.post("/aircrafts", data);
         return response.data;

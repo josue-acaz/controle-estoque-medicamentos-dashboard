@@ -9,6 +9,10 @@ const ListMovementsView = styled.div`
         font-size: 22px;
         color: red;
     }
+
+    
 `;
 
-export {ListMovementsView};
+export {
+    ListMovementsView,
+};

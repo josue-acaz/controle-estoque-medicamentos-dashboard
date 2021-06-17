@@ -11,7 +11,7 @@ const TableView = styled.table`
     table-layout: auto;
     overflow-wrap: break-word;
     position: relative;
-    background-color: #f2f2f2;
+    background-color: #ffffff;
     z-index: 50;
 `;
 
@@ -29,13 +29,14 @@ const TableHead = styled.thead`
 `;
 
 const TableHeadCell = styled.th<TableHeadCellProps>`
-    padding: 1rem;
+    padding: 10px;
     text-align: left;
     background-color: ${props => props.color ? props.color : EnumAppColors.PRIMARY};
     color: #ffffff;
     font-weight: 600;
     z-index: 100;
     border: 1px solid #ffffff;
+    font-size: 14px;
     ${props => props.fixedHeader ? "position: sticky; top: 0px" : ""};
 `;
 
@@ -45,12 +46,13 @@ const TableCell = styled.td`
     padding: 1rem;
     vertical-align: middle;
     position: relative;
+    font-size: 14px;
 `;
 
 const TableRow = styled.tr`
     display: table-row;
     vertical-align: middle;
-    &:nth-child(even){background-color: #ffffff;}
+    &:nth-child(even){background-color: #f2f2f2;}
     &:hover {background-color: #f2f2f2;}
     position: relative;
 `;

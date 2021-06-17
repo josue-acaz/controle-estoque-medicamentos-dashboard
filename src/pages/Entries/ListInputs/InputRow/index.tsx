@@ -19,7 +19,6 @@ export default function InputRow(props: InputRowProps) {
     return(
         <TableRow style={{cursor: "pointer"}} onClick={() => onSelect(input)}>
             <TableCell>{input.invoice_number}</TableCell>
-            <TableCell>{formatDatetime(input.request_date, EnumDateFormatTypes.READABLE_V5)}</TableCell>
             <TableCell>{input.entry_date ? formatDatetime(input.entry_date, EnumDateFormatTypes.READABLE_V5) : "-"}</TableCell>
             <TableCell>{currency(Number(input.freight))}</TableCell>
             {selected && <SelectedRow />}

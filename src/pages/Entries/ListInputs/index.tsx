@@ -33,10 +33,6 @@ export default function ListInputs(props: ListInputsProps) {
             value: "Número da fatura",
         },
         {
-            key: "request_date",
-            value: "Data da solicitação",
-        },
-        {
             key: "entry_date",
             value: "Data da entrada",
         },

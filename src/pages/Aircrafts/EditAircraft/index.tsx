@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {Row, Col} from "react-bootstrap";
 import ToolbarAction from "../../../components/ToolbarActions";
@@ -65,9 +65,19 @@ export default function EditAircraft(props: RouteChildrenProps) {
         history.goBack();
     }
 
+    async function show() {
+        try {
+            const aircraft = await aircraftService.getById(id);
+            setInputs(aircraft);
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+        }
+    }
+
     async function save() {
         try {
-            const doctor = edit ? 
+            const aircraft = edit ? 
             await aircraftService.update(id, inputs) : 
             await aircraftService.create(inputs);
             feedback.open({severity: "success"});
@@ -104,6 +114,12 @@ export default function EditAircraft(props: RouteChildrenProps) {
         setOpen(false);
     }
 
+    useEffect(() => {
+        if(edit) {
+            show();
+        }
+    }, []);
+
     return(
         <GridContainer>
             <Alert 
@@ -117,7 +133,7 @@ export default function EditAircraft(props: RouteChildrenProps) {
             />
             <GridToolbar>
                 <ToolbarAction 
-                    title="Novo fornecedor"
+                    title="Nova aeronave"
                     action={EnumActions.ADD}  
                     onGoBack={handleGoBack}
                     routes={historyActions}

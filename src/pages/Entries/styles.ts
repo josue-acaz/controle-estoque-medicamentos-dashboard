@@ -81,7 +81,7 @@ const Logo = styled.img`
 `;
 
 const Title = styled.p`
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
     color: #666666;
 `;

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {Row, Col} from "react-bootstrap";
 import ToolbarAction from "../../../components/ToolbarActions";
@@ -55,9 +55,7 @@ export default function EditCategory(props: RouteChildrenProps) {
     const [processing, setProcessing] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [open, setOpen] = useState(false);
-    const [inputs, setInputs] = useState<Category>({
-        name: "",
-    });
+    const [inputs, setInputs] = useState<Category>(new Category());
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const {name, value} = e.target;
@@ -68,9 +66,19 @@ export default function EditCategory(props: RouteChildrenProps) {
         history.goBack();
     }
 
+    async function show() {
+        try {
+            const category = await categoryService.getById(id);
+            setInputs(category);
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+        }
+    }
+
     async function save() {
         try {
-            const provider = edit ? 
+            const category = edit ? 
             await categoryService.update(id, inputs) : 
             await categoryService.create(inputs);
             feedback.open({severity: "success"});
@@ -100,6 +108,12 @@ export default function EditCategory(props: RouteChildrenProps) {
     function handleCancel() {
         setOpen(false);
     }
+
+    useEffect(() => {
+        if(edit) {
+            show();
+        }
+    }, []);
 
     return(
         <GridContainer>
@@ -132,7 +146,7 @@ export default function EditCategory(props: RouteChildrenProps) {
                                             name="name" 
                                             value={inputs.name} 
                                             onChange={handleChange} 
-                                            placeholder="Nome do fornecedor"
+                                            placeholder="Nome da categoria"
                                             error={submitted && !inputs.name}
                                         />
                                     </Col>

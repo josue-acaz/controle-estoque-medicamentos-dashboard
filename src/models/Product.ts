@@ -1,5 +1,4 @@
 import Category from "./Category";
-import Provider from "./Provider";
 import MinimumStock from "./MinimumStock";
 
 class Product {
@@ -11,7 +10,6 @@ class Product {
     category_id: string = "";
     provider_id: string  = "";
     category?: Category;
-    provider?: Provider;
     minimum_stocks?: Array<MinimumStock>;
 };
 

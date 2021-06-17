@@ -20,10 +20,6 @@ export default function InputMovements(props: InputMovementsProps) {
             value: "Número da fatura",
         },
         {
-            key: "request_date",
-            value: "Data da requisição",
-        },
-        {
             key: "entry_date",
             value: "Data da entrada",
         },

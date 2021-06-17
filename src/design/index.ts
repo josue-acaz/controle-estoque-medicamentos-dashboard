@@ -68,7 +68,7 @@ const SimpleButton = styled.button`
 `;
 
 const ButtonText = styled.p`
-    font-size: 14px;
+    font-size: 12px;
 `;
 
 const ErrorText = styled.p`
@@ -87,14 +87,40 @@ const View = styled.div<ViewProps>`
 
 const Button = styled.button`
     width: auto;
-    min-width: 150px;
+    min-width: 130px;
     border: none;
     background-color: ${EnumAppColors.PRIMARY};
     color: #ffffff;
     font-weight: normal;
     text-transform: uppercase;
     text-align: center;
-    height: 40px;
+    height: 35px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 0px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.23);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-right: .5rem;
+
+    &:hover {
+        filter: brightness(.9);
+        cursor: pointer;
+    }
+`;
+
+const CancelButton = styled.button`
+    width: auto;
+    min-width: 130px;
+    border: none;
+    background-color: ${EnumAppColors.SECONDARY};
+    color: #444444;
+    font-weight: normal;
+    text-transform: uppercase;
+    text-align: center;
+    height: 35px;
     padding-left: 1rem;
     padding-right: 1rem;
     border-radius: 0px;
@@ -116,6 +142,7 @@ export {
     InputGroup, 
     InputLabel, 
     PrimaryButton, 
+    CancelButton,
     ButtonText,
     ErrorText,
     MetroButton,

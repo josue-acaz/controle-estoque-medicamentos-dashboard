@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {Row, Col} from "react-bootstrap";
 import ToolbarAction from "../../../components/ToolbarActions";
@@ -71,6 +71,16 @@ export default function EditDoctor(props: RouteChildrenProps) {
         history.goBack();
     }
 
+    async function show() {
+        try {
+            const doctor = await doctorService.getById(id);
+            setInputs(doctor);
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+        }
+    }
+
     async function save() {
         try {
             const doctor = edit ? 
@@ -111,6 +121,12 @@ export default function EditDoctor(props: RouteChildrenProps) {
         setOpen(false);
     }
 
+    useEffect(() => {
+        if(edit) {
+            show();
+        }
+    }, []);
+
     return(
         <GridContainer>
             <Alert 
@@ -142,7 +158,7 @@ export default function EditDoctor(props: RouteChildrenProps) {
                                             name="name" 
                                             value={inputs.name} 
                                             onChange={handleChange} 
-                                            placeholder="Nome do fornecedor"
+                                            placeholder="Nome do médico"
                                             error={submitted && !inputs.name}
                                         />
                                     </Col>

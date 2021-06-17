@@ -15,7 +15,7 @@ const CircleOne = styled.div<CircularProps>`
     width: 100%;
     height: 100%;
     border-radius: 100%;
-    border: calc(60px / 10) solid transparent;
+    border: calc(48px / 10) solid transparent;
     border-top-color: ${props => props.color};
     animation: half-circle-spinner-animation 1s infinite;
 
@@ -36,9 +36,9 @@ const CircleTwo = styled.div<CircularProps>`
     width: 100%;
     height: 100%;
     border-radius: 100%;
-    border: calc(60px / 10) solid transparent;
+    border: calc(48px / 10) solid transparent;
     border-bottom-color: ${props => props.color};
-    animation: half-circle-spinner-animation 1s infinite alternate;
+    animation: half-circle-spinner-animation 1s infinite;
 
     @keyframes half-circle-spinner-animation {
       0% {

@@ -7,7 +7,7 @@ import {TableProps} from "./types";
 import {TableView, TableBody, TableRow, TableHead, TableHeadCell} from "./styles";
 
 const Table: React.FC<TableProps> = (props) => {
-    const {children, headLabels, fixedHeader, color} = props;
+    const {children, headLabels, fixedHeader, color, withActions} = props;
 
     return(
         <TableView>
@@ -22,6 +22,7 @@ const Table: React.FC<TableProps> = (props) => {
                             {head_label.value}
                         </TableHeadCell>
                     ))}
+                    {withActions && <TableHeadCell>Ações</TableHeadCell>}
                 </TableRow>
             </TableHead>
             <TableBody>

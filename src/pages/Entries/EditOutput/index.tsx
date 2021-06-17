@@ -26,6 +26,7 @@ import EditProductOutput from "./EditProductOutput";
 import {
     EditOutputView, 
     Form, 
+    FormActions,
 } from "./styles";
 import {
     Button, 
@@ -40,7 +41,12 @@ export default function EditOutput(props: EditOutputProps) {
     const feedback = useFeedback();
     const [submitted, setSubmitted] = useState(false);
     const [processing, setProcessing] = useState(false);
+    const [subProduct, setSubProduct] = useState(false);
     const [inputs, setInputs] = useState<Output>(output);
+
+    function toggleSubProduct() {
+        setSubProduct(!subProduct);
+    }
 
     function handleChange(e: any) {
         let {name, value} = e.target;
@@ -158,12 +164,29 @@ export default function EditOutput(props: EditOutputProps) {
                         />
                     </Col>
                 </Row>
-                <Button onClick={handleSubmit} disabled={processing}>
-                    {processing ? <Circular size={30} /> : <ButtonText>Salvar</ButtonText>}
-                </Button>
+                
+                <FormActions>
+                    <Button onClick={handleSubmit} disabled={processing}>
+                        {processing ? <Circular size={30} /> : <ButtonText>Salvar</ButtonText>}
+                    </Button>
+                    {!subProduct && output.id && (
+                        <Button onClick={toggleSubProduct}>
+                            <ButtonText>Novo item de saída</ButtonText>
+                        </Button>
+                    )}
+                </FormActions>
             </Form>
 
-            {inputs.id && <EditProductOutput output={output} onSaved={onProductOutputSaved} />}
+            {subProduct && (
+                <EditProductOutput 
+                    output={output} 
+                    onSaved={() => {
+                        toggleSubProduct();
+                        onProductOutputSaved();
+                    }} 
+                    onCancel={toggleSubProduct} 
+                />
+            )}
         </EditOutputView>
     );
 }

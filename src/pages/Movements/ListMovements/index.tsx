@@ -125,8 +125,8 @@ export default function ListMovements() {
                 <ToolbarActions title="Movimentações" action={EnumActions.LIST} />
             </GridToolbar>
             <GridContent>
-                <ListMovementsView>
-                    <View>
+                <View>
+                    <ListMovementsView>
                         <Tab tabs={tabs} selected={selectedTab} onChange={handleChangeTab} />
                         <TabContent index={0} selected={selectedTab}>
                             <InputMovements 
@@ -148,8 +148,8 @@ export default function ListMovements() {
                                 getOutputMovements={getOutputMovements}
                             />
                         </TabContent>
-                    </View>
-                </ListMovementsView>
+                    </ListMovementsView>
+                </View>
             </GridContent>
             <GridFooter>
                 <Pagination 

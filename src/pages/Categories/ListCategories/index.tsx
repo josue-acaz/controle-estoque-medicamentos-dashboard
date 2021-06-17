@@ -80,8 +80,12 @@ export default function ListCategories(props: RouteChildrenProps) {
         handleChangePagination("limit", rows_per_page);
     }
 
-    function handleAddCategory() {
+    function handleAdd() {
         history.push(`${path}/0/edit`);
+    }
+
+    function handleEdit(id: string) {
+        history.push(`${path}/${id}/edit`);
     }
 
     async function index() {
@@ -103,13 +107,13 @@ export default function ListCategories(props: RouteChildrenProps) {
     return(
         <GridContainer>
             <GridToolbar>
-                <ToolbarActions title="Categorias" action={EnumActions.LIST} onAdd={handleAddCategory} />
+                <ToolbarActions title="Categorias" action={EnumActions.LIST} onAdd={handleAdd} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (
                     <View>
-                        <Table headLabels={headLabels}>
-                            {categories.map(category => <CategoryRow category={category} />)}
+                        <Table headLabels={headLabels} withActions={true}>
+                            {categories.map(category => <CategoryRow category={category} onEdit={handleEdit} />)}
                         </Table>
                     </View>
                 )}

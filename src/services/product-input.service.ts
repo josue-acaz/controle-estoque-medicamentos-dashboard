@@ -17,6 +17,7 @@ class ProductInputService {
                 product_id: data.product_id,
                 input_id: data.input_id,
                 base_id: data.base_id,
+                provider_id: data.provider_id,
             }
         });
 

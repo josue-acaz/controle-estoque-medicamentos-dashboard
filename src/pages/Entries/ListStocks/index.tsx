@@ -43,7 +43,7 @@ export default function ListStocks(props: ListStocksProps) {
         },
         {
             key: "minimum_stock_id",
-            value: "Mínimo",
+            value: "Qtd. Mínima",
         },
     ];
 

@@ -1,9 +1,8 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {Row, Col} from "react-bootstrap";
 import ToolbarAction from "../../../components/ToolbarActions";
 import {EnumActions} from "../../../constants";
-import {maskCnpj} from "../../../utils";
 
 // types
 import {RouteChildrenProps} from "react-router-dom";
@@ -72,9 +71,19 @@ export default function EditCategory(props: RouteChildrenProps) {
         history.goBack();
     }
 
+    async function show() {
+        try {
+            const base = await baseService.getById(id);
+            setInputs(base);
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+        }
+    }
+
     async function save() {
         try {
-            const provider = edit ? 
+            const base = edit ? 
             await baseService.update(id, inputs) : 
             await baseService.create(inputs);
             feedback.open({severity: "success"});
@@ -104,6 +113,12 @@ export default function EditCategory(props: RouteChildrenProps) {
     function handleCancel() {
         setOpen(false);
     }
+
+    useEffect(() => {
+        if(edit) {
+            show();
+        }
+    }, []);
 
     return(
         <GridContainer>
@@ -149,6 +164,7 @@ export default function EditCategory(props: RouteChildrenProps) {
                                             renderOption={(option: any) => (
                                                 <div>{option.name}</div>
                                             )}
+                                            inputText={inputs.city?.full_name}
                                             onOptionSelected={handleChange}
                                             error={submitted && !inputs.city_id}
                                         />

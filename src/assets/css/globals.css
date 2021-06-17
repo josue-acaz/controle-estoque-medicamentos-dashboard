@@ -64,7 +64,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type=numb
 
 /* width */
 ::-webkit-scrollbar {
-  width: 15px;
+  width: 10px;
 }
 
 /* Track */

@@ -12,7 +12,7 @@ input[type="text"], [type="number"] {
 }
 .autocomplete-core .autocomplete-input input {
     width: 100%;
-    font-size: 16px;
+    font-size: 14px;
     color: #444444;
     border: 1px solid #c0c0c0;
     border-radius: 0rem;

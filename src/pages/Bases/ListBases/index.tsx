@@ -18,7 +18,7 @@ import ToolbarActions from "../../../components/ToolbarActions";
 import Loading from "../../../components/spinners/Loading";
 import Table from "../../../components/Table";
 import Pagination from "../../../components/Table/Pagination";
-import CategoryRow from "./BaseRow";
+import BaseRow from "./BaseRow";
 
 // styles
 import {
@@ -80,8 +80,12 @@ export default function ListBases(props: RouteChildrenProps) {
         handleChangePagination("limit", rows_per_page);
     }
 
-    function handleAddCategory() {
+    function handleAdd() {
         history.push(`${path}/0/edit`);
+    }
+
+    function handleEdit(id: string) {
+        history.push(`${path}/${id}/edit`);
     }
 
     async function index() {
@@ -103,13 +107,13 @@ export default function ListBases(props: RouteChildrenProps) {
     return(
         <GridContainer>
             <GridToolbar>
-                <ToolbarActions title="Bases" action={EnumActions.LIST} onAdd={handleAddCategory} />
+                <ToolbarActions title="Bases" action={EnumActions.LIST} onAdd={handleAdd} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (
                     <View>
-                        <Table headLabels={headLabels}>
-                            {bases.map(base => <CategoryRow base={base} />)}
+                        <Table headLabels={headLabels} withActions={true}>
+                            {bases.map(base => <BaseRow base={base} onEdit={handleEdit} />)}
                         </Table>
                     </View>
                 )}

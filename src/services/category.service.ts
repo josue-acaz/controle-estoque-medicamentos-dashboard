@@ -10,6 +10,11 @@ interface PaginationResponse {
 class CategoryService {
     constructor() {}
 
+    async getById(id: string) {
+        const response = await api.get(`/categories/${id}/show`);
+        return response.data;
+    }
+
     async create(data: Category) {
         const response = await api.post("/categories", data);
         return response.data;

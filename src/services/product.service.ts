@@ -10,6 +10,11 @@ interface PaginationResponse {
 class ProductService {
     constructor() {}
 
+    async getById(id: string) {
+        const response = await api.get(`/products/${id}/show`);
+        return response.data;
+    }
+
     async create(data: Product) {
         const response = await api.post("/products", data, {
             headers: {

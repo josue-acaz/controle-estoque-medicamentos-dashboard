@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {Row, Col} from "react-bootstrap";
 import ToolbarAction from "../../../components/ToolbarActions";
@@ -73,6 +73,16 @@ export default function EditProvider(props: RouteChildrenProps) {
         history.goBack();
     }
 
+    async function show() {
+        try {
+            const provider = await providerService.getById(id);
+            setInputs(provider);
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+        }
+    }
+
     async function save() {
         try {
             const provider = edit ? 
@@ -105,6 +115,12 @@ export default function EditProvider(props: RouteChildrenProps) {
     function handleCancel() {
         setOpen(false);
     }
+    
+    useEffect(() => {
+        if(edit) {
+            show();
+        }
+    }, []);
 
     return(
         <GridContainer>
@@ -165,6 +181,7 @@ export default function EditProvider(props: RouteChildrenProps) {
                                                 const {name, value} = e.target;
                                                 setInputs(inputs => ({...inputs, [name]: value.id}));
                                             }}
+                                            inputText={inputs.city?.full_name}
                                             placeholder="Selecione uma cidade..."
                                         />
                                     </Col>

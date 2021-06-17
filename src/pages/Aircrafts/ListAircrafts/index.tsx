@@ -76,8 +76,12 @@ export default function ListDoctors(props: RouteChildrenProps) {
         handleChangePagination("limit", rows_per_page);
     }
 
-    function handleAddDoctor() {
+    function handleAddAircraft() {
         history.push(`${path}/0/edit`);
+    }
+
+    function handleEditAircraft(id: string) {
+        history.push(`${path}/${id}/edit`);
     }
 
     async function index() {
@@ -99,13 +103,13 @@ export default function ListDoctors(props: RouteChildrenProps) {
     return(
         <GridContainer>
             <GridToolbar>
-                <ToolbarActions title="Aeronaves" action={EnumActions.LIST} onAdd={handleAddDoctor} />
+                <ToolbarActions title="Aeronaves" action={EnumActions.LIST} onAdd={handleAddAircraft} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (
                     <View>
-                        <Table headLabels={headLabels}>
-                            {aircrafts.map(aircraft => <AircraftRow aircraft={aircraft} />)}
+                        <Table headLabels={headLabels} withActions={true}>
+                            {aircrafts.map(aircraft => <AircraftRow aircraft={aircraft} onEdit={handleEditAircraft} />)}
                         </Table>
                     </View>
                 )}

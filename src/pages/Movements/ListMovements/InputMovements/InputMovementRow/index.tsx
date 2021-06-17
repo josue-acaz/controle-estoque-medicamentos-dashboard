@@ -48,6 +48,10 @@ function CollapseItems(props: CollapseItemsProps) {
             value: "Qtd",
         },
         {
+            key: "provider_id",
+            value: "Fornecedor",
+        },
+        {
             key: "unit_price",
             value: "Preço unitário",
         },
@@ -62,6 +66,7 @@ function CollapseItems(props: CollapseItemsProps) {
                         <TableCell>{product_input.base?.name}</TableCell>
                         <TableCell>{product_input.product?.name}</TableCell>
                         <TableCell>{product_input.current_quantity}</TableCell>
+                        <TableCell>{product_input.provider?.name}</TableCell>
                         <TableCell>{currency(Number(product_input.unit_price))}</TableCell>
                     </TableRow>
                 ))}
@@ -82,7 +87,6 @@ export default function InputMovementRow(props: InputMovementRowProps) {
         <React.Fragment>
             <TableRow>
                 <TableCell>{input.invoice_number.toUpperCase()}</TableCell>
-                <TableCell>{formatDatetime(input.request_date, EnumDateFormatTypes.READABLE_V5)}</TableCell>
                 <TableCell>{formatDatetime(input.entry_date, EnumDateFormatTypes.READABLE_V5)}</TableCell>
                 <TableCell>{currency(Number(input.freight))}</TableCell>
                 <TableCell>

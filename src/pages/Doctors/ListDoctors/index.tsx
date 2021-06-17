@@ -80,8 +80,12 @@ export default function ListDoctors(props: RouteChildrenProps) {
         handleChangePagination("limit", rows_per_page);
     }
 
-    function handleAddDoctor() {
+    function handleAdd() {
         history.push(`${path}/0/edit`);
+    }
+
+    function handleEdit(id: string) {
+        history.push(`${path}/${id}/edit`);
     }
 
     async function index() {
@@ -103,13 +107,13 @@ export default function ListDoctors(props: RouteChildrenProps) {
     return(
         <GridContainer>
             <GridToolbar>
-                <ToolbarActions title="Médicos" action={EnumActions.LIST} onAdd={handleAddDoctor} />
+                <ToolbarActions title="Médicos" action={EnumActions.LIST} onAdd={handleAdd} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (
                     <View>
-                        <Table headLabels={headLabels}>
-                            {doctors.map(doctor => <DoctorRow doctor={doctor} />)}
+                        <Table headLabels={headLabels} withActions={true}>
+                            {doctors.map(doctor => <DoctorRow doctor={doctor} onEdit={handleEdit} />)}
                         </Table>
                     </View>
                 )}

@@ -39,7 +39,7 @@ const GridToolbar = styled.nav`
 const GridContent = styled.data`
     grid-area: data;
     overflow-y: scroll;
-    padding: 1rem 0rem 1rem 1rem;
+    padding: 10px 0px 10px 10px;
     width: auto;
     position: relative;
 `;

@@ -32,16 +32,18 @@ import TextArea from "../../../../components/form/TextArea";
 import {
     Form, 
     Title,
+    FormActions,
     ProductInputFormView, 
 } from "./styles";
 import {
     Button, 
     InputLabel, 
     ButtonText,
+    CancelButton,
 } from "../../../../design";
 
 export default function EditProductInput(props: ProductInputFormProps) {
-    const {input, onSaved} = props;
+    const {input, onSaved, onCancel} = props;
 
     const feedback = useFeedback();
     const [submitted, setSubmitted] = useState(false);
@@ -63,6 +65,7 @@ export default function EditProductInput(props: ProductInputFormProps) {
         product_id: "",
         input_id: input.id,
         base_id: "",
+        provider_id: "",
     });
 
     function handleChange(e: any) {
@@ -74,7 +77,7 @@ export default function EditProductInput(props: ProductInputFormProps) {
         }
 
         // ProductInput
-        if(name === "product_id" || name === "base_id") {
+        if(name === "product_id" || name === "base_id" || name === "provider_id") {
             value = value.id;
         }
 
@@ -105,6 +108,7 @@ export default function EditProductInput(props: ProductInputFormProps) {
             product_id: inputs.product_id,
             input_id: input.id,
             base_id: inputs.base_id,
+            provider_id: inputs.provider_id,
         };
 
         setProcessing(true);
@@ -164,7 +168,7 @@ export default function EditProductInput(props: ProductInputFormProps) {
                             error={submitted && !inputs.expiration_date}
                         />
                     </Col>
-                    <Col sm="6">
+                    <Col sm="3">
                         <InputLabel>Base de destino</InputLabel>
                         <Autocomplete
                             fieldName="name"
@@ -176,6 +180,19 @@ export default function EditProductInput(props: ProductInputFormProps) {
                             onOptionSelected={handleChange}
                             placeholder="Informe a base/cidade"
                             error={submitted && !inputs.base_id}
+                        />
+                    </Col>
+                    <Col sm="3">
+                        <InputLabel>Fornecedor</InputLabel>
+                        <Autocomplete 
+                            fieldName="name" 
+                            name="provider_id" 
+                            endpoint="/providers/autocomplete"
+                            renderOption={(option: any) => (
+                                <div>{option.name}</div>
+                            )} 
+                            onOptionSelected={handleChange}
+                            error={submitted && !inputs.provider_id}
                         />
                     </Col>
                 </Row>
@@ -242,9 +259,12 @@ export default function EditProductInput(props: ProductInputFormProps) {
                     </Col>
                 </Row>
 
-                <Button onClick={handleSubmit}>
-                    {processing ? <Circular size={30} /> : <ButtonText>Salvar</ButtonText>}
-                </Button>
+                <FormActions>
+                    <Button onClick={handleSubmit}>
+                        {processing ? <Circular size={30} /> : <ButtonText>Salvar</ButtonText>}
+                    </Button>
+                    <CancelButton onClick={onCancel}>Cancelar</CancelButton>
+                </FormActions>
             </Form>
         </ProductInputFormView>
     );

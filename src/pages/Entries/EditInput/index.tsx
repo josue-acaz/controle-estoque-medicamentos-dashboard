@@ -25,6 +25,7 @@ import EditProductInput from "./EditProductInput";
 import {
     InputFormView, 
     Form, 
+    FormActions,
     EditProductContainer,
 } from "./styles";
 import {
@@ -40,7 +41,12 @@ export default function EditInput(props: InputFormProps) {
     const feedback = useFeedback();
     const [submitted, setSubmitted] = useState(false);
     const [processing, setProcessing] = useState(false);
+    const [addProduct, setAddProduct] = useState(false);
     const [inputs, setInputs] = useState<InputModel>(input);
+
+    function toggleAddProduct() {
+        setAddProduct(!addProduct);
+    }
 
     function handleChange(e: any) {
         let {name, value} = e.target;
@@ -124,16 +130,6 @@ export default function EditInput(props: InputFormProps) {
         <InputFormView>
             <Form>
                 <Row>
-                    {/**<Col sm="3">
-                        <InputLabel>Data da solicitação</InputLabel>
-                        <Input 
-                            name="request_date"
-                            placeholder="DD/MM/AAAA" 
-                            value={inputs.request_date}
-                            onChange={handleChange}
-                            error={submitted && !inputs.request_date}
-                        />
-                    </Col> */}
                     <Col sm="4">
                         <InputLabel>Data da entrada</InputLabel>
                         <Input 
@@ -166,13 +162,29 @@ export default function EditInput(props: InputFormProps) {
                         />
                     </Col>
                 </Row>
-                <Button onClick={handleSubmit} disabled={processing}>
-                    {processing ? <Circular size={30} /> : <ButtonText>Salvar</ButtonText>}
-                </Button>
+                <FormActions>
+                    <Button onClick={handleSubmit} disabled={processing}>
+                        {processing ? <Circular size={30} /> : <ButtonText>Salvar</ButtonText>}
+                    </Button>
+                    {!addProduct && inputs.id && (
+                        <Button onClick={toggleAddProduct} disabled={processing}>
+                            <ButtonText>Novo medicamento</ButtonText>
+                        </Button>
+                    )}
+                </FormActions>
             </Form>
 
             <EditProductContainer>
-                {inputs.id && <EditProductInput input={inputs} onSaved={onProductInputSaved} />}
+                {addProduct && (
+                    <EditProductInput 
+                        input={inputs} 
+                        onSaved={() => {
+                            toggleAddProduct();
+                            onProductInputSaved();
+                        }} 
+                        onCancel={toggleAddProduct}
+                    />
+                )}
             </EditProductContainer>
         </InputFormView>
     );

@@ -4,6 +4,9 @@ import Switch from "@material-ui/core/Switch";
 // types
 import {ProductRowProps} from "./types";
 
+// components
+import Actions from "../../../../components/Table/Actions";
+
 // styles
 import {
     TableRow, 
@@ -11,7 +14,7 @@ import {
 } from "../../../../components/Table/styles";
 
 export default function CategoryRow(props: ProductRowProps) {
-    const {product} = props;
+    const {product, onEdit} = props;
 
     return(
         <TableRow>
@@ -27,8 +30,8 @@ export default function CategoryRow(props: ProductRowProps) {
                 />
             </TableCell>
             <TableCell>{product.category?.name}</TableCell>
-            <TableCell>{product.provider?.name}</TableCell>
             <TableCell>{product.description ? product.description : "Nenhuma"}</TableCell>
+            <Actions onEdit={() => onEdit(product.id)} />
         </TableRow>
     );
 }

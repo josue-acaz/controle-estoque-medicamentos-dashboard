@@ -10,6 +10,11 @@ interface PaginationResponse {
 class DoctorService {
     constructor() {}
 
+    async getById(id: string) {
+        const response = await api.get(`/doctors/${id}/show`);
+        return response.data;
+    }
+
     async create(data: Doctor) {
         const response = await api.post("/doctors", data);
         return response.data;

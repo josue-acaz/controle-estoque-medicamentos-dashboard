@@ -1,9 +1,8 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {Row, Col} from "react-bootstrap";
 import ToolbarAction from "../../../components/ToolbarActions";
 import {EnumActions} from "../../../constants";
-import {maskCnpj} from "../../../utils";
 
 // types
 import {RouteChildrenProps} from "react-router-dom";
@@ -73,6 +72,16 @@ export default function EditProduct(props: RouteChildrenProps) {
         history.goBack();
     }
 
+    async function show() {
+        try {
+            const product = await productService.getById(id);
+            setInputs(product);
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+        }
+    }
+
     async function save() {
         try {
             const product = edit ? 
@@ -91,7 +100,7 @@ export default function EditProduct(props: RouteChildrenProps) {
         e.preventDefault();
         setSubmitted(true);
 
-        if(inputs.name) {
+        if(inputs.name && inputs.category_id) {
             setOpen(true);
         }
     }
@@ -105,6 +114,12 @@ export default function EditProduct(props: RouteChildrenProps) {
     function handleCancel() {
         setOpen(false);
     }
+    
+    useEffect(() => {
+        if(edit) {
+            show();
+        }
+    }, []);
 
     return(
         <GridContainer>
@@ -145,6 +160,7 @@ export default function EditProduct(props: RouteChildrenProps) {
                                         <InputLabel>Peso</InputLabel>
                                         <Input 
                                             name="weight" 
+                                            type="number"
                                             value={inputs.weight} 
                                             onChange={handleChange} 
                                             placeholder="Peso do item"
@@ -162,23 +178,9 @@ export default function EditProduct(props: RouteChildrenProps) {
                                             renderOption={(option: any) => (
                                                 <div>{option.name}</div>
                                             )} 
+                                            inputText={inputs.category?.name}
                                             onOptionSelected={handleChange}
                                             error={submitted && !inputs.category_id}
-                                        />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col sm="4">
-                                        <InputLabel>Fornecedor</InputLabel>
-                                        <Autocomplete 
-                                            fieldName="name" 
-                                            name="provider_id" 
-                                            endpoint="/providers/autocomplete"
-                                            renderOption={(option: any) => (
-                                                <div>{option.name}</div>
-                                            )} 
-                                            onOptionSelected={handleChange}
-                                            error={submitted && !inputs.provider_id}
                                         />
                                     </Col>
                                 </Row>

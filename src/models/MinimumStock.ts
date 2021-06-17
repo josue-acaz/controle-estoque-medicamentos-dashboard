@@ -7,6 +7,7 @@ class MinimumStock {
     base_id: string = "";
     product_id: string = "";
     product?: Product;
+    base?: Base;
 };
 
 export default MinimumStock;

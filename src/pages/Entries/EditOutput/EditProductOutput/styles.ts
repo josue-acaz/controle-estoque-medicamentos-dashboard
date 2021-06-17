@@ -12,6 +12,11 @@ const Title = styled.p`
 
 const Form = styled.div``;
 
+const FormActions = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
 const LotOptionView = styled.div``;
 
 const LotSerialNumber = styled.p`
@@ -34,6 +39,7 @@ export {
     EditProductOutputView,
     Title,
     Form,
+    FormActions,
     SelectedLot,
     LotOptionView,
     LotSerialNumber,

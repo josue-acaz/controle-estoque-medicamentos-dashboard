@@ -52,10 +52,6 @@ export default function ListCategories(props: RouteChildrenProps) {
             value: "Categoria",
         },
         {
-            key: "provider",
-            value: "Fornecedor",
-        },
-        {
             key: "description",
             value: "Descrição",
         },
@@ -100,8 +96,12 @@ export default function ListCategories(props: RouteChildrenProps) {
         handleChangePagination("limit", rows_per_page);
     }
 
-    function handleAddCategory() {
+    function handleAdd() {
         history.push(`${path}/0/edit`);
+    }
+
+    function handleEdit(id: string) {
+        history.push(`${path}/${id}/edit`);
     }
 
     async function index() {
@@ -123,13 +123,13 @@ export default function ListCategories(props: RouteChildrenProps) {
     return(
         <GridContainer>
             <GridToolbar>
-                <ToolbarActions title="Medicamentos/Materiais" action={EnumActions.LIST} onAdd={handleAddCategory} />
+                <ToolbarActions title="Medicamentos/Materiais" action={EnumActions.LIST} onAdd={handleAdd} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (
                     <View>
-                        <Table headLabels={headLabels}>
-                            {products.map(product => <ProductRow product={product} />)}
+                        <Table headLabels={headLabels} withActions={true}>
+                            {products.map(product => <ProductRow product={product} onEdit={handleEdit} />)}
                         </Table>
                     </View>
                 )}
