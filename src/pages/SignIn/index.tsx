@@ -66,7 +66,7 @@ export default function SignIn() {
                 <Header>
                     <Title>Entrar</Title>
                 </Header>
-                <Subtitle>SCEM - Sistema de Controle de Estoque de Medicamentos</Subtitle>
+                <Subtitle>Sistema de Controle de Estoque de Medicamentos</Subtitle>
                 <Form onSubmit={handleSubmit}>
                     <InputGroup>
                         <Input 

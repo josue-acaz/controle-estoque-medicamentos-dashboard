@@ -1,13 +1,16 @@
 import styled from "styled-components";
 
-const InputFormView = styled.div`
+const EditInputView = styled.div`
+    background-color: #ffffff;
 `;
 
 const Form = styled.div``;
 
-const EditProductContainer = styled.div`
+const EditProductInputContainer = styled.div`
     margin-top: 15px;
 `;
+
+const ListProductInputContainer = styled.div``;
 
 const FormActions = styled.div`
     display: flex;
@@ -15,8 +18,9 @@ const FormActions = styled.div`
 `;
 
 export {
-    InputFormView, 
     Form,
     FormActions,
-    EditProductContainer,
+    EditInputView, 
+    EditProductInputContainer,
+    ListProductInputContainer,
 };

@@ -21,12 +21,15 @@ import Input from "../../../components/form/Input";
 import Circular from "../../../components/spinners/Circular";
 import Autocomplete from "../../../components/form/Autocomplete";
 import EditProductOutput from "./EditProductOutput";
+import ListProductOutputs from "./ListProductOutputs";
 
 // styles
 import {
     EditOutputView, 
     Form, 
     FormActions,
+    EditProductOutputContainer,
+    ListProductInputContainer,
 } from "./styles";
 import {
     Button, 
@@ -177,16 +180,24 @@ export default function EditOutput(props: EditOutputProps) {
                 </FormActions>
             </Form>
 
-            {subProduct && (
-                <EditProductOutput 
-                    output={output} 
-                    onSaved={() => {
-                        toggleSubProduct();
-                        onProductOutputSaved();
-                    }} 
-                    onCancel={toggleSubProduct} 
-                />
-            )}
+            <EditProductOutputContainer>
+                {subProduct && (
+                    <EditProductOutput 
+                        output={output} 
+                        onSaved={() => {
+                            toggleSubProduct();
+                            onProductOutputSaved();
+                        }} 
+                        onCancel={toggleSubProduct} 
+                    />
+                )}
+            </EditProductOutputContainer>
+
+            <ListProductInputContainer>
+                {output.id && !subProduct && (
+                    <ListProductOutputs output_id={output.id} />
+                )}
+            </ListProductInputContainer>
         </EditOutputView>
     );
 }

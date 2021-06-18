@@ -30,9 +30,12 @@ import {
     StockHeader,
     Overview,
     OverviewHeader,
+    ButtonNew,
     Header,
     Configs,
     SelectAction,
+    ActionTitle,
+    ActionSubtitle,
 } from "./styles";
 
 export default function Entries() {
@@ -105,18 +108,25 @@ export default function Entries() {
         setSelectedStock(product_input);
     }
 
+    function handleNew() {
+        if(action.value === "input") {
+            setSelectedInput(new Input());
+        } else {
+            setSelectedOutput(new Output());
+        }
+    }
+
     return(
         <React.Fragment>
             <EntryView>
-                {/**<Toolbar>
-                    <Logo src={logo} />
-                </Toolbar> */}
                 <Form>
                     <Header>
                         <Configs>
-                            <h3>{action.label}</h3>
+                            <ActionTitle>{action.label}</ActionTitle>
+                            <ActionSubtitle>#{action.value === "input" ? selectedInput.id : selectedOutput.id}</ActionSubtitle>
                         </Configs>
                         <SelectAction>
+                            {(selectedInput.id || selectedOutput.id) && (<ButtonNew onClick={handleNew}>Nova {action.label}</ButtonNew>)}
                             <Select name="action" options={actions} onChange={handleChangeAction} />
                         </SelectAction>
                     </Header>

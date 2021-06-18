@@ -247,6 +247,8 @@ export default function EditProductInput(props: ProductInputFormProps) {
                                     onChange={handleChange}
                                     placeholder="Preço unitário"
                                     error={submitted && !inputs.unit_price}
+                                    adorment={<p>R$</p>}
+                                    adormentPosition="start"
                                 />
                             </Col>
                         </React.Fragment>

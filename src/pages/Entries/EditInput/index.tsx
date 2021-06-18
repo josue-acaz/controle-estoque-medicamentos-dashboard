@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {Row, Col} from "react-bootstrap";
+import OutsideClickHandler from "react-outside-click-handler";
 import {maskDate, maskCurrency, currency, currencyToNumber} from "../../../utils";
 import {stringDateToSql, formatDatetime} from "../../../tools/dates";
 import {EnumDateFormatTypes} from "../../../constants";
@@ -20,13 +21,15 @@ import InputModel from "../../../models/Input";
 import Input from "../../../components/form/Input";
 import Circular from "../../../components/spinners/Circular";
 import EditProductInput from "./EditProductInput";
+import ListProductInputs from "./ListProductInputs";
 
 // styles
 import {
-    InputFormView, 
     Form, 
     FormActions,
-    EditProductContainer,
+    EditInputView, 
+    EditProductInputContainer,
+    ListProductInputContainer,
 } from "./styles";
 import {
     Button, 
@@ -127,7 +130,7 @@ export default function EditInput(props: InputFormProps) {
     }
 
     return(
-        <InputFormView>
+        <EditInputView>
             <Form>
                 <Row>
                     <Col sm="4">
@@ -168,13 +171,13 @@ export default function EditInput(props: InputFormProps) {
                     </Button>
                     {!addProduct && inputs.id && (
                         <Button onClick={toggleAddProduct} disabled={processing}>
-                            <ButtonText>Novo medicamento</ButtonText>
+                            <ButtonText>Novo item de compra</ButtonText>
                         </Button>
                     )}
                 </FormActions>
             </Form>
 
-            <EditProductContainer>
+            <EditProductInputContainer>
                 {addProduct && (
                     <EditProductInput 
                         input={inputs} 
@@ -185,7 +188,12 @@ export default function EditInput(props: InputFormProps) {
                         onCancel={toggleAddProduct}
                     />
                 )}
-            </EditProductContainer>
-        </InputFormView>
+            </EditProductInputContainer>
+            <ListProductInputContainer>
+                {input.id && !addProduct && (
+                    <ListProductInputs input_id={input.id} />
+                )}
+            </ListProductInputContainer>
+        </EditInputView>
     );
 }

@@ -4,13 +4,21 @@ const EditOutputView = styled.div``;
 
 const Form = styled.div``;
 
+const EditProductOutputContainer = styled.div`
+    margin-top: 15px;
+`;
+
+const ListProductInputContainer = styled.div``;
+
 const FormActions = styled.div`
     display: flex;
     align-items: center;
 `;
 
 export {
+    Form,
     EditOutputView, 
-    Form, 
+    EditProductOutputContainer,
+    ListProductInputContainer,
     FormActions,
 };

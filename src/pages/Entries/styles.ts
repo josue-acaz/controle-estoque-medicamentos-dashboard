@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {EnumAppColors} from "../../constants";
 
 const EntryView = styled.div`
     overflow: hidden;
@@ -95,7 +96,46 @@ const Header = styled.div`
 
 const Configs = styled.div``;
 
-const SelectAction = styled.div``;
+const SelectAction = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
+const ActionTitle = styled.p`
+    font-size: 18px;
+    color: #444444;
+    font-weight: bold;
+`;
+
+const ActionSubtitle = styled.p`
+    font-size: 14px;
+    color: #888888;
+`;
+
+const ButtonNew = styled.button`
+    width: auto;
+    width: 200px;
+    border: none;
+    background-color: transparent;
+    color: ${EnumAppColors.PRIMARY};
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    height: 45px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+
+    &:hover {
+        filter: brightness(.9);
+        cursor: pointer;
+        text-decoration: underline;
+    }
+`;
 
 export {
     EntryView,
@@ -112,4 +152,7 @@ export {
     SelectAction,
     Overview,
     OverviewHeader,
+    ActionTitle,
+    ActionSubtitle,
+    ButtonNew,
 };

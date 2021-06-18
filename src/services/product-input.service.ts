@@ -37,6 +37,7 @@ class ProductInputService {
                 limit: params.limit,
                 offset: params.offset,
                 text: params.text,
+                input_id: params.input_id,
             },
         });
 
