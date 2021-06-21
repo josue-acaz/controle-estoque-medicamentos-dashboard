@@ -1,5 +1,9 @@
 import React, {useState, useEffect} from "react";
-import {EnumAppColors} from "../../../constants";
+import {formatDatetime} from "../../../tools/dates";
+import {EnumDateFormatTypes} from "../../../constants";
+
+// contexts
+import {useFeedback} from "../../../contexts/feedback/feedback.context";
 
 // models
 import Input from "../../../models/Input";
@@ -8,25 +12,27 @@ import Input from "../../../models/Input";
 import inputService from "../../../services/input.service";
 
 // types
-import {TableHeadProps} from "../../../components/Table/types";
-import {PaginationProps} from "../../../components/Table/Pagination/types";
 import {ListInputsProps} from "./types";
+import {TableHeadProps, RowProps} from "../../../components/Task/types";
+import {PaginationProps} from "../../../components/Task/Pagination/types";
 
 // components
-import Table from "../../../components/Table";
-import Pagination from "../../../components/Table/Pagination";
-import Circular from "../../../components/spinners/Circular";
-import InputRow from "./InputRow";
+import Loading from "../../../components/spinners/Loading";
+import Task from "../../../components/Task";
+import Toolbar from "../../../components/Task/Toolbar";
+import Pagination from "../../../components/Task/Pagination";
+import Alert from "../../../components/Alert";
 
 // styles
 import {
     ListInputsView,
+    Header,
     List,
     Footer,
 } from "./styles";
 
 export default function ListInputs(props: ListInputsProps) {
-    const {refresh, inputSelected, onInputSelected} = props;
+    const {refresh, inputSelected, onSelected, onDeleted} = props;
     const headLabels: Array<TableHeadProps> = [
         {
             key: "invoice_number",
@@ -42,7 +48,11 @@ export default function ListInputs(props: ListInputsProps) {
         },
     ];
 
+    const feedback = useFeedback();
+    const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [processing, setProcessing] = useState(false);
+    const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [inputs, setInputs] = useState<Array<Input>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
         limit: 10, 
@@ -54,6 +64,37 @@ export default function ListInputs(props: ListInputsProps) {
         filter: "name", 
         orderBy: "name",
     });
+
+    function handleOpenAlert() {
+        setOpen(true);
+    }
+
+    function handleCloseAlert() {
+        setOpen(false);
+    }
+
+    async function handleRemoveSelecteds() {
+        handleCloseAlert();
+        setProcessing(true);
+
+        try {
+            const deleted = await Promise.all(selecteds.map(id => inputService.delete(id)));
+            feedback.open({severity: "success"});
+            setProcessing(false);
+            setSelecteds([]);
+            onDeleted();
+        } catch (error) {
+            setProcessing(false);
+            if(error.response) {
+                feedback.open({
+                    severity: "error",
+                    msg: error.response.data.msg,
+                });
+            } else {
+                feedback.open({severity: "error"});
+            }
+        }
+    }
 
     function handleChangePagination(key: string, value: any) {
         setPagination(pagination => ({ ...pagination, [key]: value }));
@@ -96,20 +137,64 @@ export default function ListInputs(props: ListInputsProps) {
         pagination.page,
     ]);
 
+    function handleChangeSelecteds(selecteds: Array<string>) {
+        setSelecteds(selecteds);
+    }
+
+    function createRows(inputs: Array<Input>) {
+        const rows: Array<RowProps> = inputs.map(input => {
+            const row: RowProps = {
+                id: input.id,
+                onHoverClick: () => onSelected(input),
+                hoverSelected: inputSelected.id === input.id,
+                cells: [
+                    {
+                        value: input.invoice_number,
+                    },
+                    {
+                        value: formatDatetime(input.entry_date, EnumDateFormatTypes.READABLE_V5),
+                    },
+                    {
+                        value: input.freight,
+                    }
+                ]
+            };
+
+            return row;
+        });
+
+        return rows;
+    }
+
     return(
         <ListInputsView>
+            <Alert 
+                open={open} 
+                theme="danger" 
+                title="Deseja excluir as compras selecionadas?"
+                msg="Esta ação não poderá ser desfeita"
+                onConfirm={handleRemoveSelecteds}
+                onCancel={handleCloseAlert}
+                onClose={handleCloseAlert}
+            />
+            <Header>
+                <Toolbar 
+                    search={false} 
+                    title="Compras" 
+                    padding="overview"
+                    numSelected={selecteds.length}
+                    onDelete={handleOpenAlert}
+                />
+            </Header>
             <List>
-                <Table headLabels={headLabels} fixedHeader={true}>
-                    {loading ? <Circular size={35} color={EnumAppColors.PRIMARY} /> : (
-                        inputs.map(input => (
-                            <InputRow 
-                                input={input} 
-                                selected={input.id === inputSelected.id} 
-                                onSelect={onInputSelected} 
-                            />
-                        ))
-                    )}
-                </Table>
+                <Task 
+                    fixedHeader={true}
+                    widthActions={false}
+                    selecteds={selecteds}
+                    headLabels={headLabels} 
+                    rows={createRows(inputs)}
+                    onChangeSelecteds={handleChangeSelecteds}
+                />
             </List>
             <Footer>
                 <Pagination 

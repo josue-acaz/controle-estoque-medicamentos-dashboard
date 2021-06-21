@@ -1,26 +1,26 @@
 import React, {useState, useEffect} from "react";
-import {EnumAppColors} from "../../../constants";
 
 // models
 import Stock from "../../../models/Stock";
 
 // types
 import {ListStocksProps} from "./types";
-import {TableHeadProps} from "../../../components/Table/types";
-import {PaginationProps} from "../../../components/Table/Pagination/types";
+import {TableHeadProps, RowProps} from "../../../components/Task/types";
+import {PaginationProps} from "../../../components/Task/Pagination/types";
+
+// components
+import Task from "../../../components/Task";
+import Toolbar from "../../../components/Task/Toolbar";
+import Pagination from "../../../components/Task/Pagination";
+import Circular from "../../../components/spinners/Circular";
 
 // services
 import stockService from "../../../services/stock.service";
 
-// components
-import Table from "../../../components/Table";
-import Pagination from "../../../components/Table/Pagination";
-import Circular from "../../../components/spinners/Circular";
-import StockRow from "./StockRow";
-
 // styles
 import {
     StockView,
+    Header,
     List,
     Footer,
 } from "./styles";
@@ -47,8 +47,9 @@ export default function ListStocks(props: ListStocksProps) {
         },
     ];
 
-    const [stocks, setStocks] = useState<Array<Stock>>([]);
     const [loading, setLoading] = useState(true);
+    const [selecteds, setSelecteds] = useState<Array<string>>([]);
+    const [stocks, setStocks] = useState<Array<Stock>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
         limit: 10, 
         offset: 0, 
@@ -101,28 +102,68 @@ export default function ListStocks(props: ListStocksProps) {
         pagination.page,
     ]);
 
+    function handleChangeSelecteds(selecteds: Array<string>) {
+        setSelecteds(selecteds);
+    }
+
+    function createRows(stocks: Array<Stock>) {
+        const rows: Array<RowProps> = stocks.map(stock => {
+            let row: RowProps = {
+                id: "",
+                cells: []
+            };
+
+            const {product_inputs, minimum_stocks} = stock;
+            product_inputs?.forEach(product_input => {
+
+                const minimum_stock = minimum_stocks?.find(minimum_stock => minimum_stock.base_id === product_input.base_id);
+                row = {
+                    id: stock.id,
+                    hoverTitle: "Mostrar estoque completo",
+                    onHoverClick: () => onStockSelected(product_input),
+                    cells: [
+                        {
+                            value: product_input.base?.name,
+                        },
+                        {
+                            value: stock.name,
+                        },
+                        {
+                            value: product_input.total,
+                        },
+                        {
+                            value: minimum_stock ? minimum_stock.quantity : "-"
+                        }
+                    ],
+                };
+            });
+
+
+            return row;
+        });
+
+        return rows;
+    }
+
     return(
         <StockView>
+            <Header>
+                <Toolbar 
+                    padding="overview" 
+                    search={false} 
+                    title="Estoque" 
+                    numSelected={selecteds.length}
+                />
+            </Header>
             <List>
-                <Table headLabels={headLabels} fixedHeader={true}>
-                    {loading ? <Circular size={35} color={EnumAppColors.PRIMARY} /> : stocks.map(stock => {
-                        const {product_inputs, minimum_stocks} = stock;
-                        return(product_inputs?.map(product_input => {
-
-                            const minimum_stock = minimum_stocks?.find(minimum_stock => minimum_stock.base_id === product_input.base_id);
-
-                            return(
-                                <StockRow 
-                                    name={stock.name} 
-                                    key={product_input.id} 
-                                    product_input={product_input}
-                                    onSelect={onStockSelected}
-                                    minimumStock={minimum_stock}
-                                />
-                            );
-                        }));
-                    })}
-                </Table>
+                <Task 
+                    fixedHeader={true}
+                    widthActions={false}
+                    selecteds={selecteds}
+                    headLabels={headLabels} 
+                    rows={createRows(stocks)}
+                    onChangeSelecteds={handleChangeSelecteds}
+                />
             </List>
             <Footer>
                 <Pagination 

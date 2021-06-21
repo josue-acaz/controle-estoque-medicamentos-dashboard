@@ -3,7 +3,8 @@ import Output from "../../../../models/Output";
 interface ListOutputsProps {
     refresh: boolean;
     outputSelected: Output;
-    onOutputSelected(output: Output): void;
+    onSelected(output: Output): void;
+    onDeleted(): void;
 };
 
 export type {ListOutputsProps};

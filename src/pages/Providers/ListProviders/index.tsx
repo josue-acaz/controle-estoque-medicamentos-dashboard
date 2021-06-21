@@ -1,24 +1,22 @@
 import React, {useState, useEffect} from "react";
 import {useRouteMatch} from "react-router-dom";
-import {EnumActions} from "../../../constants";
 
 // services
 import providerService from "../../../services/provider.service";
 
 // types
 import {RouteChildrenProps} from "react-router-dom";
-import {TableHeadProps} from "../../../components/Table/types";
-import {PaginationProps} from "../../../components/Table/Pagination/types";
+import {TableHeadProps, RowProps} from "../../../components/Task/types";
+import {PaginationProps} from "../../../components/Task/Pagination/types";
 
 // models
 import Provider from "../../../models/Provider";
 
 // components
-import ToolbarActions from "../../../components/ToolbarActions";
+import Task from "../../../components/Task";
+import Toolbar from "../../../components/Task/Toolbar";
+import Pagination from "../../../components/Task/Pagination";
 import Loading from "../../../components/spinners/Loading";
-import Table from "../../../components/Table";
-import Pagination from "../../../components/Table/Pagination";
-import ProviderRow from "./ProviderRow";
 
 // styles
 import {View} from "../../../design";
@@ -32,7 +30,6 @@ import {
 export default function ListProviders(props: RouteChildrenProps) {
     const {history} = props;
     const {path} = useRouteMatch();
-    const [loading, setLoading] = useState(true);
 
     const headLabels: Array<TableHeadProps> = [
         {
@@ -49,6 +46,8 @@ export default function ListProviders(props: RouteChildrenProps) {
         },
     ];
 
+    const [loading, setLoading] = useState(true);
+    const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [providers, setProviders] = useState<Array<Provider>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
         limit: 10, 
@@ -61,16 +60,8 @@ export default function ListProviders(props: RouteChildrenProps) {
         orderBy: "name",
     });
 
-    function handleRemoveSelecteds() {
-
-    }
-
     function handleChangePagination(key: string, value: any) {
         setPagination(pagination => ({ ...pagination, [key]: value }));
-    }
-
-    function handleSearch(text: string) {
-        handleChangePagination("text", text);
     }
 
     function handleChangePage(page: number) {
@@ -96,6 +87,18 @@ export default function ListProviders(props: RouteChildrenProps) {
         history.push(`${path}/${id}/edit`);
     }
 
+    function handleSearch(text: string) {
+        handleChangePagination("text", text);
+    }
+
+    function handleRemoveSelecteds() {
+
+    }
+
+    function handleChangeSelecteds(selecteds: Array<string>) {
+        setSelecteds(selecteds);
+    }
+
     async function index() {
         try {
             const providers = await providerService.pagination(pagination);
@@ -108,21 +111,46 @@ export default function ListProviders(props: RouteChildrenProps) {
         }
     }
 
-    useEffect(() => {
-        index();
-    }, []);
+    useEffect(() => {index()}, []);
+
+    function createRows(providers: Array<Provider>) {
+        const rows: Array<RowProps> = providers.map(provider => {
+            const row: RowProps = {
+                id: provider.id,
+                cells: [
+                    {
+                        value: provider.name,
+                    },
+                    {
+                        value: provider.cnpj,
+                    },
+                    {
+                        value: provider.city?.full_name,
+                    },
+                ]
+            };
+
+            return row;
+        });
+
+        return rows;
+    }
 
     return(
         <GridContainer>
             <GridToolbar>
-                <ToolbarActions title="Fornecedores" action={EnumActions.LIST} onAdd={handleAdd} />
+                <Toolbar title="Fornecedores" numSelected={selecteds.length} onAdd={handleAdd} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (
                     <View>
-                        <Table headLabels={headLabels} withActions={true}>
-                            {providers.map(provider => <ProviderRow provider={provider} onEdit={handleEdit} />)}
-                        </Table>
+                        <Task
+                            selecteds={selecteds}
+                            onEditRow={handleEdit}
+                            headLabels={headLabels} 
+                            rows={createRows(providers)}
+                            onChangeSelecteds={handleChangeSelecteds}
+                        />
                     </View>
                 )}
             </GridContent>

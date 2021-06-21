@@ -1,13 +1,20 @@
 import React from "react";
+import Checkbox from "@material-ui/core/Checkbox";
 
 // types
 import {TableProps} from "./types";
 
 // styles
-import {TableView, TableBody, TableRow, TableHead, TableHeadCell} from "./styles";
+import {
+    TableView, 
+    TableBody, 
+    TableRow, 
+    TableHead, 
+    TableHeadCell,
+} from "./styles";
 
 const Table: React.FC<TableProps> = (props) => {
-    const {children, headLabels, fixedHeader, color, withActions} = props;
+    const {children, headLabels, fixedHeader, color, withActions, numSelected, rowCount, onSelectAllClick} = props;
 
     return(
         <TableView>
@@ -22,7 +29,7 @@ const Table: React.FC<TableProps> = (props) => {
                             {head_label.value}
                         </TableHeadCell>
                     ))}
-                    {withActions && <TableHeadCell>Ações</TableHeadCell>}
+                    {withActions && <TableHeadCell style={{textAlign: "right"}}>Ações</TableHeadCell>}
                 </TableRow>
             </TableHead>
             <TableBody>

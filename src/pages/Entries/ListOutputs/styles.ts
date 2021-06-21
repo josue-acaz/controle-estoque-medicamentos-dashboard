@@ -9,26 +9,31 @@ const ListOutputsView = styled.div`
     right: 0;
     grid-template-columns: 5fr;
     transition: 2s;
-    grid-template-rows: 4fr auto;
-    grid-template-areas: "input-list"
-                         "input-footer";
+    grid-template-rows: auto 4fr auto;
+    grid-template-areas: "output-header"
+                         "output-list"
+                         "output-footer";
+`;
+
+const Header = styled.div`
+    grid-area: output-header;
 `;
 
 const List = styled.div`
-    grid-area: input-list;
-    border: inset;
-    border-width: 3px;
-    margin-right: 5px;
+    grid-area: output-list;
     overflow-y: scroll;
+    border: 1px solid #cccccc;
+    /**border: inset;
+    border-width: 3px; */
 `;
 
 const Footer = styled.div`
-    grid-area: input-footer;
+    grid-area: output-footer;
 `;
-
 
 export {
     ListOutputsView,
+    Header,
     List,
     Footer,
 };

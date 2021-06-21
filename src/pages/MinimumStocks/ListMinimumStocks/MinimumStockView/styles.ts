@@ -6,6 +6,8 @@ const ToolbarView = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background-color: #ffffff;
+    border-bottom: 1px solid #eeeeee;
 `;
 
 const ToolbarItem = styled.div`

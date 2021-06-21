@@ -9,17 +9,25 @@ const StockView = styled.div`
     right: 0;
     grid-template-columns: 5fr;
     transition: 2s;
-    grid-template-rows: 4fr auto;
-    grid-template-areas: "stock-list"
+    grid-template-rows: auto 4fr auto;
+    grid-template-areas: "stock-header"
+                         "stock-list"
                          "stock-footer";
+`;
+
+const Header = styled.div`
+    grid-area: stock-header;
+    margin-right: 10px;
 `;
 
 const List = styled.div`
     grid-area: stock-list;
-    border: inset;
-    border-width: 3px;
-    margin-right: 5px;
+    margin-right: 10px;
     overflow-y: scroll;
+    border: 1px solid #cccccc;
+    /**
+    border: inset;
+    border-width: 3px; */
 `;
 
 const Footer = styled.div`
@@ -29,5 +37,6 @@ const Footer = styled.div`
 export {
     StockView,
     List,
+    Header,
     Footer,
 };

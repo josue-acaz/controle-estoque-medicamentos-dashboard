@@ -25,6 +25,11 @@ class AircraftService {
         return response.data;
     }
 
+    async delete(id: string) {
+        const response = await api.delete(`/aircrafts/${id}/delete`);
+        return response.data;
+    }
+
     async pagination(params: PaginationProps) {
         const response = await api.get<PaginationResponse>("/aircrafts/pagination", {
             params: {

@@ -6,7 +6,12 @@ const ListLotsView = styled.div`
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 15px;
+    padding: 10px;
 `;
 
-export {ListLotsView};
+const ListLotsContent = styled.div`
+    border-left: 1px solid #eeeeee;
+    border-top: 1px solid #eeeeee;
+`;
+
+export {ListLotsView, ListLotsContent};

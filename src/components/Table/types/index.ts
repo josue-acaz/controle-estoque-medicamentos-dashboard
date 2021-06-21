@@ -5,14 +5,32 @@ interface TableHeadProps {
 
 interface TableHeadCellProps {
     fixedHeader?: boolean;
+    padding?: string;
     color?: string;
+};
+
+interface TableCellProps {
+    padding?: string;
+};
+
+interface TableRowProps {
+    selected?: boolean;
 };
 
 interface TableProps {
-    headLabels: Array<TableHeadProps>;
-    fixedHeader?: boolean;
     color?: string;
+    fixedHeader?: boolean;
     withActions?: boolean;
+    numSelected: number;
+    rowCount: number;
+    headLabels: Array<TableHeadProps>;
+    onSelectAllClick(event: React.ChangeEvent<HTMLInputElement>, checked: boolean): void;
 };
 
-export type {TableProps, TableHeadProps, TableHeadCellProps};
+export type {
+    TableProps, 
+    TableRowProps,
+    TableHeadProps,
+    TableCellProps, 
+    TableHeadCellProps,
+};

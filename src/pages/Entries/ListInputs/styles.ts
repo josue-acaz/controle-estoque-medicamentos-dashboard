@@ -9,17 +9,22 @@ const ListInputsView = styled.div`
     right: 0;
     grid-template-columns: 5fr;
     transition: 2s;
-    grid-template-rows: 4fr auto;
-    grid-template-areas: "input-list"
+    grid-template-rows: auto 4fr auto;
+    grid-template-areas: "input-header"
+                         "input-list"
                          "input-footer";
+`;
+
+const Header = styled.div`
+    grid-area: input-header;
 `;
 
 const List = styled.div`
     grid-area: input-list;
-    border: inset;
-    border-width: 3px;
-    margin-right: 5px;
     overflow-y: scroll;
+    border: 1px solid #cccccc;
+    /**border: inset;
+    border-width: 3px; */
 `;
 
 const Footer = styled.div`
@@ -29,6 +34,7 @@ const Footer = styled.div`
 
 export {
     ListInputsView,
+    Header,
     List,
     Footer,
 };

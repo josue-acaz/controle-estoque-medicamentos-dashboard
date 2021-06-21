@@ -1,5 +1,9 @@
 import React, {useState, useEffect} from "react";
-import {EnumAppColors} from "../../../constants";
+import {formatDatetime} from "../../../tools/dates";
+import {EnumDateFormatTypes} from "../../../constants";
+
+// contexts
+import {useFeedback} from "../../../contexts/feedback/feedback.context";
 
 // models
 import Output from "../../../models/Output";
@@ -9,20 +13,26 @@ import outputService from "../../../services/output.service";
 
 // types
 import {ListOutputsProps} from "./types";
-import {TableHeadProps} from "../../../components/Table/types";
-import {PaginationProps} from "../../../components/Table/Pagination/types";
+import {TableHeadProps, RowProps} from "../../../components/Task/types";
+import {PaginationProps} from "../../../components/Task/Pagination/types";
 
 // components
-import Table from "../../../components/Table";
-import Pagination from "../../../components/Table/Pagination";
-import Circular from "../../../components/spinners/Circular";
-import OutputRow from "./OutputRow";
+import Loading from "../../../components/spinners/Loading";
+import Task from "../../../components/Task";
+import Toolbar from "../../../components/Task/Toolbar";
+import Pagination from "../../../components/Task/Pagination";
+import Alert from "../../../components/Alert";
 
 // styles
-import {ListOutputsView, List, Footer} from "./styles";
+import {
+    ListOutputsView, 
+    Header,
+    List, 
+    Footer,
+} from "./styles";
 
 export default function ListOutputs(props: ListOutputsProps) {
-    const {refresh, outputSelected, onOutputSelected} = props;
+    const {refresh, outputSelected, onSelected, onDeleted} = props;
 
     const headLabels: Array<TableHeadProps> = [
         {
@@ -39,7 +49,11 @@ export default function ListOutputs(props: ListOutputsProps) {
         }
     ];
 
+    const feedback = useFeedback();
+    const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [processing, setProcessing] = useState(false);
+    const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [outputs, setOutputs] = useState<Array<Output>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
         limit: 10, 
@@ -51,6 +65,37 @@ export default function ListOutputs(props: ListOutputsProps) {
         filter: "name", 
         orderBy: "name",
     });
+
+    function handleOpenAlert() {
+        setOpen(true);
+    }
+
+    function handleCloseAlert() {
+        setOpen(false);
+    }
+
+    async function handleRemoveSelecteds() {
+        handleCloseAlert();
+        setProcessing(true);
+
+        try {
+            const deleted = await Promise.all(selecteds.map(id => outputService.delete(id)));
+            feedback.open({severity: "success"});
+            setProcessing(false);
+            setSelecteds([]);
+            onDeleted();
+        } catch (error) {
+            setProcessing(false);
+            if(error.response) {
+                feedback.open({
+                    severity: "error",
+                    msg: error.response.data.msg,
+                });
+            } else {
+                feedback.open({severity: "error"});
+            }
+        }
+    }
 
     function handleChangePagination(key: string, value: any) {
         setPagination(pagination => ({ ...pagination, [key]: value }));
@@ -93,23 +138,64 @@ export default function ListOutputs(props: ListOutputsProps) {
         pagination.page,
     ]);
 
+    function handleChangeSelecteds(selecteds: Array<string>) {
+        setSelecteds(selecteds);
+    }
+
+    function createRows(outputs: Array<Output>) {
+        const rows: Array<RowProps> = outputs.map(output => {
+            const row: RowProps = {
+                id: output.id,
+                onHoverClick: () => onSelected(output),
+                hoverSelected: outputSelected.id === output.id,
+                cells: [
+                    {
+                        value: formatDatetime(output.date, EnumDateFormatTypes.READABLE_V5),
+                    },
+                    {
+                        value: output.aircraft?.prefix,
+                    },
+                    {
+                        value: output.doctor?.name,
+                    }
+                ]
+            };
+
+            return row;
+        });
+
+        return rows;
+    }
+
     return(
         <ListOutputsView>
+            <Alert 
+                open={open} 
+                theme="danger" 
+                title="Deseja excluir as saídas selecionadas?"
+                msg="Esta ação não poderá ser desfeita"
+                onConfirm={handleRemoveSelecteds}
+                onCancel={handleCloseAlert}
+                onClose={handleCloseAlert}
+            />
+            <Header>
+                <Toolbar 
+                    search={false} 
+                    title="Saídas" 
+                    padding="overview"
+                    numSelected={selecteds.length}
+                    onDelete={handleOpenAlert}
+                />
+            </Header>
             <List>
-                <Table headLabels={headLabels} fixedHeader={true}>
-                    {loading ? (
-                        <Circular 
-                            size={35} 
-                            color={EnumAppColors.PRIMARY}
-                        />
-                    ) : outputs.map(output => (
-                        <OutputRow 
-                            output={output} 
-                            selected={output.id === outputSelected.id}
-                            onSelect={onOutputSelected}
-                        />
-                    ))}
-                </Table>
+                <Task 
+                    fixedHeader={true}
+                    widthActions={false}
+                    selecteds={selecteds}
+                    headLabels={headLabels} 
+                    rows={createRows(outputs)}
+                    onChangeSelecteds={handleChangeSelecteds}
+                />
             </List>
             <Footer>
                 <Pagination 

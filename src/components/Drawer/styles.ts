@@ -10,7 +10,7 @@ const DrawerView = styled.div`
     width: 100%;
     background-color: #ffffff;
     z-index: 99;
-    padding: 15px;
+    padding: 10px;
 `;
 
 const Header = styled.div`

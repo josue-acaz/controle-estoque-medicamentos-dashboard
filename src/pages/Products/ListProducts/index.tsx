@@ -5,20 +5,19 @@ import {EnumActions} from "../../../constants";
 // services
 import productService from "../../../services/product.service";
 
-// types
-import {RouteChildrenProps} from "react-router-dom";
-import {TableHeadProps} from "../../../components/Table/types";
-import {PaginationProps} from "../../../components/Table/Pagination/types";
-
 // models
 import Product from "../../../models/Product";
 
+// types
+import {RouteChildrenProps} from "react-router-dom";
+import {TableHeadProps, RowProps} from "../../../components/Task/types";
+import {PaginationProps} from "../../../components/Task/Pagination/types";
+
 // components
-import ToolbarActions from "../../../components/ToolbarActions";
 import Loading from "../../../components/spinners/Loading";
-import Table from "../../../components/Table";
-import Pagination from "../../../components/Table/Pagination";
-import ProductRow from "./ProductRow";
+import Task from "../../../components/Task";
+import Toolbar from "../../../components/Task/Toolbar";
+import Pagination from "../../../components/Task/Pagination";
 
 // styles
 import {
@@ -32,7 +31,6 @@ import {View} from "../../../design";
 export default function ListCategories(props: RouteChildrenProps) {
     const {history} = props;
     const {path} = useRouteMatch();
-    const [loading, setLoading] = useState(true);
 
     const headLabels: Array<TableHeadProps> = [
         {
@@ -57,6 +55,8 @@ export default function ListCategories(props: RouteChildrenProps) {
         },
     ];
 
+    const [loading, setLoading] = useState(true);
+    const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [products, setProducts] = useState<Array<Product>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
         limit: 10, 
@@ -96,6 +96,10 @@ export default function ListCategories(props: RouteChildrenProps) {
         handleChangePagination("limit", rows_per_page);
     }
 
+    function handleChangeSelecteds(selecteds: Array<string>) {
+        setSelecteds(selecteds);
+    }
+
     function handleAdd() {
         history.push(`${path}/0/edit`);
     }
@@ -120,17 +124,50 @@ export default function ListCategories(props: RouteChildrenProps) {
         index();
     }, []);
 
+    function createRows(products: Array<Product>) {
+        const rows: Array<RowProps> = products.map(product => {
+            const row: RowProps = {
+                id: product.id,
+                cells: [
+                    {
+                        value: product.name,
+                    },
+                    {
+                        value: product.weight,
+                    },
+                    {
+                        value: product.controlled,
+                    },
+                    {
+                        value: product.category?.name,
+                    },
+                    {
+                        value: product.description,
+                    }
+                ]
+            };
+
+            return row;
+        });
+
+        return rows;
+    }
+
     return(
         <GridContainer>
             <GridToolbar>
-                <ToolbarActions title="Medicamentos/Materiais" action={EnumActions.LIST} onAdd={handleAdd} />
+                <Toolbar title="Medicamentos/Materiais" numSelected={selecteds.length} onAdd={handleAdd} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (
                     <View>
-                        <Table headLabels={headLabels} withActions={true}>
-                            {products.map(product => <ProductRow product={product} onEdit={handleEdit} />)}
-                        </Table>
+                        <Task 
+                            selecteds={selecteds}
+                            onEditRow={handleEdit}
+                            headLabels={headLabels} 
+                            rows={createRows(products)}
+                            onChangeSelecteds={handleChangeSelecteds}
+                        />
                     </View>
                 )}
             </GridContent>

@@ -1,15 +1,15 @@
-import React from "react";
-import clsx from "clsx";
-import {lighten, makeStyles} from '@material-ui/core/styles';
-import Toolbar from "@material-ui/core/Toolbar";
+import React, {useState} from "react";
+
+// models
+import MinimumStock from "../../../../models/MinimumStock";
 
 // types
 import {MinimumStockRowProps} from "./types";
-import {TableHeadProps} from "../../../../components/Table/types";
+import {TableHeadProps, RowProps} from "../../../../components/Task/types";
 
 // components
-import Table from "../../../../components/Table";
-import Actions from "../../../../components/Table/Actions";
+import Task from "../../../../components/Task";
+import Toolbar from "../../../../components/Task/Toolbar";
 
 // styles
 import {
@@ -17,41 +17,11 @@ import {
     ToolbarItem, 
     ToolbarText,
 } from "./styles";
-import {
-    TableRow, 
-    TableCell,
-} from "../../../../components/Table/styles";
 import {View} from "../../../../design";
-
-const useToolbarStyles = makeStyles((theme) => ({
-    root: {
-        paddingLeft: 5,
-        paddingRight: '1rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    highlight:
-      theme.palette.type === 'light'
-        ? {
-            color: theme.palette.secondary.main,
-            backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-          }
-        : {
-            color: theme.palette.text.primary,
-            backgroundColor: theme.palette.secondary.dark,
-          },
-    title: {
-      flex: '1 1 100%',
-      fontSize: 16,
-      color: '#444444',
-      marginLeft: 1
-    },
-}));
 
 export default function MinimumStockView(props: MinimumStockRowProps) {
     const {base, numSelected, selected, onEdit} = props;
-    const classes = useToolbarStyles();
+    const [selecteds, setSelecteds] = useState<Array<string>>([]);
 
     const headLabels: Array<TableHeadProps> = [
         {
@@ -64,26 +34,48 @@ export default function MinimumStockView(props: MinimumStockRowProps) {
         },
     ];
 
+    function handleChangeSelecteds(selecteds: Array<string>) {
+        setSelecteds(selecteds);
+    }
+
+    function createRows(minimum_stocks?: Array<MinimumStock>) {
+        if(!minimum_stocks) return [];
+        const rows: Array<RowProps> = minimum_stocks.map(minimum_stock => {
+            const row: RowProps = {
+                id: minimum_stock.id,
+                cells: [
+                    {
+                        value: minimum_stock.product?.name,
+                    },
+                    {
+                        value: minimum_stock.quantity,
+                    },
+                ]
+            };
+
+            return row;
+        });
+
+        return rows;
+    }
+
     return(
         <View style={{marginBottom: 15, padding: 0}}>
-            <Toolbar className={clsx(classes.root, {
-                    [classes.highlight]: numSelected > 0 && selected,
-                })}>
-                <ToolbarView>
-                    <ToolbarItem>
-                        <ToolbarText>{base.name}</ToolbarText>
-                    </ToolbarItem>
-                </ToolbarView>
-            </Toolbar>
-            <Table headLabels={headLabels} withActions={true}>
-                {base.minimum_stocks?.map(minimum_stock => (
-                    <TableRow>
-                        <TableCell>{minimum_stock.product?.name}</TableCell>
-                        <TableCell>{minimum_stock.quantity}</TableCell>
-                        <Actions onEdit={() => onEdit(minimum_stock.id)} />
-                    </TableRow>
-                ))}
-            </Table>
+            <ToolbarView>
+                <Toolbar 
+                    title={base.name} 
+                    search={false}
+                    numSelected={selecteds.length} 
+                />
+            </ToolbarView>
+            
+            <Task 
+                selecteds={selecteds}
+                onEditRow={onEdit}
+                headLabels={headLabels} 
+                rows={createRows(base.minimum_stocks)}
+                onChangeSelecteds={handleChangeSelecteds}
+            />
         </View>
     );
 }

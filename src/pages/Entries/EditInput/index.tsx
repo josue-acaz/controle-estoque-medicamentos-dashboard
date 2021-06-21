@@ -38,7 +38,7 @@ import {
 } from "../../../design";
 
 export default function EditInput(props: InputFormProps) {
-    const {input, onSaved, onProductInputSaved} = props;
+    const {input, onSaved, onProductInputSaved, onProductInputDeleted} = props;
     const edit = input.id !== "";
 
     const feedback = useFeedback();
@@ -191,7 +191,7 @@ export default function EditInput(props: InputFormProps) {
             </EditProductInputContainer>
             <ListProductInputContainer>
                 {input.id && !addProduct && (
-                    <ListProductInputs input_id={input.id} />
+                    <ListProductInputs input_id={input.id} onDeleted={onProductInputDeleted} />
                 )}
             </ListProductInputContainer>
         </EditInputView>

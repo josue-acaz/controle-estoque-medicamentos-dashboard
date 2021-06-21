@@ -38,7 +38,13 @@ export default function InputMovements(props: InputMovementsProps) {
     return(
         <InputMovementsView>
             {loading ? <Loading /> : (
-                <Table headLabels={headLabels}>
+                <Table
+                    withActions={true}
+                    headLabels={headLabels} 
+                    rowCount={inputMovements.length}
+                    numSelected={0}
+                    onSelectAllClick={() => {}}
+                >
                     {inputMovements.map(input_movement => <InputMovementRow input={input_movement} />)}
                 </Table>
             )}

@@ -29,11 +29,11 @@ const GridToolbar = styled.nav`
     grid-area: nav;
     display: flex;
     align-items: center;
-    padding-left: 1rem;
-    padding-right: 1rem;
     background-color: #ffffff;
     box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.23);
     z-index: 10;
+    position: relative;
+    z-index: 20;
 `;
 
 const GridContent = styled.data`
@@ -42,6 +42,7 @@ const GridContent = styled.data`
     padding: 10px 0px 10px 10px;
     width: auto;
     position: relative;
+    z-index: 5;
 `;
 
 const GridFooter = styled.footer`

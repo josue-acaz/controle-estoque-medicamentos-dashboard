@@ -1,29 +1,35 @@
 import React, {useState, useEffect} from "react";
+import {formatDatetime} from "../../../../tools/dates";
+import {EnumDateFormatTypes, EnumAppColors} from "../../../../constants";
 
 // models
 import ProductInput from "../../../../models/ProductInput";
+
+// contexts
+import {useFeedback} from "../../../../contexts/feedback/feedback.context";
 
 // services
 import productInputService from "../../../../services/product-input.service";
 
 // types
-import {TableHeadProps} from "../../../../components/Table/types";
-import {PaginationProps} from "../../../../components/Table/Pagination/types";
 import {ListProductInputsProps} from "./types";
+import {TableHeadProps, RowProps} from "../../../../components/Task/types";
+import {PaginationProps} from "../../../../components/Task/Pagination/types";
 
 // components
-import Table from "../../../../components/Table";
-import Loading from "../../../../components/spinners/Loading";
-import ProductInputRow from "./ProductInputRow";
+import Task from "../../../../components/Task";
+import Toolbar from "../../../../components/Task/Toolbar";
+import Alert from "../../../../components/Alert";
 
 // styles
 import {
-    Title,
-    ListProductInputsView
+    ListProductInputsView,
+    ListProductInputsContent,
 } from "./styles";
 
 export default function ListProducts(props: ListProductInputsProps) {
-    const {input_id} = props;
+    const {input_id, onDeleted} = props;
+    const feedback = useFeedback();
 
     const headLabels: Array<TableHeadProps> = [
         {
@@ -54,9 +60,18 @@ export default function ListProducts(props: ListProductInputsProps) {
             key: "unit_price",
             value: "Preço unitátio",
         },
+        {
+            key: "product_output_id",
+            value: "Nº de saídas",
+            textColor: EnumAppColors.ERROR,
+        }
     ];
 
+    const [open, setOpen] = useState(false);
+    const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [processing, setProcessing] = useState(false);
+    const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [productInputs, setProductInputs] = useState<Array<ProductInput>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
         limit: 10, 
@@ -69,8 +84,40 @@ export default function ListProducts(props: ListProductInputsProps) {
         orderBy: "name",
     });
 
-    function handleRemoveSelecteds() {
+    function toggleRefresh() {
+        setRefresh(!refresh);
+    }
 
+    function handleOpenAlert() {
+        setOpen(true);
+    }
+
+    function handleCloseAlert() {
+        setOpen(false);
+    }
+
+    async function handleRemoveSelecteds() {
+        handleCloseAlert();
+        setProcessing(true);
+
+        try {
+            const deleted = await Promise.all(selecteds.map(id => productInputService.delete(id)));
+            feedback.open({severity: "success"});
+            setProcessing(false);
+            setSelecteds([]);
+            onDeleted();
+            toggleRefresh();
+        } catch (error) {
+            setProcessing(false);
+            if(error.response) {
+                feedback.open({
+                    severity: "error",
+                    msg: error.response.data.msg,
+                });
+            } else {
+                feedback.open({severity: "error"});
+            }
+        }
     }
 
     function handleChangePagination(key: string, value: any) {
@@ -115,23 +162,82 @@ export default function ListProducts(props: ListProductInputsProps) {
 
     useEffect(() => {
         index();
-    }, [input_id]);
+    }, [input_id, refresh]);
 
     function handleEdit(id: string) {
         
     }
 
+    function handleChangeSelecteds(selecteds: Array<string>) {
+        setSelecteds(selecteds);
+    }
+
+    function createRows(product_inputs: Array<ProductInput>) {
+        const rows: Array<RowProps> = product_inputs.map(product_input => {
+            const row: RowProps = {
+                id: product_input.id,
+                cells: [
+                    {
+                        value: product_input?.lot?.serial_number,
+                    },
+                    {
+                        value: product_input?.lot?.expiration_date ? formatDatetime(product_input?.lot?.expiration_date, EnumDateFormatTypes.READABLE_V5) : "-",
+                    },
+                    {
+                        value: product_input?.base?.name,
+                    },
+                    {
+                        value: product_input?.provider?.name,
+                    },
+                    {
+                        value: product_input?.product?.name,
+                    },
+                    {
+                        value: product_input?.total_quantity,
+                    },
+                    {
+                        value: product_input?.unit_price,
+                    },
+                    {
+                        value: product_input.lot?.product_outputs?.length,
+                        color: EnumAppColors.ERROR,
+                    }
+                ]
+            };
+
+            return row;
+        });
+
+        return rows;
+    }
+
     return(
         <ListProductInputsView>
-            <Title>Relação de itens</Title>
-            <Table headLabels={headLabels} withActions={true}>
-                {loading ? <Loading /> : productInputs.map(product_input => (
-                    <ProductInputRow 
-                        onEdit={handleEdit}
-                        product_input={product_input} 
-                    />
-                ))}
-            </Table>
+            <Alert 
+                open={open} 
+                theme="danger" 
+                title="Deseja excluir os itens selecionados?"
+                msg="Esta ação não poderá ser desfeita"
+                onConfirm={handleRemoveSelecteds}
+                onCancel={handleCloseAlert}
+                onClose={handleCloseAlert}
+            />
+            <Toolbar 
+                search={false} 
+                padding="overview"
+                title="Relação de itens" 
+                onDelete={handleOpenAlert}
+                numSelected={selecteds.length}
+            />
+            <ListProductInputsContent>
+                <Task 
+                    selecteds={selecteds}
+                    onEditRow={handleEdit}
+                    headLabels={headLabels} 
+                    rows={createRows(productInputs)}
+                    onChangeSelecteds={handleChangeSelecteds}
+                />
+            </ListProductInputsContent>
         </ListProductInputsView>
     );
 }

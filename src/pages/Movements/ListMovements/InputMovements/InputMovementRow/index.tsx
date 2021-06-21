@@ -59,7 +59,13 @@ function CollapseItems(props: CollapseItemsProps) {
 
     return(
         <CollapseItemsView>
-            <Table headLabels={headLabels} color={EnumAppColors.SECONDARY}>
+            <Table 
+                headLabels={headLabels} 
+                color={EnumAppColors.SECONDARY}
+                rowCount={product_inputs.length}
+                numSelected={0}
+                onSelectAllClick={() => {}}
+            >
                 {product_inputs.map(product_input => (
                     <TableRow>
                         <TableCell>{product_input.lot?.serial_number}</TableCell>

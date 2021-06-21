@@ -1,24 +1,22 @@
 import React, {useState, useEffect} from "react";
 import {useRouteMatch} from "react-router-dom";
-import {EnumActions} from "../../../constants";
 
 // services
 import categoryService from "../../../services/category.service";
 
-// types
-import {RouteChildrenProps} from "react-router-dom";
-import {TableHeadProps} from "../../../components/Table/types";
-import {PaginationProps} from "../../../components/Table/Pagination/types";
-
 // models
 import Category from "../../../models/Category";
 
+// types
+import {RouteChildrenProps} from "react-router-dom";
+import {TableHeadProps, RowProps} from "../../../components/Task/types";
+import {PaginationProps} from "../../../components/Task/Pagination/types";
+
 // components
-import ToolbarActions from "../../../components/ToolbarActions";
 import Loading from "../../../components/spinners/Loading";
-import Table from "../../../components/Table";
-import Pagination from "../../../components/Table/Pagination";
-import CategoryRow from "./CategoryRow";
+import Task from "../../../components/Task";
+import Toolbar from "../../../components/Task/Toolbar";
+import Pagination from "../../../components/Task/Pagination";
 
 // styles
 import {
@@ -32,7 +30,6 @@ import {View} from "../../../design";
 export default function ListCategories(props: RouteChildrenProps) {
     const {history} = props;
     const {path} = useRouteMatch();
-    const [loading, setLoading] = useState(true);
 
     const headLabels: Array<TableHeadProps> = [
         {
@@ -41,6 +38,8 @@ export default function ListCategories(props: RouteChildrenProps) {
         },
     ];
 
+    const [loading, setLoading] = useState(true);
+    const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [categories, setCategories] = useState<Array<Category>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
         limit: 10, 
@@ -88,6 +87,10 @@ export default function ListCategories(props: RouteChildrenProps) {
         history.push(`${path}/${id}/edit`);
     }
 
+    function handleChangeSelecteds(selecteds: Array<string>) {
+        setSelecteds(selecteds);
+    }
+
     async function index() {
         try {
             const providers = await categoryService.pagination(pagination);
@@ -104,17 +107,38 @@ export default function ListCategories(props: RouteChildrenProps) {
         index();
     }, []);
 
+    function createRows(categories: Array<Category>) {
+        const rows: Array<RowProps> = categories.map(category => {
+            const row: RowProps = {
+                id: category.id,
+                cells: [
+                    {
+                        value: category.name,
+                    },
+                ]
+            };
+
+            return row;
+        });
+
+        return rows;
+    }
+
     return(
         <GridContainer>
             <GridToolbar>
-                <ToolbarActions title="Categorias" action={EnumActions.LIST} onAdd={handleAdd} />
+                <Toolbar title="Categorias" numSelected={selecteds.length} onAdd={handleAdd} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (
                     <View>
-                        <Table headLabels={headLabels} withActions={true}>
-                            {categories.map(category => <CategoryRow category={category} onEdit={handleEdit} />)}
-                        </Table>
+                        <Task 
+                            selecteds={selecteds}
+                            onEditRow={handleEdit}
+                            headLabels={headLabels} 
+                            rows={createRows(categories)}
+                            onChangeSelecteds={handleChangeSelecteds}
+                        />
                     </View>
                 )}
             </GridContent>

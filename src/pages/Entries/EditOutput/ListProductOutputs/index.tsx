@@ -3,27 +3,30 @@ import React, {useState, useEffect} from "react";
 // models
 import ProductOutput from "../../../../models/ProductOutput";
 
+// contexts
+import {useFeedback} from "../../../../contexts/feedback/feedback.context";
+
 // services
 import productOutputService from "../../../../services/product-output.service";
 
 // types
-import {TableHeadProps} from "../../../../components/Table/types";
-import {PaginationProps} from "../../../../components/Table/Pagination/types";
 import {ListProductOutputsProps} from "./types";
+import {TableHeadProps, RowProps} from "../../../../components/Task/types";
+import {PaginationProps} from "../../../../components/Task/Pagination/types";
 
 // components
-import Table from "../../../../components/Table";
-import Loading from "../../../../components/spinners/Loading";
-import ProductOutputRow from "./ProductOutputRow";
+import Task from "../../../../components/Task";
+import Toolbar from "../../../../components/Task/Toolbar";
+import Alert from "../../../../components/Alert";
 
 // styles
 import {
-    Title,
     ListProductOutputsView,
+    ListProductOutputsContent,
 } from "./styles";
 
 export default function ListProductOutputs(props: ListProductOutputsProps) {
-    const {output_id} = props;
+    const {output_id, onDeleted} = props;
 
     const headLabels: Array<TableHeadProps> = [
         {
@@ -40,7 +43,12 @@ export default function ListProductOutputs(props: ListProductOutputsProps) {
         },
     ];
 
+    const feedback = useFeedback();
+    const [open, setOpen] = useState(false);
+    const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [processing, setProcessing] = useState(false);
+    const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [productOutputs, setProductOutputs] = useState<Array<ProductOutput>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
         limit: 10, 
@@ -53,8 +61,40 @@ export default function ListProductOutputs(props: ListProductOutputsProps) {
         orderBy: "name",
     });
 
-    function handleRemoveSelecteds() {
+    function toggleRefresh() {
+        setRefresh(!refresh);
+    }
 
+    function handleOpenAlert() {
+        setOpen(true);
+    }
+
+    function handleCloseAlert() {
+        setOpen(false);
+    }
+
+    async function handleRemoveSelecteds() {
+        handleCloseAlert();
+        setProcessing(true);
+
+        try {
+            const deleted = await Promise.all(selecteds.map(id => productOutputService.delete(id)));
+            feedback.open({severity: "success"});
+            setProcessing(false);
+            setSelecteds([]);
+            onDeleted();
+            toggleRefresh();
+        } catch (error) {
+            setProcessing(false);
+            if(error.response) {
+                feedback.open({
+                    severity: "error",
+                    msg: error.response.data.msg,
+                });
+            } else {
+                feedback.open({severity: "error"});
+            }
+        }
     }
 
     function handleChangePagination(key: string, value: any) {
@@ -98,23 +138,66 @@ export default function ListProductOutputs(props: ListProductOutputsProps) {
 
     useEffect(() => {
         index();
-    }, [output_id]);
+    }, [output_id, refresh]);
 
     function handleEdit(id: string) {
         
     }
 
+    function handleChangeSelecteds(selecteds: Array<string>) {
+        setSelecteds(selecteds);
+    }
+
+    function createRows(product_outputs: Array<ProductOutput>) {
+        const rows: Array<RowProps> = product_outputs.map(product_output => {
+            const row: RowProps = {
+                id: product_output.id,
+                cells: [
+                    {
+                        value: product_output.lot?.serial_number,
+                    },
+                    {
+                        value: product_output.product?.name,
+                    },
+                    {
+                        value: product_output.quantity,
+                    },
+                ]
+            };
+
+            return row;
+        });
+
+        return rows;
+    }
+    
     return(
         <ListProductOutputsView>
-            <Title>Relação de itens</Title>
-            <Table headLabels={headLabels} withActions={true}>
-                {loading ? <Loading /> : productOutputs.map(product_output => (
-                    <ProductOutputRow 
-                        onEdit={handleEdit}
-                        product_output={product_output} 
-                    />
-                ))}
-            </Table>
+            <Alert 
+                open={open} 
+                theme="danger" 
+                title="Deseja excluir os itens selecionados?"
+                msg="A quantidade será revertida para o lote de origem. Esta ação não poderá ser desfeita."
+                onConfirm={handleRemoveSelecteds}
+                onCancel={handleCloseAlert}
+                onClose={handleCloseAlert}
+            />
+            <Toolbar 
+                search={false} 
+                padding="overview"
+                title="Relação de itens" 
+                numSelected={selecteds.length}
+                onDelete={handleOpenAlert}
+            />
+            <ListProductOutputsContent>
+                <Task 
+                    selecteds={selecteds}
+                    onEditRow={handleEdit}
+                    headLabels={headLabels} 
+                    rows={createRows(productOutputs)}
+                    onChangeSelecteds={handleChangeSelecteds}
+                />
+            </ListProductOutputsContent>
         </ListProductOutputsView>
     );
 }

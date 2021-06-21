@@ -25,6 +25,11 @@ class DoctorService {
         return response.data;
     }
 
+    async delete(id: string) {
+        const response = await api.delete(`/doctors/${id}/delete`);
+        return response.data;
+    }
+
     async pagination(params: PaginationProps) {
         const response = await api.get<PaginationResponse>("/doctors/pagination", {
             params: {

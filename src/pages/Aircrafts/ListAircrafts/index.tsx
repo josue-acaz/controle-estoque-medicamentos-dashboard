@@ -1,11 +1,10 @@
-import React, {useState, useEffect} from "react";
+import {useState, useEffect} from "react";
 import {useRouteMatch} from "react-router-dom";
-import {EnumActions} from "../../../constants";
 
 // types
 import {RouteChildrenProps} from "react-router-dom";
-import {TableHeadProps} from "../../../components/Table/types";
-import {PaginationProps} from "../../../components/Table/Pagination/types";
+import {TableHeadProps, RowProps} from "../../../components/Task/types";
+import {PaginationProps} from "../../../components/Task/Pagination/types";
 
 // models
 import Aircraft from "../../../models/Aircraft";
@@ -14,11 +13,10 @@ import Aircraft from "../../../models/Aircraft";
 import aircraftService from "../../../services/aircraft.service";
 
 // components
-import ToolbarActions from "../../../components/ToolbarActions";
 import Loading from "../../../components/spinners/Loading";
-import Table from "../../../components/Table";
-import Pagination from "../../../components/Table/Pagination";
-import AircraftRow from "./AircraftRow";
+import Task from "../../../components/Task";
+import Toolbar from "../../../components/Task/Toolbar";
+import Pagination from "../../../components/Task/Pagination";
 
 // styles
 import {
@@ -45,6 +43,7 @@ export default function ListDoctors(props: RouteChildrenProps) {
     ];
 
     const [loading, setLoading] = useState(true);
+    const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [aircrafts, setAircrafts] = useState<Array<Aircraft>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
         limit: 10, 
@@ -76,12 +75,16 @@ export default function ListDoctors(props: RouteChildrenProps) {
         handleChangePagination("limit", rows_per_page);
     }
 
-    function handleAddAircraft() {
+    function handleAdd() {
         history.push(`${path}/0/edit`);
     }
 
-    function handleEditAircraft(id: string) {
+    function handleEdit(id: string) {
         history.push(`${path}/${id}/edit`);
+    }
+
+    function handleChangeSelecteds(selecteds: Array<string>) {
+        setSelecteds(selecteds);
     }
 
     async function index() {
@@ -100,17 +103,41 @@ export default function ListDoctors(props: RouteChildrenProps) {
         index();
     }, []);
 
+    function createRows(aircrafts: Array<Aircraft>) {
+        const rows: Array<RowProps> = aircrafts.map(aircraft => {
+            const row: RowProps = {
+                id: aircraft.id,
+                cells: [
+                    {
+                        value: aircraft.prefix,
+                    },
+                    {
+                        value: aircraft.name,
+                    },
+                ]
+            };
+
+            return row;
+        });
+
+        return rows;
+    }
+
     return(
         <GridContainer>
             <GridToolbar>
-                <ToolbarActions title="Aeronaves" action={EnumActions.LIST} onAdd={handleAddAircraft} />
+                <Toolbar title="Aeronaves" numSelected={selecteds.length} onAdd={handleAdd} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (
                     <View>
-                        <Table headLabels={headLabels} withActions={true}>
-                            {aircrafts.map(aircraft => <AircraftRow aircraft={aircraft} onEdit={handleEditAircraft} />)}
-                        </Table>
+                        <Task 
+                            selecteds={selecteds}
+                            onEditRow={handleEdit}
+                            headLabels={headLabels} 
+                            rows={createRows(aircrafts)}
+                            onChangeSelecteds={handleChangeSelecteds}
+                        />
                     </View>
                 )}
             </GridContent>

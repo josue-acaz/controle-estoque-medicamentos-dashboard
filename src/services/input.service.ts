@@ -20,6 +20,11 @@ class InputService {
         return response.data;
     }
 
+    async delete(id: string) {
+        const response = await api.delete(`/inputs/${id}/delete`);
+        return response.data;
+    }
+
     async pagination(params: PaginationProps) {
         const response = await api.get<PaginationResponse>("/inputs/pagination", {
             params: {

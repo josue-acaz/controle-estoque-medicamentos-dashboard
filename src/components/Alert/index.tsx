@@ -9,24 +9,24 @@ interface AlertProps {
     title?: string;
     msg?: string;
     theme?: "primary" | "danger" | "secondary" | "info" | "success" | "error";
-    handleConfirm(): void;
-    handleCancel(): void;
-    handleClose(): void;
+    onConfirm(): void;
+    onCancel(): void;
+    onClose(): void;
 };
 
 const Alert = (props: AlertProps) => {
-    const {open, handleClose, title, msg, theme = "primary", handleCancel, handleConfirm} = props;
+    const {open, title, msg, theme = "primary", onCancel, onConfirm, onClose} = props;
 
     return(
-        <Core className="lay-alert" show={open} handleClose={handleClose}>
+        <Core className="lay-alert" show={open} handleClose={onClose}>
             <div className="alert-container">
                 <p className="title">{title}</p>
                 <p className="msg">{msg}</p>
                 <div className="alert-actions">
-                    <Button theme={theme} style={{width: '100%'}} onClick={handleConfirm} decoration="normal">
+                    <Button theme={theme} style={{width: '100%'}} onClick={onConfirm} decoration="normal">
                         SIM
                     </Button>
-                    <Button theme={theme} style={{width: '100%'}} onClick={handleCancel} decoration="slim">
+                    <Button theme={theme} style={{width: '100%'}} onClick={onCancel} decoration="slim">
                         NÃO
                     </Button>
                 </div>

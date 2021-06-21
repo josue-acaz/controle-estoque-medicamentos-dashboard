@@ -1,24 +1,22 @@
 import React, {useState, useEffect} from "react";
 import {useRouteMatch} from "react-router-dom";
-import {EnumActions} from "../../../constants";
 
 // services
 import baseService from "../../../services/base.service";
 
-// types
-import {RouteChildrenProps} from "react-router-dom";
-import {TableHeadProps} from "../../../components/Table/types";
-import {PaginationProps} from "../../../components/Table/Pagination/types";
-
 // models
 import Base from "../../../models/Base";
 
+// types
+import {RouteChildrenProps} from "react-router-dom";
+import {TableHeadProps, RowProps} from "../../../components/Task/types";
+import {PaginationProps} from "../../../components/Task/Pagination/types";
+
 // components
-import ToolbarActions from "../../../components/ToolbarActions";
 import Loading from "../../../components/spinners/Loading";
-import Table from "../../../components/Table";
-import Pagination from "../../../components/Table/Pagination";
-import BaseRow from "./BaseRow";
+import Task from "../../../components/Task";
+import Toolbar from "../../../components/Task/Toolbar";
+import Pagination from "../../../components/Task/Pagination";
 
 // styles
 import {
@@ -32,7 +30,6 @@ import {View} from "../../../design";
 export default function ListBases(props: RouteChildrenProps) {
     const {history} = props;
     const {path} = useRouteMatch();
-    const [loading, setLoading] = useState(true);
 
     const headLabels: Array<TableHeadProps> = [
         {
@@ -41,7 +38,9 @@ export default function ListBases(props: RouteChildrenProps) {
         },
     ];
 
+    const [loading, setLoading] = useState(true);
     const [bases, setBases] = useState<Array<Base>>([]);
+    const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
         limit: 10, 
         offset: 0, 
@@ -88,10 +87,14 @@ export default function ListBases(props: RouteChildrenProps) {
         history.push(`${path}/${id}/edit`);
     }
 
+    function handleChangeSelecteds(selecteds: Array<string>) {
+        setSelecteds(selecteds);
+    }
+
     async function index() {
         try {
-            const providers = await baseService.pagination(pagination);
-            const {count, rows} = providers;
+            const bases = await baseService.pagination(pagination);
+            const {count, rows} = bases;
             handleChangePagination("count", count);
             setBases(rows);
             setLoading(false);
@@ -100,21 +103,40 @@ export default function ListBases(props: RouteChildrenProps) {
         }
     }
 
-    useEffect(() => {
-        index();
-    }, []);
+    useEffect(() => {index()}, []);
+
+    function createRows(bases: Array<Base>) {
+        const rows: Array<RowProps> = bases.map(base => {
+            const row: RowProps = {
+                id: base.id,
+                cells: [
+                    {
+                        value: base.name,
+                    },
+                ]
+            };
+
+            return row;
+        });
+
+        return rows;
+    }
 
     return(
         <GridContainer>
             <GridToolbar>
-                <ToolbarActions title="Bases" action={EnumActions.LIST} onAdd={handleAdd} />
+                <Toolbar title="Bases" numSelected={selecteds.length} onAdd={handleAdd} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (
                     <View>
-                        <Table headLabels={headLabels} withActions={true}>
-                            {bases.map(base => <BaseRow base={base} onEdit={handleEdit} />)}
-                        </Table>
+                        <Task 
+                            selecteds={selecteds}
+                            onEditRow={handleEdit}
+                            headLabels={headLabels} 
+                            rows={createRows(bases)}
+                            onChangeSelecteds={handleChangeSelecteds}
+                        />
                     </View>
                 )}
             </GridContent>

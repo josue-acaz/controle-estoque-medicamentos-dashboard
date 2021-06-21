@@ -2,23 +2,22 @@ import React, {useState, useEffect} from "react";
 import {useRouteMatch} from "react-router-dom";
 import {EnumActions} from "../../../constants";
 
-// types
-import {RouteChildrenProps} from "react-router-dom";
-import {TableHeadProps} from "../../../components/Table/types";
-import {PaginationProps} from "../../../components/Table/Pagination/types";
-
 // models
 import Doctor from "../../../models/Doctor";
 
 // services
 import doctorService from "../../../services/doctor.service";
 
+// types
+import {RouteChildrenProps} from "react-router-dom";
+import {TableHeadProps, RowProps} from "../../../components/Task/types";
+import {PaginationProps} from "../../../components/Task/Pagination/types";
+
 // components
-import ToolbarActions from "../../../components/ToolbarActions";
 import Loading from "../../../components/spinners/Loading";
-import Table from "../../../components/Table";
-import Pagination from "../../../components/Table/Pagination";
-import DoctorRow from "./DoctorRow";
+import Task from "../../../components/Task";
+import Toolbar from "../../../components/Task/Toolbar";
+import Pagination from "../../../components/Task/Pagination";
 
 // styles
 import {
@@ -49,6 +48,7 @@ export default function ListDoctors(props: RouteChildrenProps) {
     ];
 
     const [loading, setLoading] = useState(false);
+    const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [doctors, setDoctors] = useState<Array<Doctor>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
         limit: 10, 
@@ -88,6 +88,10 @@ export default function ListDoctors(props: RouteChildrenProps) {
         history.push(`${path}/${id}/edit`);
     }
 
+    function handleChangeSelecteds(selecteds: Array<string>) {
+        setSelecteds(selecteds);
+    }
+
     async function index() {
         try {
             const doctors = await doctorService.pagination(pagination);
@@ -100,21 +104,46 @@ export default function ListDoctors(props: RouteChildrenProps) {
         }
     }
 
-    useEffect(() => {
-        index();
-    }, []);
+    useEffect(() => {index()}, []);
+
+    function createRows(doctors: Array<Doctor>) {
+        const rows: Array<RowProps> = doctors.map(doctor => {
+            const row: RowProps = {
+                id: doctor.id,
+                cells: [
+                    {
+                        value: doctor.name,
+                    },
+                    {
+                        value: doctor.email,
+                    },
+                    {
+                        value: doctor.phone_number,
+                    }
+                ]
+            };
+
+            return row;
+        });
+
+        return rows;
+    }
 
     return(
         <GridContainer>
             <GridToolbar>
-                <ToolbarActions title="Médicos" action={EnumActions.LIST} onAdd={handleAdd} />
+                <Toolbar title="Médicos" numSelected={selecteds.length} onAdd={handleAdd} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (
                     <View>
-                        <Table headLabels={headLabels} withActions={true}>
-                            {doctors.map(doctor => <DoctorRow doctor={doctor} onEdit={handleEdit} />)}
-                        </Table>
+                        <Task 
+                            selecteds={selecteds}
+                            onEditRow={handleEdit}
+                            headLabels={headLabels} 
+                            rows={createRows(doctors)}
+                            onChangeSelecteds={handleChangeSelecteds}
+                        />
                     </View>
                 )}
             </GridContent>

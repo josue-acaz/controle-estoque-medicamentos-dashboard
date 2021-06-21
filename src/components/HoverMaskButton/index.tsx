@@ -13,14 +13,14 @@ import {
 } from "./styles";
 
 export default function HoverMaskButton(props: React.ButtonHTMLAttributes<HTMLButtonElement> & HoverMaskButtonProps) {
-    const {title, icon} = props;
+    const {title="", icon} = props;
 
     return(
         <HoverMaskButtonView {...props}>
             <HoverMaskButtonContent>
                 <Feedback>
                     <Title>{title}</Title>
-                    <Icon>{icon}</Icon>
+                    {icon && <Icon>{icon}</Icon>}
                 </Feedback>
             </HoverMaskButtonContent>
         </HoverMaskButtonView>

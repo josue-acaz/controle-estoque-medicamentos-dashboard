@@ -141,9 +141,9 @@ export default function EditMinimumStock(props: RouteChildrenProps) {
                 theme="primary" 
                 title="Confirmar operação?" 
                 msg=""
-                handleCancel={handleCancel} 
-                handleClose={handleCancel}
-                handleConfirm={handleSave}
+                onCancel={handleCancel} 
+                onClose={handleCancel}
+                onConfirm={handleSave}
             />
             <GridToolbar>
                 <ToolbarAction 

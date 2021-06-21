@@ -5,6 +5,8 @@ const ToolbarActionsView = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
 `;
 
 const AddButton = styled.button`

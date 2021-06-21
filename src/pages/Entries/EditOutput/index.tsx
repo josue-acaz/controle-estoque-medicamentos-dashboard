@@ -38,7 +38,7 @@ import {
 } from "../../../design";
 
 export default function EditOutput(props: EditOutputProps) {
-    const {output, onSaved, onProductOutputSaved} = props;
+    const {output, onSaved, onProductOutputSaved, onProductOutputDeleted} = props;
     const edit = output.id !== "";
 
     const feedback = useFeedback();
@@ -195,7 +195,7 @@ export default function EditOutput(props: EditOutputProps) {
 
             <ListProductInputContainer>
                 {output.id && !subProduct && (
-                    <ListProductOutputs output_id={output.id} />
+                    <ListProductOutputs output_id={output.id} onDeleted={onProductOutputDeleted} />
                 )}
             </ListProductInputContainer>
         </EditOutputView>

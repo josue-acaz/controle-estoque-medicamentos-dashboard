@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from "react";
+import {formatDatetime} from "../../../tools/dates";
+import {EnumDateFormatTypes} from "../../../constants";
 
 // models
 import Lot from "../../../models/Lot";
@@ -8,14 +10,14 @@ import stockService from "../../../services/stock.service";
 
 // types
 import {ListLotsProps} from "./types";
-import {TableHeadProps} from "../../../components/Table/types";
-import {PaginationProps} from "../../../components/Table/Pagination/types";
+import {TableHeadProps, RowProps} from "../../../components/Task/types";
+import {PaginationProps} from "../../../components/Task/Pagination/types";
 
 // components
-import LotRow from "./LotRow";
-import Table from "../../../components/Table";
 import Loading from "../../../components/spinners/Loading";
-import Pagination from "../../../components/Table/Pagination";
+import Task from "../../../components/Task";
+import Toolbar from "../../../components/Task/Toolbar";
+import Pagination from "../../../components/Task/Pagination";
 
 // styles
 import {
@@ -23,7 +25,7 @@ import {
     GridContent, 
     GridFooter,
 } from "../../../design/grid";
-import {ListLotsView} from "./styles";
+import {ListLotsView, ListLotsContent} from "./styles";
 
 export default function ListLots(props: ListLotsProps) {
     const {product_input} = props;
@@ -44,6 +46,7 @@ export default function ListLots(props: ListLotsProps) {
     ];
 
     const [loading, setLoading] = useState(false);
+    const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [lots, setLots] = useState<Array<Lot>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
         limit: 10, 
@@ -75,6 +78,10 @@ export default function ListLots(props: ListLotsProps) {
         handleChangePagination("limit", rows_per_page);
     }
 
+    function handleChangeSelecteds(selecteds: Array<string>) {
+        setSelecteds(selecteds);
+    }
+
     async function index() {
         setLoading(true);
         try {
@@ -98,13 +105,43 @@ export default function ListLots(props: ListLotsProps) {
         }
     }, [product_input]);
 
+    function createRows(lots: Array<Lot>) {
+        const rows: Array<RowProps> = lots.map(lot => {
+            const row: RowProps = {
+                id: lot.id,
+                cells: [
+                    {
+                        value: `#${lot.serial_number.toUpperCase()}`,
+                    },
+                    {
+                        value: formatDatetime(lot.expiration_date, EnumDateFormatTypes.READABLE_V5),
+                    },
+                    {
+                        value: lot.product_input?.current_quantity,
+                    },
+                ]
+            };
+
+            return row;
+        });
+
+        return rows;
+    }
+
     return(
         <GridContainerSlim>
             <GridContent style={{overflowY: "hidden"}}>
                 <ListLotsView>
-                    <Table headLabels={headLabels}>
-                        {loading ? <Loading /> : lots.map(lot => <LotRow lot={lot} />)}
-                    </Table>
+                    <ListLotsContent>
+                        <Task 
+                            fixedHeader={true}
+                            widthActions={false}
+                            selecteds={selecteds}
+                            headLabels={headLabels} 
+                            rows={createRows(lots)}
+                            onChangeSelecteds={handleChangeSelecteds}
+                        />
+                    </ListLotsContent>
                 </ListLotsView>
             </GridContent>
             <GridFooter>

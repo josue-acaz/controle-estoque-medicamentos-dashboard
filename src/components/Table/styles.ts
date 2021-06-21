@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import {TableHeadCellProps} from "./types";
-import {EnumAppColors} from "../../constants";
+import {TableHeadCellProps, TableCellProps, TableRowProps} from "./types";
 
 const TableView = styled.table`
     width: 100%;
@@ -29,32 +28,43 @@ const TableHead = styled.thead`
 `;
 
 const TableHeadCell = styled.th<TableHeadCellProps>`
-    padding: 10px;
+    padding: 15px;
     text-align: left;
-    background-color: ${props => props.color ? props.color : EnumAppColors.PRIMARY};
-    color: #ffffff;
+    background-color: ${props => props.color ? props.color : "#ffffff"};
+    color: #444444;
     font-weight: 600;
     z-index: 100;
-    border: 1px solid #ffffff;
+    border-right: 1px solid #eeeeee;
+    border-bottom: 1px solid #eeeeee;
     font-size: 14px;
     ${props => props.fixedHeader ? "position: sticky; top: 0px" : ""};
+    ${props => props.padding === "checkbox" ? "width: 55px; padding: 0 0 0 5px" : ""};
 `;
 
-const TableCell = styled.td`
+const TableCell = styled.td<TableCellProps>`
     display: table-cell;
-    border: 1px solid #ffffff;
+    border-right: 1px solid #eeeeee;
+    border-bottom: 1px solid #eeeeee;
     padding: 1rem;
     vertical-align: middle;
     position: relative;
     font-size: 14px;
+    ${props => props.padding === "checkbox" ? "width: 55px; padding: 0 0 0 5px" : ""};
 `;
 
-const TableRow = styled.tr`
+const TableRow = styled.tr<TableRowProps>`
     display: table-row;
     vertical-align: middle;
-    &:nth-child(even){background-color: #f2f2f2;}
-    &:hover {background-color: #f2f2f2;}
     position: relative;
+    ${props => props.selected ? `
+        background-color: rgb(255, 226, 236);
+        &:nth-child(even){background-color: rgb(255, 226, 236);}
+        &:hover {background-color: rgb(255, 226, 236);}
+    ` : `
+        background-color: #ffffff;
+        &:nth-child(even){background-color: #f2f2f2;}
+        &:hover {background-color: #f2f2f2;}
+    `}
 `;
 
 const SelectedRow = styled.div`

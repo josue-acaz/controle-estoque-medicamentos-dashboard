@@ -37,7 +37,13 @@ export default function InputMovements(props: OutputMovementsProps) {
     return(
         <OutputMovementsView>
             {loading ? <Loading /> : (
-                <Table headLabels={headLabels}>
+                <Table
+                    withActions={true}
+                    headLabels={headLabels} 
+                    rowCount={outputMovements.length}
+                    numSelected={0}
+                    onSelectAllClick={() => {}}
+                >
                     {outputMovements.map(output_movement => <OutputMovementRow output={output_movement} />)}
                 </Table>
             )}

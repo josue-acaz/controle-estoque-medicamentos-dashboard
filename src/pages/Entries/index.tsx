@@ -25,11 +25,8 @@ import {
     Form, 
     List, 
     ListView, 
-    Title,
     Stock,
-    StockHeader,
     Overview,
-    OverviewHeader,
     ButtonNew,
     Header,
     Configs,
@@ -87,12 +84,28 @@ export default function Entries() {
         toggleRefresh("stock_list");
     }
 
+    function handleDeletedProductInput() {
+        toggleRefresh("stock_list");
+    }
+
+    function handleDeletedProductOutput() {
+        toggleRefresh("stock_list");
+    }
+
     function handleInputSelected(input: Input) {
         setSelectedInput(input);
     }
 
+    function handleInputDeleted() {
+        toggleRefresh("input_list");
+    }
+
     function handleOutputSelected(output: Output) {
         setSelectedOutput(output);
+    }
+
+    function handleOutputDeleted() {
+        toggleRefresh("output_list");
     }
 
     function handleSavedOutput(output: Output) {
@@ -135,42 +148,39 @@ export default function Entries() {
                             input={selectedInput} 
                             onSaved={handleSavedInput} 
                             onProductInputSaved={handleSavedProductInput}
+                            onProductInputDeleted={handleDeletedProductInput}
                         />
                     ) : (
                         <EditOutput 
                             output={selectedOutput} 
                             onSaved={handleSavedOutput}
                             onProductOutputSaved={handleSavedProductOutput}
+                            onProductOutputDeleted={handleDeletedProductOutput}
                         />
                     )}
                 </Form>
                 <List>
                     <ListView>
-                        <StockHeader>
-                            <Title>Estoque</Title>
-                        </StockHeader>
                         <Stock>
                             <ListStocks 
                                 refresh={refresh.stock_list} 
                                 onStockSelected={handleStockSelected} 
                             />
                         </Stock>
-
-                        <OverviewHeader>
-                            <Title>{action.label+"s"}</Title>
-                        </OverviewHeader>
                         <Overview>
                             {action.value === "input" ? (
                                 <ListInputs 
                                     refresh={refresh.input_list} 
                                     inputSelected={selectedInput}
-                                    onInputSelected={handleInputSelected} 
+                                    onSelected={handleInputSelected}
+                                    onDeleted={handleInputDeleted} 
                                 />
                             ) : (
                                 <ListOutputs    
                                     refresh={refresh.output_list} 
                                     outputSelected={selectedOutput}
-                                    onOutputSelected={handleOutputSelected}
+                                    onSelected={handleOutputSelected}
+                                    onDeleted={handleOutputDeleted}
                                 />
                             )}
                         </Overview>

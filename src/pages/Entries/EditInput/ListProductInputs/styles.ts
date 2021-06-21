@@ -1,16 +1,14 @@
 import styled from "styled-components";
 
 const ListProductInputsView = styled.div`
-    
 `;
 
-const Title = styled.p`
-    font-size: 16px;
-    font-weight: bold;
-    color: #444444;
+const ListProductInputsContent = styled.div`
+    border-left: 1px solid #eeeeee;
+    border-top: 1px solid #eeeeee;
 `;
 
 export {
-    Title,
     ListProductInputsView,
+    ListProductInputsContent,
 };

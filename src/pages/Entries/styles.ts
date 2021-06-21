@@ -27,7 +27,7 @@ const Toolbar = styled.div`
 const Form = styled.div`
     grid-area: form;
     background-color: #ffffff;
-    padding: 15px 15px;
+    padding: 10px 10px;
     overflow-y: scroll;
 `;
 
@@ -35,8 +35,7 @@ const List = styled.div`
     position: relative;
     grid-area: list;
     background-color: #ffffff;
-    border-top: outset;
-    border-width: 3px;
+    box-shadow: 0 1px 15px rgba(0,0,0,.08),0 1px 6px rgba(0,0,0,.08);
 `;
 
 const ListView = styled.div`
@@ -48,10 +47,10 @@ const ListView = styled.div`
     right: 0;
     grid-template-columns: 2fr 3fr;
     transition: 2s;
-    grid-template-rows: .5fr 6fr;
-    grid-template-areas: "stock-header overview-header"
-                         "stock overview";
-    padding: 15px 15px;
+    grid-template-rows: 5fr;
+    grid-template-areas: "stock overview";
+    padding-left: 10px;
+    padding-right: 10px;
 `;
 
 const Overview = styled.div`
@@ -60,19 +59,10 @@ const Overview = styled.div`
     position: relative;
 `;
 
-const StockHeader = styled.div`
-    grid-area: stock-header;
-`;
-
 const Stock = styled.div`
     grid-area: stock;
     background-color: #ffffff;
     position: relative;
-`;
-
-const OverviewHeader = styled.div`
-    grid-area: overview-header;
-    margin-left: 5px;
 `;
 
 const Logo = styled.img`
@@ -146,12 +136,10 @@ export {
     ListView,
     Logo,
     Stock,
-    StockHeader,
     Header,
     Configs,
     SelectAction,
     Overview,
-    OverviewHeader,
     ActionTitle,
     ActionSubtitle,
     ButtonNew,
