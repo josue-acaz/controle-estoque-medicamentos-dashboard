@@ -55,12 +55,16 @@ function TableHeadComponent(props: TableHeadComponentProps) {
 }
 
 function TableRowComponent(props: TableRowComponentProps) {
-    const {row, selected, widthActions, hoverTitle, hoverSelected, onClick, onEdit, onHoverClick} = props;
+    const {row, selected, widthActions, hoverTitle, hoverSelected, disable_select, onClick, onEdit, onHoverClick} = props;
 
     return(
         <TableRow selected={selected}>
             <TableCell padding="checkbox">
-                <Checkbox checked={selected} onClick={(event) => onClick(event, row.id)} />
+                <Checkbox checked={selected} onClick={(event) => {
+                    if(!disable_select) {
+                        onClick(event, row.id);
+                    }
+                }} />
             </TableCell>
             {row.cells.map(cell => <TableCell color={cell.color}>{cell.value}</TableCell>)}
             {widthActions && (
@@ -105,7 +109,7 @@ export default function Task(props: TableProps) {
 
     const handleSelectAllClick = (event: any) => {
         if (event.target.checked) {
-          const newSelecteds = rows.map((n) => n.id);
+          const newSelecteds = rows.filter(row => !row.disable_select).map((n) => n.id);
           onChangeSelecteds(newSelecteds);
           return;
         }
@@ -135,6 +139,7 @@ export default function Task(props: TableProps) {
                         selected={isSelected(row.id)}
                         widthActions={widthActions}
                         hoverTitle={row.hoverTitle}
+                        disable_select={row.disable_select}
                         hoverSelected={row.hoverSelected}
                         onHoverClick={row.onHoverClick}
                     />

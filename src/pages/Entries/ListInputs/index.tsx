@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {formatDatetime} from "../../../tools/dates";
-import {EnumDateFormatTypes} from "../../../constants";
+import {EnumAppColors, EnumDateFormatTypes} from "../../../constants";
 
 // contexts
 import {useFeedback} from "../../../contexts/feedback/feedback.context";
@@ -45,6 +45,11 @@ export default function ListInputs(props: ListInputsProps) {
         {
             key: "freight",
             value: "Frete",
+        },
+        {
+            key: "count_product_outputs",
+            value: "Nº de saídas",
+            textColor: EnumAppColors.ERROR,
         },
     ];
 
@@ -147,6 +152,7 @@ export default function ListInputs(props: ListInputsProps) {
                 id: input.id,
                 onHoverClick: () => onSelected(input),
                 hoverSelected: inputSelected.id === input.id,
+                disable_select: input.count_product_outputs ? input.count_product_outputs > 0 : false,
                 cells: [
                     {
                         value: input.invoice_number,
@@ -156,6 +162,10 @@ export default function ListInputs(props: ListInputsProps) {
                     },
                     {
                         value: input.freight,
+                    },
+                    {
+                        value: input.count_product_outputs,
+                        color: EnumAppColors.ERROR,
                     }
                 ]
             };

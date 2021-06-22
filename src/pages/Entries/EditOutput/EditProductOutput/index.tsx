@@ -58,7 +58,7 @@ export default function EditProductOutput(props: EditProductOutputProps) {
 
         if(name === "quantity") {
             value = onlyNumbers(value);
-            if(maximum_quantity) {
+            if(maximum_quantity && value) {
                 if(!(Number(value) <= maximum_quantity) || Number(value) < 1) return;
             }
         }

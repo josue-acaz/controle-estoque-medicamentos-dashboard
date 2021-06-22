@@ -173,7 +173,7 @@ export default function ListOutputs(props: ListOutputsProps) {
                 open={open} 
                 theme="danger" 
                 title="Deseja excluir as saídas selecionadas?"
-                msg="Esta ação não poderá ser desfeita"
+                msg="Esta ação irá reverter a quantidade de saída para cada lote. Esta ação não poderá ser desfeita, deseja continuar?"
                 onConfirm={handleRemoveSelecteds}
                 onCancel={handleCloseAlert}
                 onClose={handleCloseAlert}

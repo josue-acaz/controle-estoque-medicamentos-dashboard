@@ -97,6 +97,11 @@ export default function Entries() {
     }
 
     function handleInputDeleted() {
+        // Limpa a tela se alguma entrada estiver selecionada
+        if(selectedInput.id) {
+            setSelectedInput(new Input());
+        }
+        
         toggleRefresh("input_list");
     }
 
@@ -105,6 +110,11 @@ export default function Entries() {
     }
 
     function handleOutputDeleted() {
+        // Limpa a tela se alguma saída estiver selecionada
+        if(selectedOutput.id) {
+            setSelectedOutput(new Output());
+        }
+
         toggleRefresh("output_list");
     }
 

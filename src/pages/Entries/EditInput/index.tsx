@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from "react";
 import {Row, Col} from "react-bootstrap";
-import OutsideClickHandler from "react-outside-click-handler";
 import {maskDate, maskCurrency, currency, currencyToNumber} from "../../../utils";
 import {stringDateToSql, formatDatetime} from "../../../tools/dates";
 import {EnumDateFormatTypes} from "../../../constants";
@@ -36,6 +35,7 @@ import {
     ButtonText, 
     InputLabel,
 } from "../../../design";
+import ProductInput from "../../../models/ProductInput";
 
 export default function EditInput(props: InputFormProps) {
     const {input, onSaved, onProductInputSaved, onProductInputDeleted} = props;
@@ -44,12 +44,9 @@ export default function EditInput(props: InputFormProps) {
     const feedback = useFeedback();
     const [submitted, setSubmitted] = useState(false);
     const [processing, setProcessing] = useState(false);
-    const [addProduct, setAddProduct] = useState(false);
+    const [editProduct, setEditProduct] = useState(false);
     const [inputs, setInputs] = useState<InputModel>(input);
-
-    function toggleAddProduct() {
-        setAddProduct(!addProduct);
-    }
+    const [productInput, setProductInput] = useState<ProductInput>(new ProductInput);
 
     function handleChange(e: any) {
         let {name, value} = e.target;
@@ -68,10 +65,10 @@ export default function EditInput(props: InputFormProps) {
     async function save() {
         let data: InputModel = {
             id: inputs.id,
-            freight: currencyToNumber(inputs.freight.toString()),
             invoice_number: inputs.invoice_number,
-            entry_date: stringDateToSql(inputs.entry_date),
+            entry_date:  stringDateToSql(inputs.entry_date),
             request_date: stringDateToSql(inputs.entry_date), //repetir entry_date para a data da solicitação
+            freight: currencyToNumber(inputs.freight.toString()),
         };
 
         setProcessing(true);
@@ -101,7 +98,7 @@ export default function EditInput(props: InputFormProps) {
 
     async function handleSubmit() {
         setSubmitted(true);
-        if(inputs.entry_date && inputs.invoice_number) {
+        if(inputs.invoice_number) {
             setProcessing(true);
             await save();
         }
@@ -129,6 +126,21 @@ export default function EditInput(props: InputFormProps) {
         setInputs(new InputModel());
     }
 
+    function handleEditProductInput(product_input: ProductInput) {
+        setProductInput(product_input);
+    }
+
+    function handleSavedProductInput() {
+        setEditProduct(false);
+        onProductInputSaved();
+        setProductInput(new ProductInput());
+    }
+
+    function handleCancelProductInput() {
+        setEditProduct(false);
+        setProductInput(new ProductInput());
+    }
+
     return(
         <EditInputView>
             <Form>
@@ -140,8 +152,8 @@ export default function EditInput(props: InputFormProps) {
                             placeholder="DD/MM/AAAA" 
                             value={inputs.entry_date}
                             onChange={handleChange}
-                            error={submitted && !inputs.entry_date}
                         />
+                        <span className="helper-text">*Se não for fornecida, será considerada a data atual</span>
                     </Col>
                     <Col sm="4">
                         <InputLabel>Número da Fatura</InputLabel>
@@ -169,8 +181,8 @@ export default function EditInput(props: InputFormProps) {
                     <Button onClick={handleSubmit} disabled={processing}>
                         {processing ? <Circular size={30} /> : <ButtonText>Salvar</ButtonText>}
                     </Button>
-                    {!addProduct && inputs.id && (
-                        <Button onClick={toggleAddProduct} disabled={processing}>
+                    {!editProduct && !productInput.id && inputs.id && (
+                        <Button onClick={() => setEditProduct(true)} disabled={processing}>
                             <ButtonText>Novo item de compra</ButtonText>
                         </Button>
                     )}
@@ -178,20 +190,18 @@ export default function EditInput(props: InputFormProps) {
             </Form>
 
             <EditProductInputContainer>
-                {addProduct && (
+                {(editProduct || productInput.id) && (
                     <EditProductInput 
                         input={inputs} 
-                        onSaved={() => {
-                            toggleAddProduct();
-                            onProductInputSaved();
-                        }} 
-                        onCancel={toggleAddProduct}
+                        productInput={productInput}
+                        onSaved={handleSavedProductInput} 
+                        onCancel={handleCancelProductInput}
                     />
                 )}
             </EditProductInputContainer>
             <ListProductInputContainer>
-                {input.id && !addProduct && (
-                    <ListProductInputs input_id={input.id} onDeleted={onProductInputDeleted} />
+                {input.id && !productInput.id && !editProduct && (
+                    <ListProductInputs input_id={input.id} onEdit={handleEditProductInput} onDeleted={onProductInputDeleted} />
                 )}
             </ListProductInputContainer>
         </EditInputView>

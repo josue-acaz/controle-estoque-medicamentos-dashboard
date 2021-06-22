@@ -7,6 +7,7 @@ class Input {
     entry_date: string = "";
     freight: number | string = "0,00";
     invoice_number: string = "";
+    count_product_outputs?: number;
     updated_at?: string = "";
     product_inputs?: Array<ProductInput>;
 };

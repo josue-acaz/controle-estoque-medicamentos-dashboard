@@ -28,7 +28,7 @@ import {
 } from "./styles";
 
 export default function ListProducts(props: ListProductInputsProps) {
-    const {input_id, onDeleted} = props;
+    const {input_id, onEdit, onDeleted} = props;
     const feedback = useFeedback();
 
     const headLabels: Array<TableHeadProps> = [
@@ -53,8 +53,12 @@ export default function ListProducts(props: ListProductInputsProps) {
             value: "Referência",
         },
         {
-            key: "quantity",
-            value: "Quantidade",
+            key: "total_quantity",
+            value: "Qtd. inicial",
+        },
+        {
+            key: "current_quantity",
+            value: "Qtd. restante",
         },
         {
             key: "unit_price",
@@ -165,7 +169,10 @@ export default function ListProducts(props: ListProductInputsProps) {
     }, [input_id, refresh]);
 
     function handleEdit(id: string) {
-        
+        const product_input = productInputs.find(product_input => product_input.id === id);
+        if(product_input) {
+            onEdit(product_input);
+        }
     }
 
     function handleChangeSelecteds(selecteds: Array<string>) {
@@ -176,6 +183,7 @@ export default function ListProducts(props: ListProductInputsProps) {
         const rows: Array<RowProps> = product_inputs.map(product_input => {
             const row: RowProps = {
                 id: product_input.id,
+                disable_select: !!product_input.lot?.product_outputs?.length,
                 cells: [
                     {
                         value: product_input?.lot?.serial_number,
@@ -194,6 +202,9 @@ export default function ListProducts(props: ListProductInputsProps) {
                     },
                     {
                         value: product_input?.total_quantity,
+                    },
+                    {
+                        value: product_input.current_quantity,
                     },
                     {
                         value: product_input?.unit_price,
@@ -231,8 +242,8 @@ export default function ListProducts(props: ListProductInputsProps) {
             />
             <ListProductInputsContent>
                 <Task 
-                    selecteds={selecteds}
                     onEditRow={handleEdit}
+                    selecteds={selecteds}
                     headLabels={headLabels} 
                     rows={createRows(productInputs)}
                     onChangeSelecteds={handleChangeSelecteds}

@@ -1,12 +1,14 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Row, Col} from "react-bootstrap";
-import {stringDateToSql} from "../../../../tools/dates";
+import {stringDateToSql, formatDatetime} from "../../../../tools/dates";
 import {
     maskDate, 
+    currency,
     onlyNumbers, 
     maskCurrency, 
     currencyToNumber,
 } from "../../../../utils";
+import {EnumDateFormatTypes} from "../../../../constants";
 
 // contexts
 import {useFeedback} from "../../../../contexts/feedback/feedback.context";
@@ -43,32 +45,17 @@ import {
 } from "../../../../design";
 
 export default function EditProductInput(props: ProductInputFormProps) {
-    const {input, onSaved, onCancel} = props;
+    const {input, productInput, onSaved, onCancel} = props;
+    const edit = productInput.id !== "";
 
     const feedback = useFeedback();
     const [submitted, setSubmitted] = useState(false);
     const [processing, setProcessing] = useState(false);
+    const [lot, setLot] = useState<Lot>(new Lot());
     const [category, setCategory] = useState<Category>(new Category());
+    const [inputs, setInputs] = useState<ProductInput>(new ProductInput());
 
-    const [inputs, setInputs] = useState<Lot & ProductInput>({
-        id: "",
-        
-        // Lot
-        serial_number: "",
-        expiration_date: "",
-        description: "",
-
-        // ProductInput
-        current_quantity: 1,
-        unit_price: "0,00",
-        lot_id: "",
-        product_id: "",
-        input_id: input.id,
-        base_id: "",
-        provider_id: "",
-    });
-
-    function handleChange(e: any) {
+    function handleChangeLot(e: any) {
         let {name, value} = e.target;
 
         // Lot
@@ -76,12 +63,17 @@ export default function EditProductInput(props: ProductInputFormProps) {
             value = maskDate(value);
         }
 
-        // ProductInput
+        setLot(lot => ({...lot, [name]: value}));
+    }
+
+    function handleChangeInputs(e: any) {
+        let {name, value} = e.target;
+
         if(name === "product_id" || name === "base_id" || name === "provider_id") {
             value = value.id;
         }
 
-        if(name === "current_quantity") {
+        if(name === "total_quantity") {
             value = onlyNumbers(value);
         }
 
@@ -93,27 +85,27 @@ export default function EditProductInput(props: ProductInputFormProps) {
     }
 
     async function save() {
-        const data: Lot & ProductInput = {
+        const lot_data: Lot = {
+            id: lot.id,
+            serial_number: lot.serial_number.trim(),
+            expiration_date: stringDateToSql(lot.expiration_date),
+            description: lot.description?.trim(),
+        };
+
+        const product_input_data: ProductInput = {
             id: inputs.id,
-        
-            // Lot
-            serial_number: inputs.serial_number.trim(),
-            expiration_date: stringDateToSql(inputs.expiration_date),
-            description: inputs.description?.trim(),
-    
-            // ProductInput
-            current_quantity: inputs.current_quantity,
+            total_quantity: inputs.total_quantity,
             unit_price: currencyToNumber(inputs.unit_price.toString()),
-            lot_id: "",
             product_id: inputs.product_id,
             input_id: input.id,
             base_id: inputs.base_id,
             provider_id: inputs.provider_id,
+            lot_id: lot.id,
         };
 
         setProcessing(true);
         try {
-            const product_input = await productInputService.create(data);
+            const product_input = await productInputService.create(product_input_data, lot_data);
             setProcessing(false);
             feedback.open({severity: "success"});
             onSaved();
@@ -132,19 +124,63 @@ export default function EditProductInput(props: ProductInputFormProps) {
 
     async function handleSubmit() {
         setSubmitted(true);
-        if(inputs.current_quantity && 
+        if(inputs.total_quantity && 
            inputs.unit_price && 
            inputs.base_id && 
            inputs.product_id &&
-           inputs.serial_number && 
-           inputs.expiration_date) {
+           lot.serial_number && 
+           lot.expiration_date) {
             await save();
         }
     }
 
+    // Editar entrada de produto
+    useEffect(() => {
+        // Preencher formulário
+        if(productInput.id) {
+            // Configurar categoria selecionada
+            const product = productInput.product;
+            if(product) {
+                if(product.category) {
+                    setCategory(product.category);
+                }
+            }
+
+            const lot = productInput.lot;
+            if(lot) {
+                setLot({
+                    id: lot.id,
+                    serial_number: lot.serial_number,
+                    expiration_date: formatDatetime(lot.expiration_date, EnumDateFormatTypes.READABLE_V5),
+                    description: lot.description,
+                });
+
+                setInputs({
+                    id: productInput.id,
+                    total_quantity: productInput.total_quantity,
+                    current_quantity: productInput.current_quantity,
+                    unit_price: productInput.unit_price,
+                    product_id: productInput.product_id,
+                    input_id: productInput.id,
+                    base_id: productInput.base_id,
+                    provider_id: productInput.provider_id,
+                    lot_id: lot.id,
+                });
+            }
+        } else {
+            setInputs(productInput);
+        }
+    }, [productInput.id]);
+
+    function handleCancel() {
+        setLot(new Lot());
+        setCategory(new Category);
+        onCancel();
+    }
+
     return(
         <ProductInputFormView>
-            <Title>Novo Medicamento/Material Médico</Title>
+            <Title>{edit ? `#${productInput.id}` : "Novo Medicamento/Material Médico"}</Title>
             <Form>
                 <Row>
                     <Col sm="3">
@@ -152,20 +188,20 @@ export default function EditProductInput(props: ProductInputFormProps) {
                         <Input 
                             name="serial_number" 
                             style={{textTransform: "uppercase"}}
-                            value={inputs.serial_number} 
-                            onChange={handleChange}
+                            value={lot.serial_number} 
+                            onChange={handleChangeLot}
                             placeholder="Número serial"
-                            error={submitted && !inputs.serial_number}
+                            error={submitted && !lot.serial_number}
                         />
                     </Col>
                     <Col sm="3">
                         <InputLabel>Validate</InputLabel>
                         <Input 
                             name="expiration_date" 
-                            value={inputs.expiration_date} 
-                            onChange={handleChange}
+                            value={lot.expiration_date} 
+                            onChange={handleChangeLot}
                             placeholder="DD/MM/YYYY"
-                            error={submitted && !inputs.expiration_date}
+                            error={submitted && !lot.expiration_date}
                         />
                     </Col>
                     <Col sm="3">
@@ -177,7 +213,8 @@ export default function EditProductInput(props: ProductInputFormProps) {
                             renderOption={(option) => (
                                 <div>{option.name}</div>
                             )}
-                            onOptionSelected={handleChange}
+                            onOptionSelected={handleChangeInputs}
+                            inputText={productInput.base?.name}
                             placeholder="Informe a base/cidade"
                             error={submitted && !inputs.base_id}
                         />
@@ -191,7 +228,8 @@ export default function EditProductInput(props: ProductInputFormProps) {
                             renderOption={(option: any) => (
                                 <div>{option.name}</div>
                             )} 
-                            onOptionSelected={handleChange}
+                            inputText={productInput.provider?.name}
+                            onOptionSelected={handleChangeInputs}
                             error={submitted && !inputs.provider_id}
                         />
                     </Col>
@@ -206,6 +244,7 @@ export default function EditProductInput(props: ProductInputFormProps) {
                             renderOption={(option) => (
                                 <div>{option.name}</div>
                             )}
+                            inputText={productInput.product?.category?.name}
                             onOptionSelected={(e) => setCategory(e.target.value)}
                             placeholder="Informe a categoria"
                             error={submitted && !category.id}
@@ -223,7 +262,8 @@ export default function EditProductInput(props: ProductInputFormProps) {
                                     renderOption={(option) => (
                                         <div>{option.name}</div>
                                     )}
-                                    onOptionSelected={handleChange}
+                                    onOptionSelected={handleChangeInputs}
+                                    inputText={productInput.product?.name}
                                     placeholder="Selecione um medicamento..."
                                     error={submitted && !inputs.product_id}
                                 />
@@ -231,12 +271,12 @@ export default function EditProductInput(props: ProductInputFormProps) {
                             <Col sm="3">
                                 <InputLabel>Quantidade</InputLabel>
                                 <Input 
-                                    name="current_quantity" 
+                                    name="total_quantity" 
                                     type="number"
-                                    value={inputs.current_quantity} 
-                                    onChange={handleChange}
+                                    value={inputs.total_quantity} 
+                                    onChange={handleChangeInputs}
                                     placeholder="Quantidade"
-                                    error={submitted && !inputs.current_quantity}
+                                    error={submitted && !inputs.total_quantity}
                                 />
                             </Col>
                             <Col sm="3">
@@ -244,7 +284,7 @@ export default function EditProductInput(props: ProductInputFormProps) {
                                 <Input 
                                     name="unit_price" 
                                     value={inputs.unit_price} 
-                                    onChange={handleChange}
+                                    onChange={handleChangeInputs}
                                     placeholder="Preço unitário"
                                     error={submitted && !inputs.unit_price}
                                     adorment={<p>R$</p>}
@@ -257,7 +297,12 @@ export default function EditProductInput(props: ProductInputFormProps) {
                 <Row>
                     <Col sm="12">
                         <InputLabel>Descrição</InputLabel>
-                        <TextArea name="description" value={inputs.description} onChange={handleChange} placeholder="Forneça uma descrição" />
+                        <TextArea 
+                            name="description" 
+                            value={lot.description} 
+                            onChange={handleChangeLot} 
+                            placeholder="Forneça uma descrição" 
+                        />
                     </Col>
                 </Row>
 
@@ -265,7 +310,7 @@ export default function EditProductInput(props: ProductInputFormProps) {
                     <Button onClick={handleSubmit}>
                         {processing ? <Circular size={30} /> : <ButtonText>Salvar</ButtonText>}
                     </Button>
-                    <CancelButton onClick={onCancel}>Cancelar</CancelButton>
+                    <CancelButton onClick={handleCancel}>Cancelar</CancelButton>
                 </FormActions>
             </Form>
         </ProductInputFormView>

@@ -35,7 +35,8 @@ body {
 }
 
 input {
-  line-height: normal; }
+  line-height: normal; 
+}
 
 input[type="checkbox"],
 input[type="radio"] {
@@ -93,4 +94,9 @@ input[type="text"], input[type="email"], input[type="password"], input[type=numb
 
 .icon-primary {
   color: #666666;
+}
+
+span.helper-text {
+  font-size: 12px;
+  color: #444444;
 }

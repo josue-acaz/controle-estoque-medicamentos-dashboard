@@ -100,7 +100,7 @@ export default function EditOutput(props: EditOutputProps) {
 
     async function handleSubmit() {
         setSubmitted(true);
-        if(inputs.date && inputs.aircraft_id && inputs.doctor_id) {
+        if(inputs.aircraft_id && inputs.doctor_id) {
             await save();
         }
     }
@@ -133,8 +133,8 @@ export default function EditOutput(props: EditOutputProps) {
                             placeholder="DD/MM/AAAA" 
                             value={inputs.date}
                             onChange={handleChange}
-                            error={submitted && !inputs.date}
                         />
+                        <span className="helper-text">*Se não for fornecida, será considerada a data atual</span>
                     </Col>
                     <Col sm="4">
                         <InputLabel>Aeronave</InputLabel>

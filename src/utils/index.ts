@@ -69,6 +69,7 @@ export function maskPhoneNumber(value: string) {
 }
 
 export function onlyNumbers(value: string) {
+    if(value === "") return value;
     return value.replace(/[^0-9]+/g, "");
 }
 

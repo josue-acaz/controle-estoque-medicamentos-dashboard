@@ -2,6 +2,8 @@ import {format, addDays} from "date-fns";
 import {ptBR} from "date-fns/locale";
 
 export function stringDateToSql(date: string) {
+    if(date === "") return date;
+
     const formatted_date = `${date.split("/").reverse().join("-")}T00:00:00`;
     return formatted_date;
 }

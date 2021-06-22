@@ -2,6 +2,7 @@ import ProductInput from "./ProductInput";
 import ProductOutput from "./ProductOutput";
 
 class Lot {
+    [key: string]: any;
     id: string = "";
     serial_number: string = "";
     expiration_date: string = "";

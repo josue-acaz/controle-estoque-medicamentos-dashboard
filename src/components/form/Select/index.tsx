@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
+import OutsideClickHandler from "react-outside-click-handler";
 import Option from "./Option";
 
 // types
@@ -11,12 +12,9 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import {
     SelectView,
     SelectInput,
-    SelectMask,
     Span,
     CollapseView,
     CollapseOptions,
-    SelectedOption,
-    SelectedOptionText,
     InputElement,
 } from "./styles";
 
@@ -57,34 +55,40 @@ export default function Select(props: SelectProps) {
     }
 
     return(
-        <SelectView>
-            <SelectInput>
-                <InputElement 
-                    name={props.name} 
-                    value={selectedOption.label} 
-                    onClick={toggleOpen} 
-                    onKeyUp={handleKeyUp} 
-                    placeholder="Selecione..."
-                />
-            </SelectInput>
-            <Span onClick={toggleOpen}>
-                <ArrowDropDownIcon className="icon" />
-            </Span>
-            {open && (
-                <CollapseView>
-                    <CollapseOptions>
-                        {options.map((option, index) => (
-                            <Option 
-                                key={index} 
-                                index={index}
-                                cursor={cursor}
-                                {...option} 
-                                onSelected={handleSelectedOption}
-                            />
-                        ))}
-                    </CollapseOptions>
-                </CollapseView>
-            )}
-        </SelectView>
+        <OutsideClickHandler onOutsideClick={() => {
+            if(open) {
+                setOpen(false);
+            }
+        }}>
+            <SelectView>
+                <SelectInput>
+                    <InputElement 
+                        name={props.name} 
+                        value={selectedOption.label} 
+                        onClick={toggleOpen} 
+                        onKeyUp={handleKeyUp} 
+                        placeholder="Selecione..."
+                    />
+                </SelectInput>
+                <Span onClick={toggleOpen}>
+                    <ArrowDropDownIcon className="icon" />
+                </Span>
+                {open && (
+                    <CollapseView>
+                        <CollapseOptions>
+                            {options.map((option, index) => (
+                                <Option 
+                                    key={index} 
+                                    index={index}
+                                    cursor={cursor}
+                                    {...option} 
+                                    onSelected={handleSelectedOption}
+                                />
+                            ))}
+                        </CollapseOptions>
+                    </CollapseView>
+                )}
+            </SelectView>
+        </OutsideClickHandler>
     );
 }

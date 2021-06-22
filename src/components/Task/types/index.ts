@@ -8,6 +8,7 @@ interface RowProps {
     id: string;
     cells: Array<CellProps>;
     hoverTitle?: string;
+    disable_select?: boolean;
     hoverSelected?: boolean;
     onHoverClick?(): void;
 };
@@ -62,6 +63,7 @@ interface TableRowComponentProps {
     widthActions?: boolean;
     hoverTitle?: string;
     hoverSelected?: boolean;
+    disable_select?: boolean;
     onEdit?(id: string): void;
     onClick(event: any, id: string): void;
     onHoverClick?(): void;

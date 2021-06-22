@@ -11,8 +11,11 @@ interface PaginationResponse {
 class ProductInputService {
     constructor() {}
 
-    async create(data: Lot & ProductInput) {
-        const response = await api.post("/product-inputs", data, {
+    async create(data: ProductInput, lot: Lot) {
+        const response = await api.post("/product-inputs", {
+            ...data,
+            lot,
+        }, {
             headers: {
                 product_id: data.product_id,
                 input_id: data.input_id,
@@ -20,8 +23,6 @@ class ProductInputService {
                 provider_id: data.provider_id,
             }
         });
-
-        // lot_id será gerado em conjunto
 
         return response.data;
     }
