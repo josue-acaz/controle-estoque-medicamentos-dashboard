@@ -26,7 +26,7 @@ import {
 } from "./styles";
 
 export default function ListProductOutputs(props: ListProductOutputsProps) {
-    const {output_id, onDeleted} = props;
+    const {output_id, onEdit, onDeleted} = props;
 
     const headLabels: Array<TableHeadProps> = [
         {
@@ -141,7 +141,10 @@ export default function ListProductOutputs(props: ListProductOutputsProps) {
     }, [output_id, refresh]);
 
     function handleEdit(id: string) {
-        
+        const product_output = productOutputs.find(product_output => product_output.id === id);
+        if(product_output) {
+            onEdit(product_output);
+        }
     }
 
     function handleChangeSelecteds(selecteds: Array<string>) {
@@ -191,6 +194,7 @@ export default function ListProductOutputs(props: ListProductOutputsProps) {
             />
             <ListProductOutputsContent>
                 <Task 
+                    widthActions={false}
                     selecteds={selecteds}
                     onEditRow={handleEdit}
                     headLabels={headLabels} 

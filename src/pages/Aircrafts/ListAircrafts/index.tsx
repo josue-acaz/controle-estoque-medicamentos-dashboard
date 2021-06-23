@@ -6,6 +6,9 @@ import {RouteChildrenProps} from "react-router-dom";
 import {TableHeadProps, RowProps} from "../../../components/Task/types";
 import {PaginationProps} from "../../../components/Task/Pagination/types";
 
+// contexts
+import {useFeedback} from "../../../contexts/feedback/feedback.context";
+
 // models
 import Aircraft from "../../../models/Aircraft";
 
@@ -17,6 +20,7 @@ import Loading from "../../../components/spinners/Loading";
 import Task from "../../../components/Task";
 import Toolbar from "../../../components/Task/Toolbar";
 import Pagination from "../../../components/Task/Pagination";
+import Alert from "../../../components/Alert";
 
 // styles
 import {
@@ -42,7 +46,11 @@ export default function ListDoctors(props: RouteChildrenProps) {
         },
     ];
 
+    const feedback = useFeedback();
+    const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [refresh, setRefresh] = useState(false);
+    const [processing, setProcessing] = useState(false);
     const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [aircrafts, setAircrafts] = useState<Array<Aircraft>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
@@ -55,6 +63,41 @@ export default function ListDoctors(props: RouteChildrenProps) {
         filter: "name", 
         orderBy: "name",
     });
+
+    function toggleRefresh() {
+        setRefresh(!refresh);
+    }
+
+    function handleOpenAlert() {
+        setOpen(true);
+    }
+
+    function handleCloseAlert() {
+        setOpen(false);
+    }
+
+    async function handleRemoveSelecteds() {
+        handleCloseAlert();
+        setProcessing(true);
+        
+        try {
+            const deleted = await Promise.all(selecteds.map(id => aircraftService.delete(id)));
+            feedback.open({severity: "success"});
+            setProcessing(false);
+            setSelecteds([]);
+            toggleRefresh();
+        } catch (error) {
+            setProcessing(false);
+            if(error.response) {
+                feedback.open({
+                    severity: "error",
+                    msg: error.response.data.msg,
+                });
+            } else {
+                feedback.open({severity: "error"});
+            }
+        }
+    }
 
     function handleChangePagination(key: string, value: any) {
         setPagination(pagination => ({ ...pagination, [key]: value }));
@@ -125,8 +168,17 @@ export default function ListDoctors(props: RouteChildrenProps) {
 
     return(
         <GridContainer>
+            <Alert 
+                open={open} 
+                theme="danger" 
+                title="Excluir selecionados?"
+                msg="Esta ação não poderá ser desfeita"
+                onConfirm={handleRemoveSelecteds}
+                onCancel={handleCloseAlert}
+                onClose={handleCloseAlert}
+            />
             <GridToolbar>
-                <Toolbar title="Aeronaves" numSelected={selecteds.length} onAdd={handleAdd} />
+                <Toolbar title="Aeronaves" numSelected={selecteds.length} onAdd={handleAdd} onDelete={handleOpenAlert} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (

@@ -26,6 +26,7 @@ import {
     ListProductInputsView,
     ListProductInputsContent,
 } from "./styles";
+import { currency } from "../../../../utils";
 
 export default function ListProducts(props: ListProductInputsProps) {
     const {input_id, onEdit, onDeleted} = props;
@@ -104,6 +105,7 @@ export default function ListProducts(props: ListProductInputsProps) {
         handleCloseAlert();
         setProcessing(true);
 
+        
         try {
             const deleted = await Promise.all(selecteds.map(id => productInputService.delete(id)));
             feedback.open({severity: "success"});
@@ -207,7 +209,7 @@ export default function ListProducts(props: ListProductInputsProps) {
                         value: product_input.current_quantity,
                     },
                     {
-                        value: product_input?.unit_price,
+                        value: currency(Number(product_input?.unit_price)),
                     },
                     {
                         value: product_input.lot?.product_outputs?.length,

@@ -105,7 +105,10 @@ export default function EditProductInput(props: ProductInputFormProps) {
 
         setProcessing(true);
         try {
-            const product_input = await productInputService.create(product_input_data, lot_data);
+            const product_input = edit ? 
+            await productInputService.update(product_input_data.id, product_input_data, lot_data) :
+            await productInputService.create(product_input_data, lot_data);
+
             setProcessing(false);
             feedback.open({severity: "success"});
             onSaved();
@@ -159,7 +162,7 @@ export default function EditProductInput(props: ProductInputFormProps) {
                     id: productInput.id,
                     total_quantity: productInput.total_quantity,
                     current_quantity: productInput.current_quantity,
-                    unit_price: productInput.unit_price,
+                    unit_price: currency(Number(productInput.unit_price), true),
                     product_id: productInput.product_id,
                     input_id: productInput.id,
                     base_id: productInput.base_id,

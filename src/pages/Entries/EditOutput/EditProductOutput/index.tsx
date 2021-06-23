@@ -34,7 +34,9 @@ import {
 import {InputLabel, Button, ButtonText, CancelButton} from "../../../../design";
 
 export default function EditProductOutput(props: EditProductOutputProps) {
-    const {output, onSaved, onCancel} = props;
+    const {output, productOutput, onSaved, onCancel} = props;
+    const edit = productOutput.id !== "";
+
     const feedback = useFeedback();
     const [submitted, setSubmitted] = useState(false);
     const [processing, setProcessing] = useState(false);
@@ -77,7 +79,9 @@ export default function EditProductOutput(props: EditProductOutputProps) {
         setProcessing(true);
 
         try {
-            const product_output = await productOutputService.create(inputs);
+            const product_output = edit ? 
+            await productOutputService.update(inputs.id, inputs) : 
+            await productOutputService.create(inputs);
             setProcessing(false);
             feedback.open({severity: "success"});
             onSaved();
@@ -97,6 +101,18 @@ export default function EditProductOutput(props: EditProductOutputProps) {
     useEffect(() => {
         setInputs(inputs => ({...inputs, quantity: 1}));
     }, [maximum_quantity]);
+
+    useEffect(() => {
+        // Preencher formulário
+        if(productOutput.id) {
+            setInputs(productOutput);
+
+            if(productOutput.lot) {
+                setLot(productOutput.lot);
+            }
+        }
+
+    }, [productOutput.id]);
 
     return(
         <EditProductOutputView>

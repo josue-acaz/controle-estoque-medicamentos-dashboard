@@ -103,6 +103,7 @@ export default function Entries() {
         }
         
         toggleRefresh("input_list");
+        toggleRefresh("stock_list");
     }
 
     function handleOutputSelected(output: Output) {
@@ -116,6 +117,7 @@ export default function Entries() {
         }
 
         toggleRefresh("output_list");
+        toggleRefresh("stock_list");
     }
 
     function handleSavedOutput(output: Output) {

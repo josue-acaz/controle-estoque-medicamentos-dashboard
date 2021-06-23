@@ -8,6 +8,9 @@ import productService from "../../../services/product.service";
 // models
 import Product from "../../../models/Product";
 
+// contexts
+import {useFeedback} from "../../../contexts/feedback/feedback.context";
+
 // types
 import {RouteChildrenProps} from "react-router-dom";
 import {TableHeadProps, RowProps} from "../../../components/Task/types";
@@ -18,6 +21,7 @@ import Loading from "../../../components/spinners/Loading";
 import Task from "../../../components/Task";
 import Toolbar from "../../../components/Task/Toolbar";
 import Pagination from "../../../components/Task/Pagination";
+import Alert from "../../../components/Alert";
 
 // styles
 import {
@@ -55,7 +59,11 @@ export default function ListCategories(props: RouteChildrenProps) {
         },
     ];
 
+    const feedback = useFeedback();
+    const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [refresh, setRefresh] = useState(false);
+    const [processing, setProcessing] = useState(false);
     const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [products, setProducts] = useState<Array<Product>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
@@ -69,8 +77,39 @@ export default function ListCategories(props: RouteChildrenProps) {
         orderBy: "name",
     });
 
-    function handleRemoveSelecteds() {
+    function toggleRefresh() {
+        setRefresh(!refresh);
+    }
 
+    function handleOpenAlert() {
+        setOpen(true);
+    }
+
+    function handleCloseAlert() {
+        setOpen(false);
+    }
+
+    async function handleRemoveSelecteds() {
+        handleCloseAlert();
+        setProcessing(true);
+        
+        try {
+            const deleted = await Promise.all(selecteds.map(id => productService.delete(id)));
+            feedback.open({severity: "success"});
+            setProcessing(false);
+            setSelecteds([]);
+            toggleRefresh();
+        } catch (error) {
+            setProcessing(false);
+            if(error.response) {
+                feedback.open({
+                    severity: "error",
+                    msg: error.response.data.msg,
+                });
+            } else {
+                feedback.open({severity: "error"});
+            }
+        }
     }
 
     function handleChangePagination(key: string, value: any) {
@@ -120,9 +159,7 @@ export default function ListCategories(props: RouteChildrenProps) {
         }
     }
 
-    useEffect(() => {
-        index();
-    }, []);
+    useEffect(() => {index()}, [refresh]);
 
     function createRows(products: Array<Product>) {
         const rows: Array<RowProps> = products.map(product => {
@@ -155,8 +192,17 @@ export default function ListCategories(props: RouteChildrenProps) {
 
     return(
         <GridContainer>
+            <Alert 
+                open={open} 
+                theme="danger" 
+                title="Excluir selecionados?"
+                msg="Esta ação não poderá ser desfeita"
+                onConfirm={handleRemoveSelecteds}
+                onCancel={handleCloseAlert}
+                onClose={handleCloseAlert}
+            />
             <GridToolbar>
-                <Toolbar title="Medicamentos/Materiais" numSelected={selecteds.length} onAdd={handleAdd} />
+                <Toolbar title="Medicamentos/Materiais" numSelected={selecteds.length} onAdd={handleAdd} onDelete={handleOpenAlert} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (

@@ -36,6 +36,7 @@ import {
     ButtonText, 
     InputLabel,
 } from "../../../design";
+import ProductOutput from "../../../models/ProductOutput";
 
 export default function EditOutput(props: EditOutputProps) {
     const {output, onSaved, onProductOutputSaved, onProductOutputDeleted} = props;
@@ -44,12 +45,9 @@ export default function EditOutput(props: EditOutputProps) {
     const feedback = useFeedback();
     const [submitted, setSubmitted] = useState(false);
     const [processing, setProcessing] = useState(false);
-    const [subProduct, setSubProduct] = useState(false);
+    const [editProduct, setEditProduct] = useState(false);
+    const [productOutput, setProductOutput] = useState<ProductOutput>(new ProductOutput());
     const [inputs, setInputs] = useState<Output>(output);
-
-    function toggleSubProduct() {
-        setSubProduct(!subProduct);
-    }
 
     function handleChange(e: any) {
         let {name, value} = e.target;
@@ -122,6 +120,21 @@ export default function EditOutput(props: EditOutputProps) {
         });
     }, [output.id]);
 
+    function handleEditProductOutput(product_output: ProductOutput) {
+        setProductOutput(product_output);
+    }
+
+    function handleSavedProductOutput() {
+        setEditProduct(false);
+        onProductOutputSaved();
+        setProductOutput(new ProductOutput());
+    }
+
+    function handleCancelProductOutput() {
+        setEditProduct(false);
+        setProductOutput(new ProductOutput());
+    }
+
     return(
         <EditOutputView>
             <Form>
@@ -134,7 +147,7 @@ export default function EditOutput(props: EditOutputProps) {
                             value={inputs.date}
                             onChange={handleChange}
                         />
-                        <span className="helper-text">*Se não for fornecida, será considerada a data atual</span>
+                        {!output.id && (<span className="helper-text">*Se não for fornecida, será considerada a data atual</span>)}
                     </Col>
                     <Col sm="4">
                         <InputLabel>Aeronave</InputLabel>
@@ -143,7 +156,7 @@ export default function EditOutput(props: EditOutputProps) {
                             name="aircraft_id"
                             endpoint="/aircrafts/autocomplete"
                             renderOption={(option) => (
-                                <div>{option.name}</div>
+                                <div>{option.prefix}</div>
                             )}
                             inputText={inputs.aircraft?.prefix}
                             onOptionSelected={handleChange}
@@ -172,8 +185,8 @@ export default function EditOutput(props: EditOutputProps) {
                     <Button onClick={handleSubmit} disabled={processing}>
                         {processing ? <Circular size={30} /> : <ButtonText>Salvar</ButtonText>}
                     </Button>
-                    {!subProduct && output.id && (
-                        <Button onClick={toggleSubProduct}>
+                    {!editProduct && !productOutput.id && inputs.id && (
+                        <Button onClick={() => setEditProduct(true)}>
                             <ButtonText>Novo item de saída</ButtonText>
                         </Button>
                     )}
@@ -181,21 +194,19 @@ export default function EditOutput(props: EditOutputProps) {
             </Form>
 
             <EditProductOutputContainer>
-                {subProduct && (
+                {(editProduct || productOutput.id) && (
                     <EditProductOutput 
                         output={output} 
-                        onSaved={() => {
-                            toggleSubProduct();
-                            onProductOutputSaved();
-                        }} 
-                        onCancel={toggleSubProduct} 
+                        productOutput={productOutput}
+                        onSaved={handleSavedProductOutput} 
+                        onCancel={handleCancelProductOutput} 
                     />
                 )}
             </EditProductOutputContainer>
 
             <ListProductInputContainer>
-                {output.id && !subProduct && (
-                    <ListProductOutputs output_id={output.id} onDeleted={onProductOutputDeleted} />
+                {output.id && !productOutput.id && !editProduct && (
+                    <ListProductOutputs output_id={output.id} onEdit={handleEditProductOutput} onDeleted={onProductOutputDeleted} />
                 )}
             </ListProductInputContainer>
         </EditOutputView>

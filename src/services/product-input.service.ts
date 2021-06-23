@@ -27,12 +27,17 @@ class ProductInputService {
         return response.data;
     }
 
-    async update(id: string, data: ProductInput) {
-        const response = await api.put(`/product-inputs/${id}/update`, data);
+    async update(id: string, data: ProductInput, lot: Lot) {
+        const response = await api.put(`/product-inputs/${id}/update`, {
+            product_input: data,
+            lot: lot,
+        });
+
         return response.data;
     }
 
     async delete(id: string) {
+        console.log(id)
         const response = await api.delete(`/product-inputs/${id}/delete`);
         return response.data;
     }

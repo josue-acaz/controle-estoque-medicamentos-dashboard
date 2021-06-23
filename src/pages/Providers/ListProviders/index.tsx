@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from "react";
 import {useRouteMatch} from "react-router-dom";
 
+// contexts
+import {useFeedback} from "../../../contexts/feedback/feedback.context";
+
 // services
 import providerService from "../../../services/provider.service";
 
@@ -17,6 +20,7 @@ import Task from "../../../components/Task";
 import Toolbar from "../../../components/Task/Toolbar";
 import Pagination from "../../../components/Task/Pagination";
 import Loading from "../../../components/spinners/Loading";
+import Alert from "../../../components/Alert";
 
 // styles
 import {View} from "../../../design";
@@ -30,6 +34,7 @@ import {
 export default function ListProviders(props: RouteChildrenProps) {
     const {history} = props;
     const {path} = useRouteMatch();
+    const feedback = useFeedback();
 
     const headLabels: Array<TableHeadProps> = [
         {
@@ -46,7 +51,10 @@ export default function ListProviders(props: RouteChildrenProps) {
         },
     ];
 
+    const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [refresh, setRefresh] = useState(false);
+    const [processing, setProcessing] = useState(false);
     const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [providers, setProviders] = useState<Array<Provider>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
@@ -59,6 +67,41 @@ export default function ListProviders(props: RouteChildrenProps) {
         filter: "name", 
         orderBy: "name",
     });
+
+    function handleOpenAlert() {
+        setOpen(true);
+    }
+
+    function handleCloseAlert() {
+        setOpen(false);
+    }
+
+    function toggleRefresh() {
+        setRefresh(!refresh);
+    }
+
+    async function handleRemoveSelecteds() {
+        handleCloseAlert();
+        setProcessing(true);
+        
+        try {
+            const deleted = await Promise.all(selecteds.map(id => providerService.delete(id)));
+            feedback.open({severity: "success"});
+            setProcessing(false);
+            setSelecteds([]);
+            toggleRefresh();
+        } catch (error) {
+            setProcessing(false);
+            if(error.response) {
+                feedback.open({
+                    severity: "error",
+                    msg: error.response.data.msg,
+                });
+            } else {
+                feedback.open({severity: "error"});
+            }
+        }
+    }
 
     function handleChangePagination(key: string, value: any) {
         setPagination(pagination => ({ ...pagination, [key]: value }));
@@ -91,15 +134,12 @@ export default function ListProviders(props: RouteChildrenProps) {
         handleChangePagination("text", text);
     }
 
-    function handleRemoveSelecteds() {
-
-    }
-
     function handleChangeSelecteds(selecteds: Array<string>) {
         setSelecteds(selecteds);
     }
 
     async function index() {
+        setLoading(true);
         try {
             const providers = await providerService.pagination(pagination);
             const {count, rows} = providers;
@@ -111,7 +151,7 @@ export default function ListProviders(props: RouteChildrenProps) {
         }
     }
 
-    useEffect(() => {index()}, []);
+    useEffect(() => {index()}, [refresh]);
 
     function createRows(providers: Array<Provider>) {
         const rows: Array<RowProps> = providers.map(provider => {
@@ -138,8 +178,17 @@ export default function ListProviders(props: RouteChildrenProps) {
 
     return(
         <GridContainer>
+            <Alert 
+                open={open} 
+                theme="danger" 
+                title="Excluir selecionados?"
+                msg="Esta ação não poderá ser desfeita"
+                onConfirm={handleRemoveSelecteds}
+                onCancel={handleCloseAlert}
+                onClose={handleCloseAlert}
+            />
             <GridToolbar>
-                <Toolbar title="Fornecedores" numSelected={selecteds.length} onAdd={handleAdd} />
+                <Toolbar title="Fornecedores" numSelected={selecteds.length} onAdd={handleAdd} onDelete={handleOpenAlert} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (

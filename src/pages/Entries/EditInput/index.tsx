@@ -153,7 +153,7 @@ export default function EditInput(props: InputFormProps) {
                             value={inputs.entry_date}
                             onChange={handleChange}
                         />
-                        <span className="helper-text">*Se não for fornecida, será considerada a data atual</span>
+                        {!input.id && (<span className="helper-text">*Se não for fornecida, será considerada a data atual</span>)}
                     </Col>
                     <Col sm="4">
                         <InputLabel>Número da Fatura</InputLabel>
