@@ -131,6 +131,7 @@ export default function ListDoctors(props: RouteChildrenProps) {
     }
 
     async function index() {
+        setLoading(true);
         try {
             const aircrafts = await aircraftService.pagination(pagination);
             const {count, rows} = aircrafts;
@@ -142,9 +143,12 @@ export default function ListDoctors(props: RouteChildrenProps) {
         }
     }
 
-    useEffect(() => {
-        index();
-    }, []);
+    useEffect(() => {index()}, [
+        refresh,
+        pagination.limit,
+        pagination.offset,
+        pagination.page,
+    ]);
 
     function createRows(aircrafts: Array<Aircraft>) {
         const rows: Array<RowProps> = aircrafts.map(aircraft => {

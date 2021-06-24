@@ -131,6 +131,7 @@ export default function ListBases(props: RouteChildrenProps) {
     }
 
     async function index() {
+        setLoading(true);
         try {
             const bases = await baseService.pagination(pagination);
             const {count, rows} = bases;
@@ -142,7 +143,12 @@ export default function ListBases(props: RouteChildrenProps) {
         }
     }
 
-    useEffect(() => {index()}, []);
+    useEffect(() => {index()}, [
+        refresh,
+        pagination.limit,
+        pagination.offset,
+        pagination.page,
+    ]);
 
     function createRows(bases: Array<Base>) {
         const rows: Array<RowProps> = bases.map(base => {

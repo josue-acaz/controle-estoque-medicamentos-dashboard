@@ -151,7 +151,12 @@ export default function ListProviders(props: RouteChildrenProps) {
         }
     }
 
-    useEffect(() => {index()}, [refresh]);
+    useEffect(() => {index()}, [
+        refresh,
+        pagination.limit,
+        pagination.offset,
+        pagination.page,
+    ]);
 
     function createRows(providers: Array<Provider>) {
         const rows: Array<RowProps> = providers.map(provider => {

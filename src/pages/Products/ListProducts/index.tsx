@@ -148,6 +148,7 @@ export default function ListCategories(props: RouteChildrenProps) {
     }
 
     async function index() {
+        setLoading(true);
         try {
             const products = await productService.pagination(pagination);
             const {count, rows} = products;
@@ -159,7 +160,12 @@ export default function ListCategories(props: RouteChildrenProps) {
         }
     }
 
-    useEffect(() => {index()}, [refresh]);
+    useEffect(() => {index()}, [
+        refresh,
+        pagination.limit,
+        pagination.offset,
+        pagination.page,
+    ]);
 
     function createRows(products: Array<Product>) {
         const rows: Array<RowProps> = products.map(product => {

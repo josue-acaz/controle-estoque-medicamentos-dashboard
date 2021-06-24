@@ -131,6 +131,7 @@ export default function ListCategories(props: RouteChildrenProps) {
     }
 
     async function index() {
+        setLoading(true);
         try {
             const providers = await categoryService.pagination(pagination);
             const {count, rows} = providers;
@@ -142,7 +143,12 @@ export default function ListCategories(props: RouteChildrenProps) {
         }
     }
 
-    useEffect(() => {index()}, [refresh]);
+    useEffect(() => {index()}, [
+        refresh,
+        pagination.limit,
+        pagination.offset,
+        pagination.page,
+    ]);
 
     function createRows(categories: Array<Category>) {
         const rows: Array<RowProps> = categories.map(category => {

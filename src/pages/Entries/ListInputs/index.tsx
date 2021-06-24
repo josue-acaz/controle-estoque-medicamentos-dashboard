@@ -197,14 +197,16 @@ export default function ListInputs(props: ListInputsProps) {
                 />
             </Header>
             <List>
-                <Task 
-                    fixedHeader={true}
-                    widthActions={false}
-                    selecteds={selecteds}
-                    headLabels={headLabels} 
-                    rows={createRows(inputs)}
-                    onChangeSelecteds={handleChangeSelecteds}
-                />
+                {loading ? <Loading /> : (
+                    <Task 
+                        fixedHeader={true}
+                        widthActions={false}
+                        selecteds={selecteds}
+                        headLabels={headLabels} 
+                        rows={createRows(inputs)}
+                        onChangeSelecteds={handleChangeSelecteds}
+                    />
+                )}
             </List>
             <Footer>
                 <Pagination 

@@ -136,6 +136,7 @@ export default function ListDoctors(props: RouteChildrenProps) {
     }
 
     async function index() {
+        setLoading(true);
         try {
             const doctors = await doctorService.pagination(pagination);
             const {count, rows} = doctors;
@@ -147,7 +148,12 @@ export default function ListDoctors(props: RouteChildrenProps) {
         }
     }
 
-    useEffect(() => {index()}, [refresh]);
+    useEffect(() => {index()}, [
+        refresh,
+        pagination.limit,
+        pagination.offset,
+        pagination.page,
+    ]);
 
     function createRows(doctors: Array<Doctor>) {
         const rows: Array<RowProps> = doctors.map(doctor => {

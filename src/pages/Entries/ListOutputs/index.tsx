@@ -188,14 +188,16 @@ export default function ListOutputs(props: ListOutputsProps) {
                 />
             </Header>
             <List>
-                <Task 
-                    fixedHeader={true}
-                    widthActions={false}
-                    selecteds={selecteds}
-                    headLabels={headLabels} 
-                    rows={createRows(outputs)}
-                    onChangeSelecteds={handleChangeSelecteds}
-                />
+                {loading ? <Loading /> : (
+                    <Task 
+                        fixedHeader={true}
+                        widthActions={false}
+                        selecteds={selecteds}
+                        headLabels={headLabels} 
+                        rows={createRows(outputs)}
+                        onChangeSelecteds={handleChangeSelecteds}
+                    />
+                )}
             </List>
             <Footer>
                 <Pagination 
