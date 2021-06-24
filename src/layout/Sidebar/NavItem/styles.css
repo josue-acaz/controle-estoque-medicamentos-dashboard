@@ -21,12 +21,6 @@
 .submenus {
     color: #666666;
 }
-.menu-item-active {
-    background-color: rgba(247, 247, 247, .5);
-    cursor: pointer;
-    border-left: 2px solid #324f80;
-    border-right: 2px solid transparent;
-}
 .menu-item .left .col-item {
     display: inline-block;
     height: 100%;
@@ -57,6 +51,13 @@
 .menu-item:hover {
     background-color: #f7f7f780;
     cursor: pointer;
+    border-left-width: 2px;
+    border-left-color: #324f80;
+    color: #324f80;
+    border-left-style: solid;
+}
+.menu-item-active {
+    background-color: #f7f7f780;
     border-left-width: 2px;
     border-left-color: #324f80;
     color: #324f80;

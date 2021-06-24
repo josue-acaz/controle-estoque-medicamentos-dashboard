@@ -5,6 +5,7 @@ interface MinimumStockRowProps {
     numSelected: number;
     selected: boolean;
     onEdit(id: string): void;
+    onDelete(selecteds: Array<string>): void;
 };
 
 export type {MinimumStockRowProps};

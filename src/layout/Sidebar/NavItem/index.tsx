@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 
 // types
 import {
     NavItemActionProps, 
     NavItemComponent,
 } from "./types";
+import {SidebarOption} from "../types";
 
 // icons
 import IconButton from '@material-ui/core/IconButton';
@@ -20,8 +21,26 @@ const NavItemAction: React.FC<NavItemActionProps> = ({children, to, expansive}) 
     <Link className="nav-item-action" to={to}>{children}</Link>
 );
 
-const NavItem: React.FC<NavItemComponent> = ({to, label, icon, childs=[]}) => {
+function NavItemChilds(props: SidebarOption) {
+    const {to, icon, label, childs, active} = props;
+
+    return(
+        <NavItem 
+            to={to} 
+            icon={icon}
+            label={label} 
+            active={active}
+            childs={childs}
+        />
+    );
+}
+
+export default function NavItem(props: SidebarOption) {
+    const {to, childs, icon, label, active} = props;
     const expansive = childs.length > 0;
+    
+    const location = useLocation();
+    const isActive = (to: string) => to === location.pathname;
 
     const [open, setOpen] = useState(false);
     function toggleOpen() {
@@ -30,7 +49,7 @@ const NavItem: React.FC<NavItemComponent> = ({to, label, icon, childs=[]}) => {
 
     return(
         <NavItemAction to={to} expansive={expansive}>
-            <div onClick={toggleOpen} className="menu-item">
+            <div onClick={toggleOpen} className={`menu-item ${active ? "menu-item-active" : ""}`}>
                 <div className="left">
                     <div className="col-item">
                         <div className="to-center">
@@ -53,19 +72,9 @@ const NavItem: React.FC<NavItemComponent> = ({to, label, icon, childs=[]}) => {
             </div>
             {expansive && open && (
                 <div className="submenus">
-                    {childs.map((option, index) => (
-                        <NavItem 
-                            key={index}
-                            to={option.to} 
-                            icon={option.icon}
-                            label={option.label} 
-                            childs={option.childs}
-                        />
-                    ))}
+                    {childs.map((option, index) => <NavItemChilds key={index} {...option} active={isActive(option.to)} />)}
                 </div>
             )}
         </NavItemAction>
     );
-};
-
-export default NavItem;
+}

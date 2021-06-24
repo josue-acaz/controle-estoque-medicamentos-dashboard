@@ -2,7 +2,9 @@ interface NavItemProps {
     to: string;
     icon: React.ReactNode;
     label: string;
+    active?: boolean;
     childs: Array<NavItemProps>;
+    onClick(): void;
 }
 
 interface NavItemActionProps {

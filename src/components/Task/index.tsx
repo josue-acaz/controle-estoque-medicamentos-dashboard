@@ -26,18 +26,20 @@ import {
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 
 function TableHeadComponent(props: TableHeadComponentProps) {
-    const {color, rowCount, numSelected, headLabels, fixedHeader, widthActions, onSelectAllClick} = props;
+    const {color, rowCount, selectable, numSelected, headLabels, fixedHeader, widthActions, onSelectAllClick} = props;
 
     return(
         <TableHead>
             <TableRow>
-                <TableHeadCell padding="checkbox">
-                    <Checkbox
-                        indeterminate={numSelected > 0 && numSelected < rowCount}
-                        checked={rowCount > 0 && numSelected === rowCount}
-                        onChange={onSelectAllClick}
-                    />
-                </TableHeadCell>
+                {selectable && (
+                    <TableHeadCell padding="checkbox">
+                        <Checkbox
+                            indeterminate={numSelected > 0 && numSelected < rowCount}
+                            checked={rowCount > 0 && numSelected === rowCount}
+                            onChange={onSelectAllClick}
+                        />
+                    </TableHeadCell>
+                )}
                 {headLabels.map(head_label => (
                     <TableHeadCell 
                         key={head_label.key} 
@@ -55,17 +57,19 @@ function TableHeadComponent(props: TableHeadComponentProps) {
 }
 
 function TableRowComponent(props: TableRowComponentProps) {
-    const {row, selected, widthActions, hoverTitle, hoverSelected, disable_select, onClick, onEdit, onHoverClick} = props;
+    const {row, selected, selectable, widthActions, hoverTitle, hoverSelected, disable_select, onClick, onEdit, onHoverClick} = props;
 
     return(
         <TableRow selected={selected}>
-            <TableCell padding="checkbox">
-                <Checkbox checked={selected} onClick={(event) => {
-                    if(!disable_select) {
-                        onClick(event, row.id);
-                    }
-                }} />
-            </TableCell>
+            {selectable && (
+                <TableCell padding="checkbox">
+                    <Checkbox checked={selected} onClick={(event) => {
+                        if(!disable_select) {
+                            onClick(event, row.id);
+                        }
+                    }} />
+                </TableCell>
+            )}
             {row.cells.map(cell => <TableCell color={cell.color}>{cell.value}</TableCell>)}
             {widthActions && (
                 <TableCell align="right">
@@ -85,7 +89,7 @@ function TableRowComponent(props: TableRowComponentProps) {
 }
 
 export default function Task(props: TableProps) {
-    const {color, rows, headLabels, fixedHeader, selecteds, widthActions=true, onEditRow, onChangeSelecteds} = props;
+    const {color, rows, selectable=true, headLabels, fixedHeader, selecteds, widthActions=true, onEditRow, onChangeSelecteds} = props;
 
     const handleClick = (event: any, id: string) => {
         const selectedIndex = selecteds.indexOf(id);
@@ -125,6 +129,7 @@ export default function Task(props: TableProps) {
                 color={color}
                 rowCount={rows.length} 
                 headLabels={headLabels}
+                selectable={selectable}
                 fixedHeader={fixedHeader}
                 widthActions={widthActions}
                 numSelected={selecteds.length}
@@ -136,6 +141,7 @@ export default function Task(props: TableProps) {
                         row={row} 
                         onEdit={onEditRow}
                         onClick={handleClick} 
+                        selectable={selectable}
                         selected={isSelected(row.id)}
                         widthActions={widthActions}
                         hoverTitle={row.hoverTitle}

@@ -134,6 +134,7 @@ export default function ListLots(props: ListLotsProps) {
                 <ListLotsView>
                     <ListLotsContent>
                         <Task 
+                            selectable={false}
                             fixedHeader={true}
                             widthActions={false}
                             selecteds={selecteds}

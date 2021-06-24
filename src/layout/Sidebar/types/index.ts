@@ -3,6 +3,7 @@ interface SidebarOption {
     icon: any;
     label: string;
     childs: Array<SidebarOption>;
+    active?: boolean;
 };
 
 interface SidebarProps {
@@ -10,4 +11,4 @@ interface SidebarProps {
     options: Array<SidebarOption>;
 };
 
-export type {SidebarProps};
+export type {SidebarOption, SidebarProps};

@@ -39,6 +39,7 @@ interface TableHeadCellProps {
 interface TableProps {
     color?: string;
     rows: Array<RowProps>;
+    selectable?: boolean;
     fixedHeader?: boolean;
     selecteds: Array<string>;
     widthActions?: boolean;
@@ -50,6 +51,7 @@ interface TableProps {
 interface TableHeadComponentProps {
     color?: string;
     rowCount: number;
+    selectable: boolean;
     numSelected: number;
     fixedHeader?: boolean;
     widthActions?: boolean;
@@ -60,6 +62,7 @@ interface TableHeadComponentProps {
 interface TableRowComponentProps {
     row: RowProps;
     selected: boolean;
+    selectable: boolean;
     widthActions?: boolean;
     hoverTitle?: string;
     hoverSelected?: boolean;

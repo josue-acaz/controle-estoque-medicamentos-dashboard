@@ -1,7 +1,8 @@
 import React from "react";
+import {useLocation} from "react-router-dom";
 
 // types
-import {SidebarProps} from "./types";
+import {SidebarProps, SidebarOption} from "./types";
 
 // components
 import NavItem from "./NavItem";
@@ -12,18 +13,13 @@ import {SidebarView, List} from "./styles";
 export default function Sidebar(props: SidebarProps) {
     const {options} = props;
 
+    const location = useLocation();
+    const isActive = (to: string) => to === location.pathname;
+
     return(
         <SidebarView {...props}>
             <List>
-                {options.map((option, index) => (
-                    <NavItem 
-                        key={index} 
-                        to={option.to} 
-                        icon={option.icon} 
-                        label={option.label}
-                        childs={option.childs}
-                    />
-                ))}
+                {options.map((option, index) => <NavItem key={index} {...option} active={isActive(option.to)} />)}
             </List>
         </SidebarView>
     );

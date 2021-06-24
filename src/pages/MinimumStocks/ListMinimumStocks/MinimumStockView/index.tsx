@@ -20,7 +20,7 @@ import {
 import {View} from "../../../../design";
 
 export default function MinimumStockView(props: MinimumStockRowProps) {
-    const {base, numSelected, selected, onEdit} = props;
+    const {base, numSelected, selected, onEdit, onDelete} = props;
     const [selecteds, setSelecteds] = useState<Array<string>>([]);
 
     const headLabels: Array<TableHeadProps> = [
@@ -66,6 +66,7 @@ export default function MinimumStockView(props: MinimumStockRowProps) {
                     title={base.name} 
                     search={false}
                     numSelected={selecteds.length} 
+                    onDelete={() => onDelete(selecteds)}
                 />
             </ToolbarView>
             

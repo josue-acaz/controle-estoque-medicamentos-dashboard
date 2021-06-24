@@ -12,10 +12,13 @@ import {PaginationProps} from "../../../components/Table/Pagination/types";
 // models
 import Base from "../../../models/Base";
 
+// contexts
+import {useFeedback} from "../../../contexts/feedback/feedback.context";
+
 // components
 import ToolbarActions from "../../../components/ToolbarActions";
 import Loading from "../../../components/spinners/Loading";
-import Table from "../../../components/Table";
+import Alert from "../../../components/Alert";
 import Pagination from "../../../components/Table/Pagination";
 import MinimumStockView from "./MinimumStockView";
 
@@ -26,14 +29,18 @@ import {
     GridContent,
     GridFooter,
 } from "../../../design/grid";
-import {View} from "../../../design";
 
 export default function ListMinimumStocks(props: RouteChildrenProps) {
     const {history} = props;
     const {path} = useRouteMatch();
+    
+    const feedback = useFeedback();
+    const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
-
+    const [refresh, setRefresh] = useState(false);
+    const [processing, setProcessing] = useState(false);
     const [bases, setBases] = useState<Array<Base>>([]);
+    const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
         limit: 10, 
         offset: 0, 
@@ -45,8 +52,39 @@ export default function ListMinimumStocks(props: RouteChildrenProps) {
         orderBy: "name",
     });
 
-    function handleRemoveSelecteds() {
+    function toggleRefresh() {
+        setRefresh(!refresh);
+    }
 
+    function handleOpenAlert() {
+        setOpen(true);
+    }
+
+    function handleCloseAlert() {
+        setOpen(false);
+    }
+
+    async function handleRemoveSelecteds() {
+        handleCloseAlert();
+        setProcessing(true);
+        
+        try {
+            const deleted = await Promise.all(selecteds.map(id => minimumStockService.delete(id)));
+            feedback.open({severity: "success"});
+            setProcessing(false);
+            setSelecteds([]);
+            toggleRefresh();
+        } catch (error) {
+            setProcessing(false);
+            if(error.response) {
+                feedback.open({
+                    severity: "error",
+                    msg: error.response.data.msg,
+                });
+            } else {
+                feedback.open({severity: "error"});
+            }
+        }
     }
 
     function handleChangePagination(key: string, value: any) {
@@ -81,6 +119,7 @@ export default function ListMinimumStocks(props: RouteChildrenProps) {
     }
 
     async function index() {
+        setLoading(true);
         try {
             const bases = await minimumStockService.bases(pagination);
             const {count, rows} = bases;
@@ -92,18 +131,36 @@ export default function ListMinimumStocks(props: RouteChildrenProps) {
         }
     }
 
-    useEffect(() => {
-        index();
-    }, []);
+    useEffect(() => {index()}, [refresh]);
 
     return(
         <GridContainer>
+            <Alert 
+                open={open} 
+                theme="danger" 
+                title="Excluir selecionados?"
+                msg="Esta ação não poderá ser desfeita"
+                onConfirm={handleRemoveSelecteds}
+                onCancel={handleCloseAlert}
+                onClose={handleCloseAlert}
+            />
             <GridToolbar>
                 <ToolbarActions title="Estoque mínimo" action={EnumActions.LIST} onAdd={handleAdd} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (
-                    bases.map(base => <MinimumStockView base={base} numSelected={0} selected={false} onEdit={handleEdit} />)
+                    bases.map(base => (
+                        <MinimumStockView 
+                            base={base} 
+                            numSelected={0} 
+                            selected={false} 
+                            onEdit={handleEdit} 
+                            onDelete={(selecteds: Array<string>) => {
+                                setSelecteds(selecteds);
+                                handleOpenAlert();
+                            }} 
+                        />
+                    ))
                 )}
             </GridContent>
             <GridFooter>

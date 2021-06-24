@@ -4,6 +4,9 @@ import {useRouteMatch} from "react-router-dom";
 // services
 import baseService from "../../../services/base.service";
 
+// contexts
+import {useFeedback} from "../../../contexts/feedback/feedback.context";
+
 // models
 import Base from "../../../models/Base";
 
@@ -17,6 +20,7 @@ import Loading from "../../../components/spinners/Loading";
 import Task from "../../../components/Task";
 import Toolbar from "../../../components/Task/Toolbar";
 import Pagination from "../../../components/Task/Pagination";
+import Alert from "../../../components/Alert";
 
 // styles
 import {
@@ -38,7 +42,11 @@ export default function ListBases(props: RouteChildrenProps) {
         },
     ];
 
+    const feedback = useFeedback();
+    const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [refresh, setRefresh] = useState(false);
+    const [processing, setProcessing] = useState(false);
     const [bases, setBases] = useState<Array<Base>>([]);
     const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
@@ -52,8 +60,39 @@ export default function ListBases(props: RouteChildrenProps) {
         orderBy: "name",
     });
 
-    function handleRemoveSelecteds() {
+    function toggleRefresh() {
+        setRefresh(!refresh);
+    }
 
+    function handleOpenAlert() {
+        setOpen(true);
+    }
+
+    function handleCloseAlert() {
+        setOpen(false);
+    }
+
+    async function handleRemoveSelecteds() {
+        handleCloseAlert();
+        setProcessing(true);
+        
+        try {
+            const deleted = await Promise.all(selecteds.map(id => baseService.delete(id)));
+            feedback.open({severity: "success"});
+            setProcessing(false);
+            setSelecteds([]);
+            toggleRefresh();
+        } catch (error) {
+            setProcessing(false);
+            if(error.response) {
+                feedback.open({
+                    severity: "error",
+                    msg: error.response.data.msg,
+                });
+            } else {
+                feedback.open({severity: "error"});
+            }
+        }
     }
 
     function handleChangePagination(key: string, value: any) {
@@ -124,8 +163,17 @@ export default function ListBases(props: RouteChildrenProps) {
 
     return(
         <GridContainer>
+            <Alert 
+                open={open} 
+                theme="danger" 
+                title="Excluir selecionados?"
+                msg="Esta ação não poderá ser desfeita"
+                onConfirm={handleRemoveSelecteds}
+                onCancel={handleCloseAlert}
+                onClose={handleCloseAlert}
+            />
             <GridToolbar>
-                <Toolbar title="Bases" numSelected={selecteds.length} onAdd={handleAdd} />
+                <Toolbar title="Bases" numSelected={selecteds.length} onAdd={handleAdd} onDelete={handleOpenAlert} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (

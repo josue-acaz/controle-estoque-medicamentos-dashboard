@@ -12,7 +12,6 @@ import {PaginationProps} from "../../../components/Task/Pagination/types";
 import Task from "../../../components/Task";
 import Toolbar from "../../../components/Task/Toolbar";
 import Pagination from "../../../components/Task/Pagination";
-import Circular from "../../../components/spinners/Circular";
 
 // services
 import stockService from "../../../services/stock.service";
@@ -48,8 +47,8 @@ export default function ListStocks(props: ListStocksProps) {
     ];
 
     const [loading, setLoading] = useState(true);
-    const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [stocks, setStocks] = useState<Array<Stock>>([]);
+    const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
         limit: 10, 
         offset: 0, 
@@ -89,7 +88,7 @@ export default function ListStocks(props: ListStocksProps) {
             setStocks(rows);
             setLoading(false);
         } catch (error) {
-            
+            setLoading(false);
         }
     }
 
@@ -132,7 +131,7 @@ export default function ListStocks(props: ListStocksProps) {
                             value: product_input.total,
                         },
                         {
-                            value: minimum_stock ? minimum_stock.quantity : "-"
+                            value: minimum_stock ? minimum_stock.quantity : "Não definida"
                         }
                     ],
                 };
