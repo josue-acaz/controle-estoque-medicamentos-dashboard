@@ -79,7 +79,11 @@ export default function ListOutputs(props: ListOutputsProps) {
         setProcessing(true);
 
         try {
-            const deleted = await Promise.all(selecteds.map(id => outputService.delete(id)));
+            for (let index = 0; index < selecteds.length; index++) {
+                const id = selecteds[index];
+                await outputService.delete(id);
+            }
+            
             feedback.open({severity: "success"});
             setProcessing(false);
             setSelecteds([]);

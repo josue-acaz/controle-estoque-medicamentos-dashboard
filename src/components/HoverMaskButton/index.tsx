@@ -13,11 +13,11 @@ import {
 } from "./styles";
 
 export default function HoverMaskButton(props: React.ButtonHTMLAttributes<HTMLButtonElement> & HoverMaskButtonProps) {
-    const {title="", icon} = props;
+    const {title="", icon, styleType="hover"} = props;
 
     return(
         <HoverMaskButtonView {...props}>
-            <HoverMaskButtonContent>
+            <HoverMaskButtonContent styleType={styleType}>
                 <Feedback>
                     <Title>{title}</Title>
                     {icon && <Icon>{icon}</Icon>}

@@ -96,9 +96,9 @@ export default function InputMovementRow(props: InputMovementRowProps) {
                 <TableCell>{formatDatetime(input.entry_date, EnumDateFormatTypes.READABLE_V5)}</TableCell>
                 <TableCell>{currency(Number(input.freight))}</TableCell>
                 <TableCell>
-                    <p>{input.product_inputs?.length}</p>
                     <HoverMaskButton 
-                        title={open ? "Ocultar itens" : "Mostrar itens"} 
+                        styleType="visible"
+                        title={open ? `${input.product_inputs?.length} Ocultar` : `${input.product_inputs?.length} Mostrar`} 
                         icon={open ? <ExpandLessIcon className="icon" /> : <ExpandMoreIcon className="icon"/>} 
                         onClick={toggleOpen}
                     />

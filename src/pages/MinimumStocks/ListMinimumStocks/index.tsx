@@ -69,7 +69,10 @@ export default function ListMinimumStocks(props: RouteChildrenProps) {
         setProcessing(true);
         
         try {
-            const deleted = await Promise.all(selecteds.map(id => minimumStockService.delete(id)));
+            for (let index = 0; index < selecteds.length; index++) {
+                const id = selecteds[index];
+                await minimumStockService.delete(id);
+            }
             feedback.open({severity: "success"});
             setProcessing(false);
             setSelecteds([]);

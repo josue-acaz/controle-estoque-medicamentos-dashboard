@@ -94,7 +94,10 @@ export default function ListCategories(props: RouteChildrenProps) {
         setProcessing(true);
         
         try {
-            const deleted = await Promise.all(selecteds.map(id => productService.delete(id)));
+            for (let index = 0; index < selecteds.length; index++) {
+                const id = selecteds[index];
+                await productService.delete(id);
+            }
             feedback.open({severity: "success"});
             setProcessing(false);
             setSelecteds([]);

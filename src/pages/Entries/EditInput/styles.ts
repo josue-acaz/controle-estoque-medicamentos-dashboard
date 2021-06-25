@@ -10,7 +10,9 @@ const EditProductInputContainer = styled.div`
     margin-top: 15px;
 `;
 
-const ListProductInputContainer = styled.div``;
+const ListProductInputContainer = styled.div`
+    overflow-y: hidden;
+`;
 
 const FormActions = styled.div`
     display: flex;

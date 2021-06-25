@@ -3,7 +3,7 @@ import React from 'react';
 import "./styles.css";
 
 const Spinner = () => (
-    <div className="auto-spinner">
+    <div className="auto-loader">
     </div>
 );
 

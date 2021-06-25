@@ -104,10 +104,12 @@ export default function ListProducts(props: ListProductInputsProps) {
     async function handleRemoveSelecteds() {
         handleCloseAlert();
         setProcessing(true);
-
         
         try {
-            const deleted = await Promise.all(selecteds.map(id => productInputService.delete(id)));
+            for (let index = 0; index < selecteds.length; index++) {
+                const id = selecteds[index];
+                await productInputService.delete(id);
+            }
             feedback.open({severity: "success"});
             setProcessing(false);
             setSelecteds([]);

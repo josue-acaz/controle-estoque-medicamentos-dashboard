@@ -4,12 +4,12 @@ const NavbarView = styled.header`
     background: #ffffff;
     grid-area: header;
     box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.23);
-    z-index: 999;
+    z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 10px;
+    padding-right: 10px;
 `;
 
 const CollapseButton = styled.button`

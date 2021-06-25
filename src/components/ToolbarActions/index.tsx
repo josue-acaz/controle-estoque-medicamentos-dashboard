@@ -48,7 +48,7 @@ export default function ToolbarActions(props: ToolbarActionsProps) {
                             <HistorySpan>
                                 {index !== routes.length - 1 ? (
                                     <>
-                                        <Link to={route.path}>{route.label}</Link>
+                                        <Link className="link" to={route.path}>{route.label}</Link>
                                         <ArrowForwardIosIcon className="icon" />
                                     </>
                                 ) : <HistoryText><p>{route.label}</p></HistoryText>}

@@ -11,14 +11,14 @@ interface TabItemProps {
     title: string;
     subtitle?: string;
     active: boolean;
-    activeColor: string;
+    activeColor?: string;
     icon?: React.ReactNode;
     onClick(event: onTabItemClickEvent): void;
 };
 
 interface TabItemActiveBarProps {
     active: boolean;
-    activeColor: string;
+    activeColor?: string;
 };
 
 export type {

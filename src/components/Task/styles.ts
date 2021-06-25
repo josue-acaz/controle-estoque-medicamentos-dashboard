@@ -12,6 +12,10 @@ const TableView = styled.table`
     position: relative;
     background-color: #ffffff;
     z-index: 50;
+
+    @media screen and (max-width: 1200px) {
+        border-left: 1px solid #eeeeee;
+    }
 `;
 
 const TableBody = styled.tbody`
@@ -35,6 +39,10 @@ const TableHeadCell = styled.th<TableHeadCellProps>`
     font-weight: 600;
     border-right: 1px solid #eeeeee;
     border-bottom: 1px solid #eeeeee;
+    @media screen and (max-width: 1200px) {
+        font-size: 12px;
+        border-top: 1px solid #eeeeee;
+    }
     text-align: ${props => props.align ? props.align : "left"};
     background-color: ${props => props.color ? props.color : "#ffffff"};
     ${props => props.fixedHeader ? "position: sticky; top: 0px" : ""};
@@ -49,6 +57,9 @@ const TableCell = styled.td<TableCellProps>`
     vertical-align: middle;
     position: relative;
     font-size: 14px;
+    @media screen and (max-width: 1200px) {
+        font-size: 12px;
+    }
     color: ${props => props.color ? props.color : "#333333"};
     text-align: ${props => props.align ? props.align : "left"};
     ${props => props.padding === "checkbox" ? "width: 55px; padding: 0 0 0 5px" : ""};

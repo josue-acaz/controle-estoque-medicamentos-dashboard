@@ -25,6 +25,11 @@ const List = styled.div`
     border: 1px solid #cccccc;
     /**border: inset;
     border-width: 3px; */
+
+    @media screen and (max-width: 1200px) {
+        border: none;
+        border-top: 1px solid #eeeeee;
+    }
 `;
 
 const Footer = styled.div`

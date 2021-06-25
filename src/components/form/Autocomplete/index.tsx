@@ -26,20 +26,25 @@ interface AutocompleteProps {
     placeholder?: string,
     Icon?: React.ReactNode | JSX.Element | any;
     iconPosition?: "start" | "end";
+    clear?: boolean;
 }
 
-export default function Autocomplete({
-    name,
-    inputText="",
-    params={}, 
-    endpoint, 
-    renderOption, 
-    fieldName="name",
-    error,
-    onOptionSelected, 
-    placeholder,
-    iconPosition,
-    Icon}: AutocompleteProps) {
+export default function Autocomplete(props: AutocompleteProps) {
+    const {
+        name,
+        inputText="",
+        params={}, 
+        endpoint, 
+        renderOption, 
+        fieldName="name",
+        error,
+        onOptionSelected, 
+        placeholder,
+        iconPosition,
+        Icon,
+        clear,
+    } = props;
+
     const [value, setValue] = useState("");
     const [loading, setLoading] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -124,6 +129,8 @@ export default function Autocomplete({
     useEffect(() => {
         setValue(inputText);
     }, [inputText]);
+
+    useEffect(() => {setValue("")}, [clear]);
 
     return(
         <Core 

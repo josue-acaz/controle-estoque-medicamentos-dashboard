@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {StockProps} from "./types";
 import {EnumAppColors} from "../../constants";
 
 const EntryView = styled.div`
@@ -51,6 +52,13 @@ const ListView = styled.div`
     grid-template-areas: "stock overview";
     padding-left: 10px;
     padding-right: 10px;
+
+    @media screen and (max-width: 1200px) {
+        grid-template-columns: 5fr;
+        grid-template-areas: "overview";
+        padding-left: 0px;
+        padding-right: 0px;
+    }
 `;
 
 const Overview = styled.div`
@@ -59,10 +67,21 @@ const Overview = styled.div`
     position: relative;
 `;
 
-const Stock = styled.div`
+const Stock = styled.div<StockProps>`
     grid-area: stock;
-    background-color: #ffffff;
     position: relative;
+    background-color: #ffffff;
+
+    @media screen and (max-width: 1200px) {
+        position: fixed;
+        top: 50px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        grid-area: unset;
+        z-index: 600;
+        display: ${props => props.show ? "block" : "none"};
+    }
 `;
 
 const Logo = styled.img`
@@ -82,6 +101,11 @@ const Header = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    @media screen and (max-width: 1200px) {
+        display: block;
+        height: auto;
+    }
 `;
 
 const Configs = styled.div``;
@@ -89,22 +113,34 @@ const Configs = styled.div``;
 const SelectAction = styled.div`
     display: flex;
     align-items: center;
+    
+    @media screen and (max-width: 1200px) {
+        justify-content: space-between;
+        margin-top: 5px;
+    }
 `;
 
 const ActionTitle = styled.p`
     font-size: 18px;
     color: #444444;
     font-weight: bold;
+
+    @media screen and (max-width: 1200px) {
+        font-size: 14px;
+    }
 `;
 
 const ActionSubtitle = styled.p`
     font-size: 14px;
     color: #888888;
+
+    @media screen and (max-width: 1200px) {
+        font-size: 12px;
+    }
 `;
 
 const ButtonNew = styled.button`
     width: auto;
-    width: 200px;
     border: none;
     background-color: transparent;
     color: ${EnumAppColors.PRIMARY};
@@ -112,8 +148,6 @@ const ButtonNew = styled.button`
     text-transform: uppercase;
     text-align: center;
     height: 45px;
-    padding-left: 1rem;
-    padding-right: 1rem;
     border-radius: 0px;
     display: flex;
     align-items: center;
@@ -124,6 +158,25 @@ const ButtonNew = styled.button`
         filter: brightness(.9);
         cursor: pointer;
         text-decoration: underline;
+    }
+`;
+
+const ShowStockButton = styled.button`
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: none;
+    z-index: 500;
+    height: 35px;
+    padding-right: 10px;
+    padding-left: 10px;
+    min-width: 130px;
+    border: none;
+    background-color: ${EnumAppColors.PRIMARY};
+    color: #ffffff;
+
+    @media screen and (max-width: 1200px) {
+        display: block;
     }
 `;
 
@@ -143,4 +196,5 @@ export {
     ActionTitle,
     ActionSubtitle,
     ButtonNew,
+    ShowStockButton,
 };

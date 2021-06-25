@@ -80,9 +80,9 @@ export default function OutputMovementRow(props: OutputMovementRowProps) {
                 <TableCell>{output.aircraft?.prefix}</TableCell>
                 <TableCell>{output.doctor?.name}</TableCell>
                 <TableCell>
-                    <p>{output.product_outputs?.length}</p>
                     <HoverMaskButton 
-                        title={open ? "Ocultar itens" : "Mostrar itens"} 
+                        styleType="visible"
+                        title={open ? `${output.product_outputs?.length} Ocultar` : `${output.product_outputs?.length} Mostrar`} 
                         icon={open ? <ExpandLessIcon className="icon" /> : <ExpandMoreIcon className="icon"/>} 
                         onClick={toggleOpen}
                     />

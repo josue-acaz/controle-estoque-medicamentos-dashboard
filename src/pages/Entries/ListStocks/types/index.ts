@@ -4,6 +4,7 @@ import MinimumStock from "../../../../models/MinimumStock";
 interface ListStocksProps {
     refresh: boolean;
     onStockSelected(product_input: ProductInput): void;
+    onClose(): void;
 };
 
 interface StockRowProps {

@@ -12,13 +12,16 @@ const InputElement = styled.input`
     height: 45px;
     width: 100%;
     color: #444444;
-    font-size: 16px;
+    font-size: 14px;
     border: none;
     border: 1px solid #c0c0c0;
     padding-left: 15px;
     padding-right: 15px;
     display: flex;
     align-items: center;
+    @media screen and (max-width: 1200px) {
+        font-size: 12px;
+    }
 `;
 
 const Span = styled.span`

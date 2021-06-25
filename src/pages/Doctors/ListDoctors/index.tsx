@@ -86,7 +86,10 @@ export default function ListDoctors(props: RouteChildrenProps) {
         setProcessing(true);
         
         try {
-            const deleted = await Promise.all(selecteds.map(id => doctorService.delete(id)));
+            for (let index = 0; index < selecteds.length; index++) {
+                const id = selecteds[index];
+                await doctorService.delete(id);
+            }
             feedback.open({severity: "success"});
             setProcessing(false);
             setSelecteds([]);

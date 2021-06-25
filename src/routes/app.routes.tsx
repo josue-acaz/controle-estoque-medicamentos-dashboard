@@ -86,60 +86,60 @@ const sidebarOptions: Array<SidebarOption> = [
     {
         to: "/entries",
         label: "Lançamentos",
-        icon: <TrendingUpOutlinedIcon />,
+        icon: <TrendingUpOutlinedIcon className="icon" />,
         childs: [],
     },
     {
         to: "/movements",
         label: "Movimentações",
-        icon: <SyncAltIcon />,
+        icon: <SyncAltIcon className="icon" />,
         childs: []
     },
     {
         to: "/minimum-stocks",
         label: "Estoque mínimo",
-        icon: <BarChartIcon />,
+        icon: <BarChartIcon className="icon" />,
         childs: [],
     },
     {
         to: "/",
         label: "Cadastros",
-        icon: <FolderIcon />,
+        icon: <FolderIcon className="icon" />,
         childs: [
             {
                 to: "/providers",
                 label: "Fornecedores",
-                icon: <PeopleAltIcon />,
+                icon: <PeopleAltIcon className="icon" />,
                 childs: [],
             },
             {
                 to: "/categories",
                 label: "Categorias",
-                icon: <LibraryAddCheckIcon />,
+                icon: <LibraryAddCheckIcon className="icon" />,
                 childs: [],
             },
             {
                 to: "/products",
                 label: "Medicamentos/Materiais",
-                icon: <LocalHospitalIcon />,
+                icon: <LocalHospitalIcon className="icon" />,
                 childs: [],
             },
             {
                 to: "/doctors",
                 label: "Médicos",
-                icon: <AssignmentIndIcon />,
+                icon: <AssignmentIndIcon className="icon" />,
                 childs: [],
             },
             {
                 to: "/bases",
                 label: "Bases",
-                icon: <LocationOnIcon />,
+                icon: <LocationOnIcon className="icon" />,
                 childs: [],
             },
             {
                 to: "/aircrafts",
                 label: "Aeronaves",
-                icon: <AirplanemodeActiveIcon />,
+                icon: <AirplanemodeActiveIcon className="icon" />,
                 childs: [],
             }
         ]

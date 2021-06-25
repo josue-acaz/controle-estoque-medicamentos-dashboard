@@ -30,10 +30,6 @@ import {
 import {View} from "../../../design";
 import {ListMovementsView} from "./styles";
 
-// icons
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-
 export default function ListMovements() {
     const [selectedTab, setSelectedTab] = useState(0);
 
@@ -42,15 +38,11 @@ export default function ListMovements() {
             name: "inputs",
             title: "Entradas",
             subtitle: "Lista das ordens de compra com entrada",
-            icon: <ArrowDownwardIcon className="input-icon" />,
-            activeColor: EnumAppColors.SUCCESS,
         },
         {
             name: "outputs",
             title: "Saídas",
             subtitle: "Lista das ordens de saida com base no lote",
-            icon: <ArrowUpwardIcon className="output-icon" />,
-            activeColor: EnumAppColors.ERROR,
         }
     ];
 

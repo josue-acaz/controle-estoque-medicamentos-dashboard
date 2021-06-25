@@ -1,12 +1,40 @@
 import styled from "styled-components";
+import {HoverMaskButtonContentPorps} from "./types";
 
-const HoverMaskButtonContent = styled.div`
-    display: none;
+const HoverMaskButtonContent = styled.div<HoverMaskButtonContentPorps>`
+    display: ${props => props?.styleType === "hover" ? "none" : "flex"};
     height: 100%;
     width: 100%;
     align-items: center;
     justify-content: center;
-    background-color: rgba(76, 175, 80, .5);
+    background-color: transparent;
+`;
+
+const Title = styled.p`
+    margin: 0;
+    font-size: 16px;
+    color: blue;
+    text-decoration: underline;
+
+    @media screen and (max-width: 1200px) {
+        font-size: 12px;
+    }
+`;
+
+const Icon = styled.div`
+    .icon {
+        font-size: 22px;
+        color: blue;
+    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media screen and (max-width: 1200px) {
+        .icon {
+            font-size: 18px;
+        }
+    }
 `;
 
 const HoverMaskButtonView = styled.button`
@@ -29,6 +57,16 @@ const HoverMaskButtonView = styled.button`
         ${HoverMaskButtonContent} {
             cursor: pointer;
             display: flex;
+            background-color: rgba(76, 175, 80, .5);
+        }
+        ${Title} {
+            color: #ffffff;
+        }
+        ${Icon} {
+            .icon {
+                font-size: 22px;
+                color: #ffffff;
+            }
         }
     }
 `;
@@ -36,22 +74,6 @@ const HoverMaskButtonView = styled.button`
 const Feedback = styled.div`
     height: 100%;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`;
-
-const Title = styled.p`
-    margin: 0;
-    font-size: 16px;
-    color: #ffffffff;
-`;
-
-const Icon = styled.div`
-    .icon {
-        font-size: 22px;
-        color: #ffffffff;
-    }
     display: flex;
     align-items: center;
     justify-content: center;

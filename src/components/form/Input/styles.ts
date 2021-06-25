@@ -15,6 +15,10 @@ const InputElement = styled.input<React.InputHTMLAttributes<HTMLInputElement> & 
     border: 1px solid #c0c0c0;
     padding-left: ${props => props.adormentPosition === "start" ? "35px" : "10px"};
     padding-right: ${props => props.adormentPosition === "end" ? "35px" : "10px"};
+
+    @media screen and (max-width: 1200px) {
+        font-size: 12px;
+    }
 `;
 
 const Adorment = styled.span<AdormentProps>`

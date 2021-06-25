@@ -5,7 +5,7 @@ interface TabItemProps {
     title: string;
     subtitle?: string;
     icon?: any;
-    activeColor: string;
+    activeColor?: string;
 };
 
 interface TabProps {

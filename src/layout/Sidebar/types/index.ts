@@ -3,12 +3,12 @@ interface SidebarOption {
     icon: any;
     label: string;
     childs: Array<SidebarOption>;
-    active?: boolean;
 };
 
 interface SidebarProps {
     minimized: boolean;
     options: Array<SidebarOption>;
+    onOptionClicked(): void;
 };
 
 export type {SidebarOption, SidebarProps};

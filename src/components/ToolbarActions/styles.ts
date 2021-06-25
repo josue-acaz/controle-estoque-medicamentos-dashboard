@@ -18,6 +18,10 @@ const AddButton = styled.button`
     font-size: 14px;
     color: #444444;
 
+    @media screen and (max-width: 1200px) {
+        font-size: 12px;
+    }
+
     &:hover {
         cursor: pointer;
         background-color: #aaaaaa;
@@ -27,6 +31,10 @@ const AddButton = styled.button`
 const Title = styled.p`
     color: #444444;
     font-size: 18px;
+
+    @media screen and (max-width: 1200px) {
+        font-size: 14px;
+    }
 `;
 
 const RightActions = styled.div``;
@@ -79,11 +87,20 @@ const HistoryText = styled.p`
     margin-left: .5rem;
     font-size: 16px;
     color: #505050;
+
+    @media screen and (max-width: 1200px) {
+        font-size: 13px;
+    }
 `;
 
 const HistorySpan = styled.span`
     display: flex;
     align-items: center;
+    @media screen and (max-width: 1200px) {
+        .link {
+            font-size: 13px;
+        }
+    }
 `;
 
 export {

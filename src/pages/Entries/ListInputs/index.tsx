@@ -83,7 +83,10 @@ export default function ListInputs(props: ListInputsProps) {
         setProcessing(true);
 
         try {
-            const deleted = await Promise.all(selecteds.map(id => inputService.delete(id)));
+            for (let index = 0; index < selecteds.length; index++) {
+                const id = selecteds[index];
+                await inputService.delete(id);
+            }
             feedback.open({severity: "success"});
             setProcessing(false);
             setSelecteds([]);

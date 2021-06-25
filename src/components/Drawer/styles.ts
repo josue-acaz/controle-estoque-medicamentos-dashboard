@@ -9,7 +9,7 @@ const DrawerView = styled.div`
     height: 100%;
     width: 100%;
     background-color: #ffffff;
-    z-index: 99;
+    z-index: 700;
     padding: 10px;
 `;
 
@@ -29,18 +29,25 @@ const Title = styled.p`
     font-size: 18px;
     font-weight: bold;
     color: #444444;
+    @media screen and (max-width: 1200px) {
+        font-size: 14px;
+    }
 `;
 
 const Subtitle = styled.p`
     font-size: 16px;
     font-weight: normal;
     color: #666666;
+    @media screen and (max-width: 1200px) {
+        font-size: 12px;
+    }
 `;
 
 const CloseButton = styled.button`
     border: none;
     height: 35px;
-    width: 80px;
+    padding-right: 15px;
+    padding-left: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -52,6 +59,10 @@ const CloseButton = styled.button`
     &:hover {
         cursor: pointer;
         filter: brightness(.9);
+    }
+
+    @media screen and (max-width: 1200px) {
+        font-size: 12px;
     }
 `;
 

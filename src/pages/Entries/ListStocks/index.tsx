@@ -22,10 +22,11 @@ import {
     Header,
     List,
     Footer,
+    CloseButton,
 } from "./styles";
 
 export default function ListStocks(props: ListStocksProps) {
-    const {refresh, onStockSelected} = props;
+    const {refresh, onStockSelected, onClose} = props;
 
     const headLabels: Array<TableHeadProps> = [
         {
@@ -146,6 +147,7 @@ export default function ListStocks(props: ListStocksProps) {
 
     return(
         <StockView>
+            <CloseButton onClick={onClose}>Fechar</CloseButton>
             <Header>
                 <Toolbar 
                     padding="overview" 
@@ -156,6 +158,7 @@ export default function ListStocks(props: ListStocksProps) {
             </Header>
             <List>
                 <Task 
+                    selectable={false}
                     fixedHeader={true}
                     widthActions={false}
                     selecteds={selecteds}

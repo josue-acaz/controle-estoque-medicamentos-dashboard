@@ -80,7 +80,9 @@ export default function EditInput(props: InputFormProps) {
             setProcessing(false);
             setSubmitted(false);
             onSaved(input);
-            clearForm();
+            if(!edit) {
+                clearForm();
+            }
             feedback.open({severity: "success"});
         } catch (error) {
             setProcessing(false);

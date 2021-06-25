@@ -5,6 +5,7 @@ import {Link, useLocation} from "react-router-dom";
 import {
     NavItemActionProps, 
     NavItemComponent,
+    NavItemProps,
 } from "./types";
 import {SidebarOption} from "../types";
 
@@ -16,13 +17,13 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 // styles
 import "./styles.css";
 
-const NavItemAction: React.FC<NavItemActionProps> = ({children, to, expansive}) => (
+const NavItemAction: React.FC<NavItemActionProps> = ({children, to, expansive, onClick}) => (
     expansive ? <div className="nav-item-action">{children}</div> :
-    <Link className="nav-item-action" to={to}>{children}</Link>
+    <Link className="nav-item-action" to={to} onClick={onClick}>{children}</Link>
 );
 
-function NavItemChilds(props: SidebarOption) {
-    const {to, icon, label, childs, active} = props;
+function NavItemChilds(props: NavItemProps) {
+    const {to, icon, label, childs, active, onClick} = props;
 
     return(
         <NavItem 
@@ -31,12 +32,13 @@ function NavItemChilds(props: SidebarOption) {
             label={label} 
             active={active}
             childs={childs}
+            onClick={onClick}
         />
     );
 }
 
-export default function NavItem(props: SidebarOption) {
-    const {to, childs, icon, label, active} = props;
+export default function NavItem(props: NavItemProps) {
+    const {to, childs, icon, label, active, onClick} = props;
     const expansive = childs.length > 0;
     
     const location = useLocation();
@@ -48,7 +50,7 @@ export default function NavItem(props: SidebarOption) {
     }
 
     return(
-        <NavItemAction to={to} expansive={expansive}>
+        <NavItemAction to={to} expansive={expansive} onClick={onClick}>
             <div onClick={toggleOpen} className={`menu-item ${active ? "menu-item-active" : ""}`}>
                 <div className="left">
                     <div className="col-item">
@@ -72,7 +74,7 @@ export default function NavItem(props: SidebarOption) {
             </div>
             {expansive && open && (
                 <div className="submenus">
-                    {childs.map((option, index) => <NavItemChilds key={index} {...option} active={isActive(option.to)} />)}
+                    {childs.map((option, index) => <NavItemChilds key={index} {...option} active={isActive(option.to)} onClick={onClick} />)}
                 </div>
             )}
         </NavItemAction>

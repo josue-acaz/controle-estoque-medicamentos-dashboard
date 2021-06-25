@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {isMobile} from "react-device-detect";
 
 // types
 import {LayoutProps} from "./types";
@@ -12,7 +13,7 @@ import Content from "./Content";
 import {LayoutView} from "./styles";
 
 const Layout: React.FC<LayoutProps> = ({children, sidebarOptions}) => {
-    const [minimized, setMinimized] = useState(false);
+    const [minimized, setMinimized] = useState(isMobile);
 
     function toggleMinimized() {
         setMinimized(!minimized);
@@ -24,7 +25,15 @@ const Layout: React.FC<LayoutProps> = ({children, sidebarOptions}) => {
                 <Content>
                     {children}
                 </Content>
-            <Sidebar minimized={minimized} options={sidebarOptions} />
+            <Sidebar 
+                minimized={minimized} 
+                options={sidebarOptions} 
+                onOptionClicked={() => {
+                    if(isMobile) {
+                        toggleMinimized();
+                    }
+                }} 
+            />
         </LayoutView>
     );
 };

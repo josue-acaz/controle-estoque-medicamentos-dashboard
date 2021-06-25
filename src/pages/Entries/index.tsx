@@ -33,6 +33,7 @@ import {
     SelectAction,
     ActionTitle,
     ActionSubtitle,
+    ShowStockButton,
 } from "./styles";
 
 export default function Entries() {
@@ -48,6 +49,7 @@ export default function Entries() {
     ];
 
     const [action, setAction] = useState<OptionProps>(actions[0]);
+    const [showStock, setShowStock] = useState(false);
     const [open, setOpen] = useState(false);
 
     function handleOpen() {
@@ -133,6 +135,10 @@ export default function Entries() {
         setSelectedStock(product_input);
     }
 
+    function toggleShowStock() {
+        setShowStock(!showStock);
+    }
+
     function handleNew() {
         if(action.value === "input") {
             setSelectedInput(new Input());
@@ -151,7 +157,7 @@ export default function Entries() {
                             <ActionSubtitle>#{action.value === "input" ? selectedInput.id : selectedOutput.id}</ActionSubtitle>
                         </Configs>
                         <SelectAction>
-                            {(selectedInput.id || selectedOutput.id) && (<ButtonNew onClick={handleNew}>Nova {action.label}</ButtonNew>)}
+                            {(selectedInput.id || selectedOutput.id) ? (<ButtonNew onClick={handleNew}>Nova {action.label}</ButtonNew>) : (<div></div>)}
                             <Select name="action" options={actions} onChange={handleChangeAction} />
                         </SelectAction>
                     </Header>
@@ -172,10 +178,12 @@ export default function Entries() {
                     )}
                 </Form>
                 <List>
+                    <ShowStockButton onClick={toggleShowStock}>Mostrar estoque</ShowStockButton>
                     <ListView>
-                        <Stock>
+                        <Stock show={showStock}>
                             <ListStocks 
                                 refresh={refresh.stock_list} 
+                                onClose={toggleShowStock}
                                 onStockSelected={handleStockSelected} 
                             />
                         </Stock>

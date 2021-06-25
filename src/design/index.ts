@@ -10,7 +10,11 @@ const InputGroup = styled.div`
     margin-bottom: 10px;
 `;
 
-const InputLabel = styled.label``;
+const InputLabel = styled.label`
+    @media screen and (max-width: 1200px) {
+        font-size: 12px;
+    }
+`;
 
 const PrimaryButton = styled.button`
     border: none;

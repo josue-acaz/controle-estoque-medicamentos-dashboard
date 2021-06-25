@@ -46,8 +46,13 @@ export default function EditOutput(props: EditOutputProps) {
     const [submitted, setSubmitted] = useState(false);
     const [processing, setProcessing] = useState(false);
     const [editProduct, setEditProduct] = useState(false);
+    const [autocompleteClear, setAutocompleteClear] = useState(false);
     const [productOutput, setProductOutput] = useState<ProductOutput>(new ProductOutput());
     const [inputs, setInputs] = useState<Output>(output);
+
+    function toggleAutocompleteClear() {
+        setAutocompleteClear(!autocompleteClear);
+    }
 
     function handleChange(e: any) {
         let {name, value} = e.target;
@@ -80,7 +85,10 @@ export default function EditOutput(props: EditOutputProps) {
             setProcessing(false);
             setSubmitted(false);
             onSaved(output);
-            clearForm();
+            if(!edit) {
+                clearForm();
+                toggleAutocompleteClear();
+            }
             feedback.open({severity: "success"});
         } catch (error) {
             setProcessing(false);
@@ -161,6 +169,7 @@ export default function EditOutput(props: EditOutputProps) {
                             inputText={inputs.aircraft?.prefix}
                             onOptionSelected={handleChange}
                             placeholder="Selecione a aeronave"
+                            clear={autocompleteClear}
                             error={submitted && !inputs.aircraft_id}
                         />
                     </Col>
@@ -176,6 +185,7 @@ export default function EditOutput(props: EditOutputProps) {
                             inputText={inputs.doctor?.name}
                             onOptionSelected={handleChange}
                             placeholder="Selecione o médico"
+                            clear={autocompleteClear}
                             error={submitted && !inputs.doctor_id}
                         />
                     </Col>
@@ -206,7 +216,11 @@ export default function EditOutput(props: EditOutputProps) {
 
             <ListProductInputContainer>
                 {output.id && !productOutput.id && !editProduct && (
-                    <ListProductOutputs output_id={output.id} onEdit={handleEditProductOutput} onDeleted={onProductOutputDeleted} />
+                    <ListProductOutputs 
+                        output_id={output.id} 
+                        onEdit={handleEditProductOutput} 
+                        onDeleted={onProductOutputDeleted} 
+                    />
                 )}
             </ListProductInputContainer>
         </EditOutputView>

@@ -1,15 +1,18 @@
+import {SidebarOption} from "../../types";
+
 interface NavItemProps {
     to: string;
-    icon: React.ReactNode;
+    icon: any;
     label: string;
+    childs: Array<SidebarOption>;
     active?: boolean;
-    childs: Array<NavItemProps>;
     onClick(): void;
 }
 
 interface NavItemActionProps {
     to: string;
     expansive: boolean;
+    onClick(): void;
 };
 
 interface NavItemComponent {

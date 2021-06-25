@@ -87,22 +87,25 @@ function Option({index, cursor, option, optionsLength, fieldName, handleClickOpt
     );
 }
 
-export default function Core({ 
-    value, 
-    onChange, 
-    Icon,
-    visible,
-    loading,
-    toggleVisible,
-    error,
-    options=[],
-    initializing,
-    renderOption,
-    placeholder="Pesquisar por...", 
-    handleClickInput,
-    iconPosition="start",
-    onOptionSelected,
-    fieldName, }: CoreProps) {
+export default function Core(props: CoreProps) {
+    const { 
+        value, 
+        onChange, 
+        Icon,
+        visible,
+        loading,
+        toggleVisible,
+        error,
+        options=[],
+        initializing,
+        renderOption,
+        placeholder="Pesquisar por...", 
+        handleClickInput,
+        iconPosition="start",
+        onOptionSelected,
+        fieldName,
+    } = props;
+
     const [cursor, setCursor] = useState<number>(0);
     const wrapperRef = useRef(null);
 

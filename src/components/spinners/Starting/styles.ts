@@ -12,7 +12,10 @@ const StartingView = styled.div`
 `;
 
 const StartingContent = styled.div`
-    
+    @media screen and (max-width: 1200px) {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
 `;
 
 const Header = styled.div``;
@@ -21,17 +24,28 @@ const Logo = styled.img`
     height: auto;
     width: 160px;
     object-fit: contain;
+
+    @media screen and (max-width: 1200px) {
+        width: 140px;
+    }
 `;
 
 const Title = styled.p`
     color: #666666;
     font-size: 22px;
     font-weight: 500;
+
+    @media screen and (max-width: 1200px) {
+        font-size: 14px;
+    }
 `;
 
 const Subtitle = styled.p`
     font-size: 18px;
     color: #888888;
+    @media screen and (max-width: 1200px) {
+        font-size: 12px;
+    }
 `;
 
 const Spinner = styled.div`

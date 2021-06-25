@@ -5,4 +5,8 @@ interface RefreshProps {
     stock_list: boolean;
 };
 
-export type {RefreshProps};
+interface StockProps {
+    show: boolean;
+};
+
+export type {RefreshProps, StockProps};

@@ -1,6 +1,11 @@
 interface HoverMaskButtonProps {
     title?: string;
     icon?: React.ReactNode;
+    styleType?: string;
 };
 
-export type {HoverMaskButtonProps};
+interface HoverMaskButtonContentPorps {
+    styleType?: string;
+}
+
+export type {HoverMaskButtonProps, HoverMaskButtonContentPorps};

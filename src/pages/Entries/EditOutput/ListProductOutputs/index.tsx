@@ -78,7 +78,10 @@ export default function ListProductOutputs(props: ListProductOutputsProps) {
         setProcessing(true);
 
         try {
-            const deleted = await Promise.all(selecteds.map(id => productOutputService.delete(id)));
+            for (let index = 0; index < selecteds.length; index++) {
+                const id = selecteds[index];
+                await productOutputService.delete(id);
+            }
             feedback.open({severity: "success"});
             setProcessing(false);
             setSelecteds([]);

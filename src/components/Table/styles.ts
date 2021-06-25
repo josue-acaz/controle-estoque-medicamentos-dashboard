@@ -37,6 +37,9 @@ const TableHeadCell = styled.th<TableHeadCellProps>`
     border-right: 1px solid #eeeeee;
     border-bottom: 1px solid #eeeeee;
     font-size: 14px;
+    @media screen and (max-width: 1200px) {
+        font-size: 12px;
+    }
     ${props => props.fixedHeader ? "position: sticky; top: 0px" : ""};
     ${props => props.padding === "checkbox" ? "width: 55px; padding: 0 0 0 5px" : ""};
 `;
@@ -49,6 +52,9 @@ const TableCell = styled.td<TableCellProps>`
     vertical-align: middle;
     position: relative;
     font-size: 14px;
+    @media screen and (max-width: 1200px) {
+        font-size: 12px;
+    }
     ${props => props.padding === "checkbox" ? "width: 55px; padding: 0 0 0 5px" : ""};
 `;
 
