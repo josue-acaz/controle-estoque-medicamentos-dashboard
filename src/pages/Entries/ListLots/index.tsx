@@ -117,7 +117,7 @@ export default function ListLots(props: ListLotsProps) {
                         value: formatDatetime(lot.expiration_date, EnumDateFormatTypes.READABLE_V5),
                     },
                     {
-                        value: lot.product_input?.current_quantity,
+                        value: lot.current_quantity ? lot.current_quantity : lot.product_input?.quantity,
                     },
                 ]
             };

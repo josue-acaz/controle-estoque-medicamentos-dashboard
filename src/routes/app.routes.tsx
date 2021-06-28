@@ -18,21 +18,24 @@ import Categories from "../pages/Categories";
 import Bases from "../pages/Bases";
 import Products from "../pages/Products";
 import MinimumStocks from "../pages/MinimumStocks";
-import Movements from "../pages/Movements";
 import Doctors from "../pages/Doctors";
 import Aircrafts from "../pages/Aircrafts";
+import ExpirationDates from "../pages/ExpirationDates";
+import Stocks from "../pages/Stocks";
 
 // icons
 import TrendingUpOutlinedIcon from "@material-ui/icons/TrendingUpOutlined";
+import AllInboxIcon from '@material-ui/icons/AllInbox';
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import LibraryAddCheckIcon from '@material-ui/icons/LibraryAddCheck';
 import FolderIcon from '@material-ui/icons/Folder';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import BarChartIcon from '@material-ui/icons/BarChart';
-import SyncAltIcon from '@material-ui/icons/SyncAlt';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import AirplanemodeActiveIcon from '@material-ui/icons/AirplanemodeActive';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import ViewListIcon from '@material-ui/icons/ViewList';
 
 const routes: Array<RouteProps> = [
     {
@@ -66,11 +69,6 @@ const routes: Array<RouteProps> = [
         component: MinimumStocks,
     },
     {
-        path: "/movements",
-        exact: false,
-        component: Movements,
-    },
-    {
         path: "/doctors",
         exact: false,
         component: Doctors,
@@ -79,6 +77,16 @@ const routes: Array<RouteProps> = [
         path: "/aircrafts",
         exact: false,
         component: Aircrafts,
+    },
+    {
+        path: "/expiration-dates",
+        exact: false,
+        component: ExpirationDates,
+    },
+    {
+        path: "/stocks",
+        exact: false,
+        component: Stocks,
     }
 ];
 
@@ -90,16 +98,23 @@ const sidebarOptions: Array<SidebarOption> = [
         childs: [],
     },
     {
-        to: "/movements",
-        label: "Movimentações",
-        icon: <SyncAltIcon className="icon" />,
-        childs: []
-    },
-    {
-        to: "/minimum-stocks",
-        label: "Estoque mínimo",
-        icon: <BarChartIcon className="icon" />,
-        childs: [],
+        to: "/",
+        label: "Inventário",
+        icon: <AllInboxIcon className="icon" />,
+        childs: [
+            {
+                to: "/stocks",
+                label: "Geral",
+                icon: <ViewListIcon className="icon" />,
+                childs: []
+            },
+            {
+                to: "/expiration-dates",
+                label: "Prazos de validade",
+                icon: <CalendarTodayIcon className="icon" />,
+                childs: []
+            },
+        ]
     },
     {
         to: "/",
@@ -110,6 +125,12 @@ const sidebarOptions: Array<SidebarOption> = [
                 to: "/providers",
                 label: "Fornecedores",
                 icon: <PeopleAltIcon className="icon" />,
+                childs: [],
+            },
+            {
+                to: "/minimum-stocks",
+                label: "Estoque mínimo",
+                icon: <BarChartIcon className="icon" />,
                 childs: [],
             },
             {
@@ -141,7 +162,7 @@ const sidebarOptions: Array<SidebarOption> = [
                 label: "Aeronaves",
                 icon: <AirplanemodeActiveIcon className="icon" />,
                 childs: [],
-            }
+            },
         ]
     },
 ];

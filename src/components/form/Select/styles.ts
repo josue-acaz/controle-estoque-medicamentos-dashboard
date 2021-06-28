@@ -1,11 +1,31 @@
 import styled from "styled-components";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const SelectView = styled.div`
     width: 100%;
     position: relative;
+    height: 45px;
+    width: 100%;
+
+    .MuiSkeleton-root {
+        height: 100%;
+    }
 `;
 
 const SelectInput = styled.div`
+    height: 45px;
+    width: 100%;
+`;
+
+const SkeletonLoader = styled(Skeleton)`
+    display: flex;
+    width: 150px;
+    height: 45px;
+    border: none;
+    border-radius: 0rem;
+    transition: .2s;
+    z-index: 1;
+    border: 1px solid #c0c0c0;
 `;
 
 const InputElement = styled.input`
@@ -55,7 +75,7 @@ const SelectMask = styled.div`
 const CollapseView = styled.div`
     position: absolute;
     top: 45px;
-    width: inherit;
+    width: 100%;
     max-height: 300px;
     background-color: #ffffff;
     z-index: 999;
@@ -80,4 +100,5 @@ export {
     CollapseOptions,
     SelectedOption,
     SelectedOptionText,
+    SkeletonLoader,
 };

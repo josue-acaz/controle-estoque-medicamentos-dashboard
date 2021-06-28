@@ -116,7 +116,9 @@ export default function EditOutput(props: EditOutputProps) {
     }
 
     // Preencher formulário
-    useEffect(() => {
+    useEffect(createForm, [output.id]);
+
+    function createForm() {
         Object.keys(output).forEach(key => {
             let value = output[key];
 
@@ -126,7 +128,10 @@ export default function EditOutput(props: EditOutputProps) {
 
             setInputs(inputs => ({...inputs, [key]: value}));
         });
-    }, [output.id]);
+            
+        setEditProduct(false);
+        setProductOutput(new ProductOutput());
+    }
 
     function handleEditProductOutput(product_output: ProductOutput) {
         setProductOutput(product_output);

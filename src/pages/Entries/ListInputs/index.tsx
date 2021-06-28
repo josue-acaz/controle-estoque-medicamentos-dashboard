@@ -132,7 +132,7 @@ export default function ListInputs(props: ListInputsProps) {
             setInputs(rows);
             setLoading(false);
         } catch (error) {
-            
+            setLoading(false);
         }
     }
 
@@ -194,6 +194,7 @@ export default function ListInputs(props: ListInputsProps) {
                 <Toolbar 
                     search={false} 
                     title="Compras" 
+                    subtitle=""
                     padding="overview"
                     numSelected={selecteds.length}
                     onDelete={handleOpenAlert}

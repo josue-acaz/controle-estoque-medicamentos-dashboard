@@ -6,8 +6,10 @@ import Provider from "./Provider";
 
 class ProductInput {
     id: string = "";
-    current_quantity?: number = 0;
-    total_quantity?: number = 0;
+    quantity: number = 0;
+    current_quantity?: number;
+    output_quantity?: number;
+    stock_quantity?: number;
     unit_price: number | string = "0,00";
     lot_id: string = "";
     product_id: string = "";

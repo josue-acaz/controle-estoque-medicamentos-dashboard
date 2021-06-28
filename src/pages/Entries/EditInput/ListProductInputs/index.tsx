@@ -12,7 +12,7 @@ import {useFeedback} from "../../../../contexts/feedback/feedback.context";
 import productInputService from "../../../../services/product-input.service";
 
 // types
-import {ListProductInputsProps} from "./types";
+import {ListProductInputsProps, OutputQuantityCellProps} from "./types";
 import {TableHeadProps, RowProps} from "../../../../components/Task/types";
 import {PaginationProps} from "../../../../components/Task/Pagination/types";
 
@@ -25,8 +25,21 @@ import Alert from "../../../../components/Alert";
 import {
     ListProductInputsView,
     ListProductInputsContent,
+    OutputQuantityCellView,
+    OutputNumber,
+    OutputQuantity,
 } from "./styles";
-import { currency } from "../../../../utils";
+import {currency} from "../../../../utils";
+
+function OutputQuantityCell(props: OutputQuantityCellProps) {
+
+    return(
+        <OutputQuantityCellView>
+            <OutputNumber>{props.number}</OutputNumber>
+            <OutputQuantity>Qtd: {props.quantity ? props.quantity : 0}</OutputQuantity>
+        </OutputQuantityCellView>
+    );
+}
 
 export default function ListProducts(props: ListProductInputsProps) {
     const {input_id, onEdit, onDeleted} = props;
@@ -54,7 +67,7 @@ export default function ListProducts(props: ListProductInputsProps) {
             value: "Referência",
         },
         {
-            key: "total_quantity",
+            key: "quantity",
             value: "Qtd. inicial",
         },
         {
@@ -205,17 +218,16 @@ export default function ListProducts(props: ListProductInputsProps) {
                         value: product_input?.product?.name,
                     },
                     {
-                        value: product_input?.total_quantity,
+                        value: product_input.quantity,
                     },
                     {
-                        value: product_input.current_quantity,
+                        value: product_input.current_quantity ? product_input.current_quantity : product_input.quantity,
                     },
                     {
                         value: currency(Number(product_input?.unit_price)),
                     },
                     {
-                        value: product_input.lot?.product_outputs?.length,
-                        color: EnumAppColors.ERROR,
+                        value: <OutputQuantityCell number={product_input.lot?.product_outputs?.length} quantity={product_input.output_quantity} />,
                     }
                 ]
             };

@@ -5,7 +5,9 @@ interface OptionProps {
 
 interface SelectProps {
     name: string;
+    style?: React.CSSProperties;
     options: Array<OptionProps>;
+    initializing?: boolean;
     onChange(option: OptionProps): void;
 };
 

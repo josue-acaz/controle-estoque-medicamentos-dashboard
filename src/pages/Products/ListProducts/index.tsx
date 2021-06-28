@@ -41,14 +41,16 @@ export default function ListCategories(props: RouteChildrenProps) {
             key: "name",
             value: "Nome",
         },
-        {
+        /**{
             key: "weight",
             value: "Peso",
-        },
-        {
+        }, */
+        /**
+         * {
             key: "controlled",
             value: "Controlado",
         },
+         */
         {
             key: "category",
             value: "Categoria",
@@ -178,12 +180,12 @@ export default function ListCategories(props: RouteChildrenProps) {
                     {
                         value: product.name,
                     },
-                    {
+                    /**{
                         value: product.weight,
-                    },
-                    {
+                    }, */
+                    /**{
                         value: product.controlled,
-                    },
+                    }, */
                     {
                         value: product.category?.name,
                     },

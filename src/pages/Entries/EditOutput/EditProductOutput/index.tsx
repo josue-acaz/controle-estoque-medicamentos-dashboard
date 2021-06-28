@@ -49,7 +49,7 @@ export default function EditProductOutput(props: EditProductOutputProps) {
         output_id: output.id,
     });
 
-    const maximum_quantity = lot ? lot.product_input?.current_quantity : 1;
+    const maximum_quantity = lot?.current_quantity ? lot.current_quantity : lot?.product_input?.quantity;
 
     function handleChange(e: any) {
         let {name, value} = e.target;

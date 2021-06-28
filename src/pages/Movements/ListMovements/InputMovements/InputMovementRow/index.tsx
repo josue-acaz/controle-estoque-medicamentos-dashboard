@@ -71,7 +71,7 @@ function CollapseItems(props: CollapseItemsProps) {
                         <TableCell>{product_input.lot?.serial_number}</TableCell>
                         <TableCell>{product_input.base?.name}</TableCell>
                         <TableCell>{product_input.product?.name}</TableCell>
-                        <TableCell>{product_input.current_quantity}</TableCell>
+                        <TableCell>{product_input.quantity}</TableCell>
                         <TableCell>{product_input.provider?.name}</TableCell>
                         <TableCell>{currency(Number(product_input.unit_price))}</TableCell>
                     </TableRow>

@@ -32,6 +32,13 @@ const Title = styled.div`
     }
 `;
 
+const Subtitle = styled.p`
+    font-size: 14px;
+    color: #999999;
+`;
+
+const Header = styled.div``;
+
 const NumSelectedText = styled.p`
     font-size: 14px;
     padding-left: 10px;
@@ -76,6 +83,8 @@ export {
     Title,
     ToolbarLeft,
     ToolbarRight,
+    Subtitle,
+    Header,
     ToolbarView,
     NumSelectedText,
     NumSelectedActions,

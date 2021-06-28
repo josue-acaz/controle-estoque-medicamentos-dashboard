@@ -122,6 +122,9 @@ export default function EditInput(props: InputFormProps) {
 
             setInputs(inputs => ({...inputs, [key]: value}));
         });
+
+        setEditProduct(false);
+        setProductInput(new ProductInput());
     }
 
     function clearForm() {

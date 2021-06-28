@@ -1,5 +1,6 @@
 interface ToolbarProps {
     title: string;
+    subtitle?: string;
     search?: boolean;
     padding?: string;
     numSelected: number;

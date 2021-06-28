@@ -36,6 +36,10 @@ const SearchCollapse = styled.div`
     background-color: #ffffffff;
     padding: 15px;
     box-shadow: 0 1px 15px rgba(0,0,0,.04),0 1px 6px rgba(0,0,0,.04);
+
+    @media screen and (max-width: 1200px) {
+        width: 100%;
+    }
 `;
 
 const SearchContent = styled.div``;

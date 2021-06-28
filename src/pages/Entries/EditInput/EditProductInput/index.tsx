@@ -73,7 +73,7 @@ export default function EditProductInput(props: ProductInputFormProps) {
             value = value.id;
         }
 
-        if(name === "total_quantity") {
+        if(name === "quantity") {
             value = onlyNumbers(value);
         }
 
@@ -94,7 +94,7 @@ export default function EditProductInput(props: ProductInputFormProps) {
 
         const product_input_data: ProductInput = {
             id: inputs.id,
-            total_quantity: inputs.total_quantity,
+            quantity: inputs.quantity,
             unit_price: currencyToNumber(inputs.unit_price.toString()),
             product_id: inputs.product_id,
             input_id: input.id,
@@ -127,7 +127,7 @@ export default function EditProductInput(props: ProductInputFormProps) {
 
     async function handleSubmit() {
         setSubmitted(true);
-        if(inputs.total_quantity && 
+        if(inputs.quantity && 
            inputs.unit_price && 
            inputs.base_id && 
            inputs.product_id &&
@@ -160,8 +160,7 @@ export default function EditProductInput(props: ProductInputFormProps) {
 
                 setInputs({
                     id: productInput.id,
-                    total_quantity: productInput.total_quantity,
-                    current_quantity: productInput.current_quantity,
+                    quantity: productInput.quantity,
                     unit_price: currency(Number(productInput.unit_price), true),
                     product_id: productInput.product_id,
                     input_id: productInput.id,
@@ -274,12 +273,12 @@ export default function EditProductInput(props: ProductInputFormProps) {
                             <Col sm="3">
                                 <InputLabel>Quantidade</InputLabel>
                                 <Input 
-                                    name="total_quantity" 
+                                    name="quantity" 
                                     type="number"
-                                    value={inputs.total_quantity} 
+                                    value={inputs.quantity} 
                                     onChange={handleChangeInputs}
                                     placeholder="Quantidade"
-                                    error={submitted && !inputs.total_quantity}
+                                    error={submitted && !inputs.quantity}
                                 />
                             </Col>
                             <Col sm="3">

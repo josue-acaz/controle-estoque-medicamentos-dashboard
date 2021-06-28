@@ -146,7 +146,7 @@ export default function EditProduct(props: RouteChildrenProps) {
                         <View padding="15">
                             <CategoryForm onSubmit={handleSubmit}>
                                 <Row>
-                                    <Col sm="4">
+                                    <Col sm="6">
                                         <InputLabel>Nome</InputLabel>
                                         <Input 
                                             name="name" 
@@ -156,7 +156,7 @@ export default function EditProduct(props: RouteChildrenProps) {
                                             error={submitted && !inputs.name}
                                         />
                                     </Col>
-                                    <Col sm="4">
+                                    {/**<Col sm="4">
                                         <InputLabel>Peso</InputLabel>
                                         <Input 
                                             name="weight" 
@@ -168,8 +168,8 @@ export default function EditProduct(props: RouteChildrenProps) {
                                             adormentPosition="end"
                                             error={submitted && !inputs.weight}
                                         />
-                                    </Col>
-                                    <Col sm="4">
+                                    </Col> */}
+                                    <Col sm="6">
                                         <InputLabel>Categoria</InputLabel>
                                         <Autocomplete 
                                             fieldName="name" 

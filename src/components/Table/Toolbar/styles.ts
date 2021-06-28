@@ -26,6 +26,10 @@ const Title = styled.div`
     font-size: 18px;
     font-weight: bold;
     color: #444444;
+
+    @media screen and (max-width: 1200px) {
+        font-size: 14px;
+    }
 `;
 
 const NumSelectedText = styled.p`

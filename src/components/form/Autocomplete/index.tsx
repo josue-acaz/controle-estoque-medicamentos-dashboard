@@ -42,7 +42,7 @@ export default function Autocomplete(props: AutocompleteProps) {
         placeholder,
         iconPosition,
         Icon,
-        clear,
+        clear=false,
     } = props;
 
     const [value, setValue] = useState("");
@@ -130,7 +130,11 @@ export default function Autocomplete(props: AutocompleteProps) {
         setValue(inputText);
     }, [inputText]);
 
-    useEffect(() => {setValue("")}, [clear]);
+    useEffect(() => {
+        if(!initializing) {
+            setValue("");
+        }
+    }, [clear]);
 
     return(
         <Core 

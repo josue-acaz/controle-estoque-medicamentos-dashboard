@@ -17,13 +17,15 @@ import {
     NumSelectedActions,
     AddButton,
     DeleteButton,
+    Subtitle,
+    Header,
 } from "./styles";
 
 // icons
 import DeleteIcon from '@material-ui/icons/Delete';
 
 export default function Toolbar(props: ToolbarProps) {
-    const {title, search=true, padding, numSelected, onAdd, onDelete} = props;
+    const {title, subtitle, search=true, padding, numSelected, onAdd, onDelete} = props;
     const activeSelection = numSelected > 0;
 
     return(
@@ -35,7 +37,10 @@ export default function Toolbar(props: ToolbarProps) {
                     </React.Fragment>
                 ) : (
                     <React.Fragment>
-                        <Title>{title}</Title>
+                        <Header>
+                            <Title>{title}</Title>
+                            {subtitle && (<Subtitle>{subtitle}</Subtitle>)}
+                        </Header>
                         {search && <Search />}
                     </React.Fragment>
                 )}

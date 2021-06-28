@@ -87,6 +87,7 @@ const View = styled.div<ViewProps>`
     border-radius: 0px;
     height: auto;
     padding: ${props => props.padding ? props.padding : 0}px;
+    overflow-y: hidden;
 `;
 
 const Button = styled.button`

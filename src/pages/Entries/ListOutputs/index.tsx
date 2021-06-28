@@ -129,6 +129,7 @@ export default function ListOutputs(props: ListOutputsProps) {
             setOutputs(rows);
             setLoading(false);
         } catch (error) {
+            setLoading(false);
             console.error(error);
         }
     }

@@ -6,4 +6,12 @@ interface ListProductInputsProps {
     onDeleted(): void;
 };
 
-export type {ListProductInputsProps};
+interface OutputQuantityCellProps {
+    number?: number;
+    quantity?: number;
+}
+
+export type {
+    ListProductInputsProps, 
+    OutputQuantityCellProps,
+};

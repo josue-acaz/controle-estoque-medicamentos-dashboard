@@ -129,7 +129,7 @@ export default function ListStocks(props: ListStocksProps) {
                             value: stock.name,
                         },
                         {
-                            value: product_input.total,
+                            value: product_input.stock_quantity,
                         },
                         {
                             value: minimum_stock ? minimum_stock.quantity : "Não definida"
@@ -153,6 +153,7 @@ export default function ListStocks(props: ListStocksProps) {
                     padding="overview" 
                     search={false} 
                     title="Estoque" 
+                    subtitle="Lotes dentro da data de validade"
                     numSelected={selecteds.length}
                 />
             </Header>

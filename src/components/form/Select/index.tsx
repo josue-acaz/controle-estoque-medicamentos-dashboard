@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import OutsideClickHandler from "react-outside-click-handler";
 import Option from "./Option";
 
@@ -16,13 +16,14 @@ import {
     CollapseView,
     CollapseOptions,
     InputElement,
+    SkeletonLoader,
 } from "./styles";
 
 export default function Select(props: SelectProps) {
-    const {options} = props;
+    const {options, initializing=false, style} = props;
     const [cursor, setCursor] = useState(0);
     const [open, setOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState<OptionProps>(options[0]);
+    const [selectedOption, setSelectedOption] = useState<OptionProps>(options.length > 0 ? options[0] : {label: "Selecione...", value: ""});
 
     function toggleOpen() {
         setOpen(!open);
@@ -54,26 +55,36 @@ export default function Select(props: SelectProps) {
         }
     }
 
+    useEffect(() => {
+        setSelectedOption(options[0]);
+    }, [options.length]);
+
     return(
         <OutsideClickHandler onOutsideClick={() => {
             if(open) {
                 setOpen(false);
             }
         }}>
-            <SelectView>
+            <SelectView style={style}>
                 <SelectInput>
-                    <InputElement 
-                        name={props.name} 
-                        value={selectedOption.label} 
-                        onClick={toggleOpen} 
-                        onKeyUp={handleKeyUp} 
-                        placeholder="Selecione..."
-                    />
+                    {initializing ? <SkeletonLoader variant="rect" animation="wave" /> : (
+                        <InputElement 
+                            name={props.name} 
+                            value={selectedOption.label} 
+                            onClick={toggleOpen} 
+                            onKeyUp={handleKeyUp} 
+                            placeholder="Selecione..."
+                        />
+                    )}
                 </SelectInput>
-                <Span onClick={toggleOpen}>
+                <Span onClick={() => {
+                    if(!initializing) {
+                        toggleOpen();
+                    }
+                }}>
                     <ArrowDropDownIcon className="icon" />
                 </Span>
-                {open && (
+                {open && options.length > 0 && (
                     <CollapseView>
                         <CollapseOptions>
                             {options.map((option, index) => (
