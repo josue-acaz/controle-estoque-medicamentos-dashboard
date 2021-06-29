@@ -83,7 +83,7 @@ export default function ListStocks(props: ListStocksProps) {
     async function index() {
         setLoading(true);
         try {
-            const stocks = await stockService.pagination(pagination);
+            const stocks = await stockService.bases(pagination);
             const {count, rows} = stocks;
             handleChangePagination("count", count);
             setStocks(rows);

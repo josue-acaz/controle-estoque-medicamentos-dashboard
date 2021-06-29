@@ -1,8 +1,12 @@
 import Product from "./Product";
-import ProductInput from "./ProductInput";
+import MinimumStock from "./MinimumStock";
 
 class Stock extends Product {
-    product_inputs?: Array<ProductInput>;
+    input_quantity: number = 0;
+    output_quantity: number = 0;
+    amount: number = 0;
+    current_quantity: number = 0;
+    minimum_stock_quantity: number = 0;
 };
 
 export default Stock;

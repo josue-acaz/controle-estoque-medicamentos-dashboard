@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import {currency} from "../../../utils";
 
 // models
 import Base from "../../../models/Base";
@@ -16,6 +17,7 @@ import Loading from "../../../components/spinners/Loading";
 import Task from "../../../components/Task";
 import Pagination from "../../../components/Task/Pagination";
 import Toolbar from "./Toolbar";
+import Status from "./Status";
 
 // styles
 import {
@@ -94,11 +96,11 @@ export default function ListStocks() {
     async function index() {
         setLoading(true);
         try {
-            const expiration_dates = await stockService.pagination({
+            const stocks = await stockService.pagination({
                 ...pagination,
                 base_id: base?.id,
             });
-            const {count, rows} = expiration_dates;
+            const {count, rows} = stocks;
             handleChangePagination("count", count);
             setRows(rows);
             setLoading(false);
@@ -120,9 +122,35 @@ export default function ListStocks() {
 
     function createRows(stocks: Array<Stock>) {
         const rows: Array<RowProps> = stocks.map(stock => {
+            console.log(stock);
+            const current_quantity = Number(stock.current_quantity ? stock.current_quantity : stock.input_quantity);
+            const minimum_stock_quantity = Number(stock.minimum_stock_quantity ? stock.minimum_stock_quantity : 0);
+
             const row: RowProps = {
                 id: stock.id,
-                cells: []
+                cells: [
+                    {
+                        value: stock.name,
+                    },
+                    {
+                        value: minimum_stock_quantity,
+                    },
+                    {
+                        value: stock.input_quantity,
+                    },
+                    {
+                        value: stock.output_quantity ? stock.output_quantity : 0,
+                    },
+                    {
+                        value: current_quantity,
+                    },
+                    {
+                        value: <Status minimumStockQuantity={minimum_stock_quantity} stockQuantity={current_quantity} />,
+                    },
+                    {
+                        value: currency(stock.amount),
+                    }
+                ]
             };
 
             return row;
@@ -143,7 +171,6 @@ export default function ListStocks() {
             <GridContent>
                 {loading ? <Loading /> : (
                     <React.Fragment>
-                        <h1>Em desenvolvimento</h1>
                         <View>
                             <Task
                                 selecteds={[]}

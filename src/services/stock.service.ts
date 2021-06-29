@@ -22,6 +22,19 @@ class StockService {
                 limit: params.limit,
                 offset: params.offset,
                 text: params.text,
+                base_id: params.base_id,
+            },
+        });
+
+        return response.data;
+    }
+
+    async bases(params: PaginationProps) {
+        const response = await api.get<PaginationResponse>("/stocks/bases", {
+            params: {
+                limit: params.limit,
+                offset: params.offset,
+                text: params.text,
             },
         });
 
