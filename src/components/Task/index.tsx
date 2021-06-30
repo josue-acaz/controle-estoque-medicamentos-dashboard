@@ -1,4 +1,5 @@
 import React from "react";
+import Tooltip from "@material-ui/core/Tooltip";
 import Checkbox from "@material-ui/core/Checkbox";
 import HoverMaskButton from "../HoverMaskButton";
 
@@ -18,7 +19,7 @@ import {
     TableBody,
     TableCell,
     ActionsView,
-    EditButton,
+    ActionButton,
     SelectedRow,
 } from "./styles";
 
@@ -57,7 +58,7 @@ function TableHeadComponent(props: TableHeadComponentProps) {
 }
 
 function TableRowComponent(props: TableRowComponentProps) {
-    const {row, selected, selectable, widthActions, hoverTitle, hoverSelected, disable_select, onClick, onEdit, onHoverClick} = props;
+    const {row, selected, selectable, widthActions, hoverTitle, hoverSelected, disable_select, actions, onClick, onEdit, onHoverClick} = props;
 
     return(
         <TableRow selected={selected}>
@@ -75,10 +76,19 @@ function TableRowComponent(props: TableRowComponentProps) {
                 <TableCell align="right">
                     <ActionsView>
                         {onEdit && (
-                            <EditButton onClick={() => onEdit(row.id)}>
-                                <EditOutlinedIcon className="icon" />
-                            </EditButton>
+                            <Tooltip title="Editar">
+                                <ActionButton onClick={() => onEdit(row.id)}>
+                                    <EditOutlinedIcon className="icon" />
+                                </ActionButton>
+                            </Tooltip>
                         )}
+                        {actions && actions.map(action => (
+                            <Tooltip title={action.label}>
+                                <ActionButton onClick={() => action.onClick(row.id)}>
+                                    {action.icon}
+                                </ActionButton>
+                            </Tooltip>
+                        ))}
                     </ActionsView>
                 </TableCell>
             )}
@@ -138,9 +148,10 @@ export default function Task(props: TableProps) {
             <TableBody>
                 {rows.map(row => (
                     <TableRowComponent 
-                        row={row} 
+                        row={row}
                         onEdit={onEditRow}
                         onClick={handleClick} 
+                        actions={row.actions}
                         selectable={selectable}
                         selected={isSelected(row.id)}
                         widthActions={widthActions}

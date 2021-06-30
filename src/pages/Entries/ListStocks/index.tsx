@@ -12,6 +12,7 @@ import {PaginationProps} from "../../../components/Task/Pagination/types";
 import Task from "../../../components/Task";
 import Toolbar from "../../../components/Task/Toolbar";
 import Pagination from "../../../components/Task/Pagination";
+import QtdCell from "./QtdCell";
 
 // services
 import stockService from "../../../services/stock.service";
@@ -40,10 +41,6 @@ export default function ListStocks(props: ListStocksProps) {
         {
             key: "quantity",
             value: "Qtd",
-        },
-        {
-            key: "minimum_stock_id",
-            value: "Qtd. Mínima",
         },
     ];
 
@@ -129,10 +126,7 @@ export default function ListStocks(props: ListStocksProps) {
                             value: stock.name,
                         },
                         {
-                            value: product_input.stock_quantity,
-                        },
-                        {
-                            value: minimum_stock ? minimum_stock.quantity : "Não definida"
+                            value: <QtdCell quantity={product_input.stock_quantity} minimum_quantity={minimum_stock?.quantity} />,
                         }
                     ],
                 };

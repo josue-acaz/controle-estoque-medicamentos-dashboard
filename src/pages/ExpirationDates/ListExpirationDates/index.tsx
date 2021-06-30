@@ -146,8 +146,8 @@ export default function ListExpirationDates() {
                     },
                     {
                         value: (
-                            <Status days={Number(validity)}>
-                                {validity > 0 ? `Vence em ${validity} dias` : "Validade vencidade"}
+                            <Status days={Number(validity)} stock_quantity={stock_quantity}>
+                                {stock_quantity === 0 ? "Produto esgotado" : validity > 0 ? `Vence em ${validity} dias` : "Validade vencida"}
                             </Status>
                         ),
                     }

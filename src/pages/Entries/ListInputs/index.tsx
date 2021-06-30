@@ -192,7 +192,7 @@ export default function ListInputs(props: ListInputsProps) {
             />
             <Header>
                 <Toolbar 
-                    search={false} 
+                    search={true} 
                     title="Compras" 
                     subtitle=""
                     padding="overview"
@@ -201,16 +201,14 @@ export default function ListInputs(props: ListInputsProps) {
                 />
             </Header>
             <List>
-                {loading ? <Loading /> : (
-                    <Task 
-                        fixedHeader={true}
-                        widthActions={false}
-                        selecteds={selecteds}
-                        headLabels={headLabels} 
-                        rows={createRows(inputs)}
-                        onChangeSelecteds={handleChangeSelecteds}
-                    />
-                )}
+                <Task 
+                    fixedHeader={true}
+                    widthActions={false}
+                    selecteds={selecteds}
+                    headLabels={headLabels} 
+                    rows={createRows(inputs)}
+                    onChangeSelecteds={handleChangeSelecteds}
+                />
             </List>
             <Footer>
                 <Pagination 

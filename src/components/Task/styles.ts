@@ -102,7 +102,7 @@ const ActionsView = styled.div`
     justify-content: flex-end;
 `;
 
-const EditButton = styled.button`
+const ActionButton = styled.button`
     padding: 5px;
     border: 1px solid #cccccc;
     margin-right: 10px;
@@ -122,5 +122,5 @@ export {
     TableHeadCell,
     SelectedRow,
     ActionsView,
-    EditButton,
+    ActionButton,
 };

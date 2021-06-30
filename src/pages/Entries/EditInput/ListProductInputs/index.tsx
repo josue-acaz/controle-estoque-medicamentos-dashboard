@@ -11,6 +11,9 @@ import {useFeedback} from "../../../../contexts/feedback/feedback.context";
 // services
 import productInputService from "../../../../services/product-input.service";
 
+// icons
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+
 // types
 import {ListProductInputsProps, OutputQuantityCellProps} from "./types";
 import {TableHeadProps, RowProps} from "../../../../components/Task/types";
@@ -198,7 +201,14 @@ export default function ListProducts(props: ListProductInputsProps) {
 
     function createRows(product_inputs: Array<ProductInput>) {
         const rows: Array<RowProps> = product_inputs.map(product_input => {
-            const row: RowProps = {
+
+            const validity = Number(product_input.lot ? product_input.lot.validity?.days : 1);
+            const expired = !(validity > 0);
+
+            const current_quantity = product_input.current_quantity ? Number(product_input.current_quantity) === 0 ? "Esgotado" : product_input.current_quantity : product_input.quantity;
+            const expiration_date = current_quantity === "Esgotado" ? "-" : expired ? "Fora da validade" : product_input?.lot?.expiration_date ? formatDatetime(product_input?.lot?.expiration_date, EnumDateFormatTypes.READABLE_V5) : "-";
+
+            let row: RowProps = {
                 id: product_input.id,
                 disable_select: !!product_input.lot?.product_outputs?.length,
                 cells: [
@@ -206,7 +216,7 @@ export default function ListProducts(props: ListProductInputsProps) {
                         value: product_input?.lot?.serial_number,
                     },
                     {
-                        value: product_input?.lot?.expiration_date ? formatDatetime(product_input?.lot?.expiration_date, EnumDateFormatTypes.READABLE_V5) : "-",
+                        value: expiration_date === "Fora da validade" ? <p style={{fontWeight: "bold", color: EnumAppColors.ERROR}}>{expiration_date}</p> : expiration_date,
                     },
                     {
                         value: product_input?.base?.name,
@@ -221,7 +231,7 @@ export default function ListProducts(props: ListProductInputsProps) {
                         value: product_input.quantity,
                     },
                     {
-                        value: product_input.current_quantity ? product_input.current_quantity : product_input.quantity,
+                        value: current_quantity === "Esgotado" ? <p style={{fontWeight: "bold", color: EnumAppColors.ERROR}}>{current_quantity}</p> : current_quantity,
                     },
                     {
                         value: currency(Number(product_input?.unit_price)),
@@ -231,6 +241,16 @@ export default function ListProducts(props: ListProductInputsProps) {
                     }
                 ]
             };
+
+            if(expired && current_quantity !== "Esgotado") {
+                row.actions = [
+                    {
+                        label: "Descartar",
+                        icon: <DeleteForeverIcon className="icon" />,
+                        onClick: (id: string) => {},
+                    }
+                ];
+            }
 
             return row;
         });

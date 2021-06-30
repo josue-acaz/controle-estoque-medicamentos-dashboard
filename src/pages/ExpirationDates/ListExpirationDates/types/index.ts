@@ -1,5 +1,6 @@
 interface StatusProps {
     days: number;
+    stock_quantity: number;
 };
 
 interface StockProps {

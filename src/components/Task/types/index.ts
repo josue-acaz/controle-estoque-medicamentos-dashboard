@@ -1,3 +1,9 @@
+interface ActionProps {
+    icon: any;
+    label: string;
+    onClick(id: string): void;
+};
+
 interface CellProps {
     value: any;
     align?: string;
@@ -10,6 +16,7 @@ interface RowProps {
     hoverTitle?: string;
     disable_select?: boolean;
     hoverSelected?: boolean;
+    actions?: Array<ActionProps>;
     onHoverClick?(): void;
 };
 
@@ -67,6 +74,7 @@ interface TableRowComponentProps {
     hoverTitle?: string;
     hoverSelected?: boolean;
     disable_select?: boolean;
+    actions?: Array<ActionProps>;
     onEdit?(id: string): void;
     onClick(event: any, id: string): void;
     onHoverClick?(): void;

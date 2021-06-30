@@ -1,30 +1,19 @@
 import styled from "styled-components";
-import {StatusProps, StockProps} from "./types";
+import {StatusProps} from "./types";
 
-function getStatusColor(days: number) {
-    let color = "#FFFFFF";
+function getStatusColor(days: number, out_of_stock?: boolean) {
+    if(out_of_stock) {
+        return "#0080FF";
+    }
+
+    let color = "";
     if (days > 30) {
         color = "#4CAF50";
     }
     else if(days <= 30 && days > 10) {
-        color = "#efeeb4";
+        color = "#ffa500";
     }
     else if(days <= 10) {
-        color = "#f74d4d";
-    }
-
-    return color;
-}
-
-function getStockColor(quantity: number) {
-    let color = "#4CAF50";
-    if(quantity > 100) {
-        color = "#4CAF50";
-    }
-    else if(quantity <= 100 && quantity > 50) {
-        color = "#efeeb4";
-    }
-    else if(quantity <= 50) {
         color = "#f74d4d";
     }
 
@@ -60,7 +49,7 @@ const Status = styled.div<StatusProps>`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: ${props => getStatusColor(props.days)};
+    background-color: ${props => getStatusColor(props.days, props.stock_quantity === 0)};
     color: #ffffff;
     padding-left: 5px;
     padding-right: 5px;

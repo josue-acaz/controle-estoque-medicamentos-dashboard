@@ -30,9 +30,10 @@ const SearchButton = styled.button`
 const SearchCollapse = styled.div`
     position: absolute;
     top: 57px;
-    left: 0;
+    left: 1px;
     width: 430px;
     height: auto;
+    z-index: 99;
     background-color: #ffffffff;
     padding: 15px;
     box-shadow: 0 1px 15px rgba(0,0,0,.04),0 1px 6px rgba(0,0,0,.04);
@@ -56,6 +57,10 @@ const CloseLink = styled.a`
     color: blue;
     font-size: 14px;
     cursor: pointer;
+
+    @media screen and (max-width: 1200px) {
+        font-size: 12px;
+    }
 `;
 
 export {

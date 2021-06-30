@@ -185,7 +185,7 @@ export default function ListOutputs(props: ListOutputsProps) {
             />
             <Header>
                 <Toolbar 
-                    search={false} 
+                    search={true} 
                     title="Saídas" 
                     padding="overview"
                     numSelected={selecteds.length}
@@ -193,16 +193,14 @@ export default function ListOutputs(props: ListOutputsProps) {
                 />
             </Header>
             <List>
-                {loading ? <Loading /> : (
-                    <Task 
-                        fixedHeader={true}
-                        widthActions={false}
-                        selecteds={selecteds}
-                        headLabels={headLabels} 
-                        rows={createRows(outputs)}
-                        onChangeSelecteds={handleChangeSelecteds}
-                    />
-                )}
+                <Task 
+                    fixedHeader={true}
+                    widthActions={false}
+                    selecteds={selecteds}
+                    headLabels={headLabels} 
+                    rows={createRows(outputs)}
+                    onChangeSelecteds={handleChangeSelecteds}
+                />
             </List>
             <Footer>
                 <Pagination 
