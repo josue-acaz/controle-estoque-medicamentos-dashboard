@@ -156,19 +156,6 @@ export default function EditProduct(props: RouteChildrenProps) {
                                             error={submitted && !inputs.name}
                                         />
                                     </Col>
-                                    {/**<Col sm="4">
-                                        <InputLabel>Peso</InputLabel>
-                                        <Input 
-                                            name="weight" 
-                                            type="number"
-                                            value={inputs.weight} 
-                                            onChange={handleChange} 
-                                            placeholder="Peso do item"
-                                            adorment={<p>Kg</p>}
-                                            adormentPosition="end"
-                                            error={submitted && !inputs.weight}
-                                        />
-                                    </Col> */}
                                     <Col sm="6">
                                         <InputLabel>Categoria</InputLabel>
                                         <Autocomplete 

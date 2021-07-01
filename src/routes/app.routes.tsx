@@ -22,6 +22,7 @@ import Doctors from "../pages/Doctors";
 import Aircrafts from "../pages/Aircrafts";
 import ExpirationDates from "../pages/ExpirationDates";
 import Stocks from "../pages/Stocks";
+import Transfers from "../pages/Transfers";
 
 // icons
 import TrendingUpOutlinedIcon from "@material-ui/icons/TrendingUpOutlined";
@@ -36,6 +37,7 @@ import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import AirplanemodeActiveIcon from '@material-ui/icons/AirplanemodeActive';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import ViewListIcon from '@material-ui/icons/ViewList';
+import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
 
 const routes: Array<RouteProps> = [
     {
@@ -87,6 +89,11 @@ const routes: Array<RouteProps> = [
         path: "/stocks",
         exact: false,
         component: Stocks,
+    },
+    {
+        path: "/transfers",
+        exact: false,
+        component: Transfers,
     }
 ];
 
@@ -115,6 +122,12 @@ const sidebarOptions: Array<SidebarOption> = [
                 childs: []
             },
         ]
+    },
+    {
+        to: "/transfers",
+        label: "Transferências",
+        icon: <SwapHorizontalCircleIcon className="icon" />,
+        childs: []
     },
     {
         to: "/",

@@ -68,7 +68,7 @@ const TableCell = styled.td<TableCellProps>`
 const TableRow = styled.tr<TableRowProps>`
     display: table-row;
     vertical-align: middle;
-    position: relative;
+    transform: scale(1);
     background-color: ${props => props.selected ? "rgb(255, 226, 236)" : "#ffffff"};
     &:nth-child(even){
         background-color: ${props => props.selected ? "rgb(255, 226, 236)" : "#f2f2f2"};

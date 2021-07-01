@@ -93,7 +93,7 @@ function TableRowComponent(props: TableRowComponentProps) {
                 </TableCell>
             )}
             {onHoverClick && !selected && <HoverMaskButton title={hoverTitle} onClick={onHoverClick} />}
-            {hoverSelected && !selected && <SelectedRow />}
+                {hoverSelected && !selected && <SelectedRow />}
         </TableRow>
     );
 }

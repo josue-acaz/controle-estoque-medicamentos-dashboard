@@ -197,7 +197,7 @@ export default function EditProductInput(props: ProductInputFormProps) {
                         />
                     </Col>
                     <Col sm="3">
-                        <InputLabel>Validate</InputLabel>
+                        <InputLabel>Validade</InputLabel>
                         <Input 
                             name="expiration_date" 
                             value={lot.expiration_date} 
