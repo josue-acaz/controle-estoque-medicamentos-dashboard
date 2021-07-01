@@ -90,11 +90,11 @@ const routes: Array<RouteProps> = [
         exact: false,
         component: Stocks,
     },
-    {
+    /**{
         path: "/transfers",
         exact: false,
         component: Transfers,
-    }
+    } */
 ];
 
 const sidebarOptions: Array<SidebarOption> = [
@@ -123,12 +123,12 @@ const sidebarOptions: Array<SidebarOption> = [
             },
         ]
     },
-    {
+    /**{
         to: "/transfers",
         label: "Transferências",
         icon: <SwapHorizontalCircleIcon className="icon" />,
         childs: []
-    },
+    }, */
     {
         to: "/",
         label: "Cadastros",
