@@ -20,7 +20,7 @@ export default function QtdCell(props: QtdCellProps) {
             <QtdCellContent>
                 <QtdText>{quantity}</QtdText>
                 <MinimumQtd>
-                    <MinimumQtdText>{minimum_quantity ? `Mínimo de ${minimum_quantity}` : "Mínimo não definido"}</MinimumQtdText>
+                    <MinimumQtdText>{minimum_quantity ? `Mínimo ${minimum_quantity}` : "Mínimo -"}</MinimumQtdText>
                 </MinimumQtd>
             </QtdCellContent>
         </QtdCellView>
