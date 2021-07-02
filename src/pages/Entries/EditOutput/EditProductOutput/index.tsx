@@ -30,6 +30,9 @@ import {
     LotSerialNumber,
     LotProductName,
     SelectedLot,
+    LotOptionData,
+    LotBaseData,
+    LotBaseText,
 } from "./styles";
 import {InputLabel, Button, ButtonText, CancelButton} from "../../../../design";
 
@@ -133,8 +136,13 @@ export default function EditProductOutput(props: EditProductOutputProps) {
                             inputText={inputs.lot?.serial_number}
                             renderOption={(option: Lot) => (
                                 <LotOptionView>
-                                    <LotSerialNumber>{option.serial_number}</LotSerialNumber>
-                                    <LotProductName>{option.product_input?.product?.name}</LotProductName>
+                                    <LotOptionData>
+                                        <LotSerialNumber><strong>{option.serial_number.toUpperCase()}</strong>, possui {option.product_outputs?.length} saidas.</LotSerialNumber>
+                                        <LotProductName>{option.product_input?.product?.name}</LotProductName>
+                                    </LotOptionData>
+                                    <LotBaseData>
+                                        <LotBaseText>{option.product_input?.base?.name}</LotBaseText>
+                                    </LotBaseData>
                                 </LotOptionView>
                             )}
                             error={submitted && !inputs.lot_id}

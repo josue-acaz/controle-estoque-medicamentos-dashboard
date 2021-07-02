@@ -21,7 +21,7 @@ const TableBody = styled.tbody`
 
 const TableHead = styled.thead`
     width: 100%;
-    z-index: 400;
+    z-index: 99999999;
     margin: 0;
     padding: 0;
     display: table-header-group;

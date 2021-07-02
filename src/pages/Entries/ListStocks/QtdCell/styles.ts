@@ -11,7 +11,7 @@ const QtdCellView = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #ffffff;
+    background-color: transparent;
     padding-left: 5px;
     padding-right: 5px;
 `;

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {TableHeadCellProps, TableCellProps, TableRowProps} from "./types";
+import {TableHeadCellProps, TableCellProps, TableRowViewProps} from "./types";
 
 const TableView = styled.table`
     width: 100%;
@@ -65,17 +65,28 @@ const TableCell = styled.td<TableCellProps>`
     ${props => props.padding === "checkbox" ? "width: 55px; padding: 0 0 0 5px" : ""};
 `;
 
-const TableRow = styled.tr<TableRowProps>`
+const TableRow = styled.tr<TableRowViewProps>`
     display: table-row;
     vertical-align: middle;
-    transform: scale(1);
+    position: relative;
+    //transform: scale(1);
     background-color: ${props => props.selected ? "rgb(255, 226, 236)" : "#ffffff"};
     &:nth-child(even){
         background-color: ${props => props.selected ? "rgb(255, 226, 236)" : "#f2f2f2"};
     }
     &:hover {
         background-color: ${props => props.selected ? "rgb(255, 226, 236);" : "#f2f2f2"};
+        ${props => props.enableHover ? `
+            cursor: pointer;
+            background-color: rgba(76, 175, 80, .5)
+        ` : ``};
     }
+    ${props => props.hoverSelected ? `background-color: rgba(76, 175, 80, .3)` : ``};
+    ${props => props.hoverSelected ? `
+        &:nth-child(even){
+            background-color: rgba(76, 175, 80, .3)
+        }
+    ` : ``};
 `;
 
 const SelectedRow = styled.div`

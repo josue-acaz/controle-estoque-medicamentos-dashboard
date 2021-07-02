@@ -23,7 +23,7 @@ export default function Select(props: SelectProps) {
     const {options, initializing=false, style} = props;
     const [cursor, setCursor] = useState(0);
     const [open, setOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState<OptionProps>(options.length > 0 ? options[0] : {label: "Selecione...", value: ""});
+    const [selectedOption, setSelectedOption] = useState<OptionProps>(options[0]);
 
     function toggleOpen() {
         setOpen(!open);
@@ -70,7 +70,7 @@ export default function Select(props: SelectProps) {
                     {initializing ? <SkeletonLoader variant="rect" animation="wave" /> : (
                         <InputElement 
                             name={props.name} 
-                            value={selectedOption.label} 
+                            value={selectedOption ? selectedOption.label : ""} 
                             onClick={toggleOpen} 
                             onKeyUp={handleKeyUp} 
                             placeholder="Selecione..."

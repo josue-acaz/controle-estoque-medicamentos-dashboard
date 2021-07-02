@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {useRouteMatch} from "react-router-dom";
-import {EnumActions} from "../../../constants";
+import {EnumDateFormatTypes} from "../../../constants";
+import {formatDatetime} from "../../../tools/dates";
 
 // services
 import transferService from "../../../services/transfer.service";
@@ -22,6 +23,10 @@ import Task from "../../../components/Task";
 import Toolbar from "../../../components/Task/Toolbar";
 import Pagination from "../../../components/Task/Pagination";
 import Alert from "../../../components/Alert";
+import Processing from "../../../components/spinners/Processing";
+
+// icons
+import UndoIcon from '@material-ui/icons/Undo';
 
 // styles
 import {
@@ -42,10 +47,6 @@ export default function ListTransfers(props: RouteChildrenProps) {
             value: "Lote de referência",
         },
         {
-            key: "quantity",
-            value: "Quantidade",
-        },
-        {
             key: "origin_base_id",
             value: "Base de origem"
         },
@@ -57,6 +58,10 @@ export default function ListTransfers(props: RouteChildrenProps) {
             key: "description",
             value: "Descrição",
         },
+        {
+            key: "created_at",
+            value: "Data da transferência",
+        }
     ];
 
     const feedback = useFeedback();
@@ -64,6 +69,7 @@ export default function ListTransfers(props: RouteChildrenProps) {
     const [loading, setLoading] = useState(true);
     const [refresh, setRefresh] = useState(false);
     const [processing, setProcessing] = useState(false);
+    const [lotId, setLotId] = useState("");
     const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [transfers, setTransfers] = useState<Array<Transfer>>([]);
     const [pagination, setPagination] = useState<PaginationProps>({
@@ -77,6 +83,8 @@ export default function ListTransfers(props: RouteChildrenProps) {
         orderBy: "name",
     });
 
+    const currentTransfer = (id: string) => transfers.find(transfer => transfer.id === id);
+
     function toggleRefresh() {
         setRefresh(!refresh);
     }
@@ -87,32 +95,6 @@ export default function ListTransfers(props: RouteChildrenProps) {
 
     function handleCloseAlert() {
         setOpen(false);
-    }
-
-    async function handleRemoveSelecteds() {
-        handleCloseAlert();
-        setProcessing(true);
-        
-        try {
-            for (let index = 0; index < selecteds.length; index++) {
-                const id = selecteds[index];
-                await transferService.delete(id);
-            }
-            feedback.open({severity: "success"});
-            setProcessing(false);
-            setSelecteds([]);
-            toggleRefresh();
-        } catch (error) {
-            setProcessing(false);
-            if(error.response) {
-                feedback.open({
-                    severity: "error",
-                    msg: error.response.data.msg,
-                });
-            } else {
-                feedback.open({severity: "error"});
-            }
-        }
     }
 
     function handleChangePagination(key: string, value: any) {
@@ -153,10 +135,12 @@ export default function ListTransfers(props: RouteChildrenProps) {
     async function index() {
         setLoading(true);
         try {
-            const providers = await transferService.pagination(pagination);
-            const {count, rows} = providers;
+            const transfers = await transferService.pagination(pagination);
+            const {count, rows} = transfers;
             handleChangePagination("count", count);
             setTransfers(rows);
+
+            console.log(rows);
             setLoading(false);
         } catch (error) {
             setLoading(false);
@@ -170,16 +154,50 @@ export default function ListTransfers(props: RouteChildrenProps) {
         pagination.page,
     ]);
 
+    function handleReverse(id: string) {
+        setLotId(id);
+        handleOpenAlert();
+    }
+
+    async function handleReverseLot() {
+        handleCloseAlert();
+        setProcessing(true);
+
+        try {
+            const reversed = await transferService.reverse(lotId);
+            index();
+            setProcessing(false);
+            feedback.open({
+                severity: "success",
+                msg: "Transferência revertida com sucesso!"
+            });
+        } catch (error) {
+            setProcessing(false);
+            if(error.response) {
+                feedback.open({
+                    severity: "error",
+                    msg: error.response.data.msg,
+                });
+            } else {
+                feedback.open({severity: "error"});
+            }
+        }
+    }
+
     function createRows(transfers: Array<Transfer>) {
         const rows: Array<RowProps> = transfers.map(transfer => {
             const row: RowProps = {
                 id: transfer.id,
+                actions: [
+                    {
+                        label: "Estornar",
+                        icon: <UndoIcon className="icon" />,
+                        onClick: handleReverse,
+                    }
+                ],
                 cells: [
                     {
-                        value: transfer.product_input?.lot?.serial_number,
-                    },
-                    {
-                        value: transfer.quantity,
+                        value: transfer.product_input?.lot?.serial_number.toUpperCase(),
                     },
                     {
                         value: transfer.origin_base?.name,
@@ -190,6 +208,9 @@ export default function ListTransfers(props: RouteChildrenProps) {
                     {
                         value: transfer.description,
                     },
+                    {
+                        value: formatDatetime(transfer.created_at, EnumDateFormatTypes.READABLE_V5),
+                    }
                 ]
             };
 
@@ -204,19 +225,21 @@ export default function ListTransfers(props: RouteChildrenProps) {
             <Alert 
                 open={open} 
                 theme="danger" 
-                title="Excluir selecionados?"
-                msg="A quantidade será revertida ao lote original. Esta ação não poderá ser desfeita."
-                onConfirm={handleRemoveSelecteds}
+                title={`Reverter a transferência? *${currentTransfer(lotId)?.product_input?.lot?.serial_number.toUpperCase()}`}
+                msg="O lote será revertido a base de origem e este registro será excluido. Esta ação não poderá ser desfeita."
+                onConfirm={handleReverseLot}
                 onCancel={handleCloseAlert}
                 onClose={handleCloseAlert}
             />
             <GridToolbar>
-                <Toolbar title="Transferências" numSelected={selecteds.length} onAdd={handleAdd} onDelete={handleOpenAlert} />
+                <Toolbar title="Transferências" numSelected={selecteds.length} onAdd={handleAdd} />
             </GridToolbar>
             <GridContent>
-                {loading ? <Loading /> : (
+                {processing ? <Processing title="Revertendo lote..." msg="Por favor, aguarde!" /> : (
+                    loading ? <Loading /> : (
                     <View>
                         <Task 
+                            selectable={false}
                             selecteds={selecteds}
                             onEditRow={handleEdit}
                             headLabels={headLabels} 
@@ -224,7 +247,7 @@ export default function ListTransfers(props: RouteChildrenProps) {
                             onChangeSelecteds={handleChangeSelecteds}
                         />
                     </View>
-                )}
+                ))}
             </GridContent>
             <GridFooter>
                 <Pagination 

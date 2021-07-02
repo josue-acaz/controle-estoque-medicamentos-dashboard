@@ -124,14 +124,18 @@ export default function ListExpirationDates() {
             const validity = Number(lot.validity?.days);
             const stock_quantity = Number(lot.current_quantity ? lot.current_quantity : lot.product_input?.quantity);
 
+            const expired = !(validity > 0);
+            const out_of_stock = stock_quantity === 0;
+            const hide_date = out_of_stock || expired;
+
             const row: RowProps = {
                 id: lot.id,
                 cells: [
                     {
                         value: (
                             <Name>
-                                <NameTitle>{`#${lot.serial_number} ${lot.product_input?.product?.name}`}</NameTitle>
-                                <NameSubtitle>Expira em: {formatDatetime(lot.expiration_date, EnumDateFormatTypes.READABLE_V5)}</NameSubtitle>
+                                <NameTitle>{`#${lot.serial_number.toUpperCase()} ${lot.product_input?.product?.name}`}</NameTitle>
+                                <NameSubtitle>Expira em: {hide_date ? "-" : formatDatetime(lot.expiration_date, EnumDateFormatTypes.READABLE_V5)}</NameSubtitle>
                             </Name>
                         ),
                     },
@@ -147,7 +151,7 @@ export default function ListExpirationDates() {
                     {
                         value: (
                             <Status days={Number(validity)} stock_quantity={stock_quantity}>
-                                {stock_quantity === 0 ? "Produto esgotado" : validity > 0 ? `Vence em ${validity} dias` : "Validade vencida"}
+                                {out_of_stock ? "Produto esgotado" : !expired ? `Vence em ${validity} dias` : "Validade vencida"}
                             </Status>
                         ),
                     }

@@ -5,5 +5,4 @@ const api = axios.create({
 });
 
 //https://medicamentos-api.charterpiquiatuba.com.br
-
 export default api;

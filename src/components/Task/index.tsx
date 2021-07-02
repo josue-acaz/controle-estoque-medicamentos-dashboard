@@ -33,7 +33,7 @@ function TableHeadComponent(props: TableHeadComponentProps) {
         <TableHead>
             <TableRow>
                 {selectable && (
-                    <TableHeadCell padding="checkbox">
+                    <TableHeadCell padding="checkbox" fixedHeader={fixedHeader}>
                         <Checkbox
                             indeterminate={numSelected > 0 && numSelected < rowCount}
                             checked={rowCount > 0 && numSelected === rowCount}
@@ -59,9 +59,14 @@ function TableHeadComponent(props: TableHeadComponentProps) {
 
 function TableRowComponent(props: TableRowComponentProps) {
     const {row, selected, selectable, widthActions, hoverTitle, hoverSelected, disable_select, actions, onClick, onEdit, onHoverClick} = props;
+    const hoverEnabled = !!hoverTitle || !!onHoverClick;
 
     return(
-        <TableRow selected={selected}>
+        <TableRow selected={selected} enableHover={hoverEnabled} hoverSelected={hoverSelected && !selected} onClick={() => {
+            if(hoverEnabled && onHoverClick) {
+                onHoverClick();
+            }
+        }}>
             {selectable && (
                 <TableCell padding="checkbox">
                     <Checkbox checked={selected} onClick={(event) => {
@@ -92,8 +97,6 @@ function TableRowComponent(props: TableRowComponentProps) {
                     </ActionsView>
                 </TableCell>
             )}
-            {onHoverClick && !selected && <HoverMaskButton title={hoverTitle} onClick={onHoverClick} />}
-                {hoverSelected && !selected && <SelectedRow />}
         </TableRow>
     );
 }

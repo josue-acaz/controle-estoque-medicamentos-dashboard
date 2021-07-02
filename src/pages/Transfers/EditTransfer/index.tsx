@@ -16,7 +16,6 @@ import {useFeedback} from "../../../contexts/feedback/feedback.context";
 // components
 import Loading from "../../../components/spinners/Loading";
 import Processing from "../../../components/spinners/Processing";
-import Input from "../../../components/form/Input";
 import Autocomplete from "../../../components/form/Autocomplete";
 import TextArea from "../../../components/form/TextArea";
 import Alert from "../../../components/Alert";
@@ -41,12 +40,18 @@ import {
     LotProductName, 
     LotSerialNumber,
     SelectedLot,
+    LotOptionData,
+    LotBaseData,
+    LotBaseText,
+    LotTransferredView,
+    LotTransferredSerialNumber,
+    LotTransferredData,
+    LotTransferredProductText,
 } from "./styles";
-import ProductInput from "../../../models/ProductInput";
 
 export default function EditTransfer(props: RouteChildrenProps) {
     const {history} = props;
-    const [id, setId] = useState(useParams<RouteParamsProps>().id);
+    const id = useParams<RouteParamsProps>().id;
     const edit = id !== "0";
 
     const historyActions: Array<ToolbarRouteProps> = [
@@ -68,8 +73,6 @@ export default function EditTransfer(props: RouteChildrenProps) {
     const [lot, setLot] = useState<Lot>(new Lot());
     const [inputs, setInputs] = useState<Transfer>(new Transfer());
 
-    const maximum_quantity = lot?.current_quantity ? lot.current_quantity : lot?.product_input?.quantity;
-
     function handleChange(e: any) {
         let {name, value} = e.target;
 
@@ -78,15 +81,8 @@ export default function EditTransfer(props: RouteChildrenProps) {
             value = value.product_input?.id;
         }
 
-        if(name === "origin_base_id" || name === "destination_base_id") {
+        if(name === "destination_base_id") {
             value = value.id;
-        }
-
-        if(name === "quantity") {
-            value = onlyNumbers(value);
-            if(maximum_quantity && value) {
-                if(!(Number(value) <= maximum_quantity) || Number(value) < 1) return;
-            }
         }
 
         setInputs(inputs => ({...inputs, [name]: value}));
@@ -99,6 +95,14 @@ export default function EditTransfer(props: RouteChildrenProps) {
     async function show() {
         try {
             const transfer = await transferService.getById(id);
+
+            // Adicionar lote
+            if(transfer.product_input) {
+                if(transfer.product_input.lot) {
+                    setLot(transfer.product_input.lot);
+                }
+            }
+
             setInputs(transfer);
             setLoading(false);
         } catch (error) {
@@ -130,11 +134,8 @@ export default function EditTransfer(props: RouteChildrenProps) {
         e.preventDefault();
         setSubmitted(true);
 
-        if(inputs.product_input_id 
-            && inputs.origin_base_id 
-            && inputs.destination_base_id 
-            && inputs.quantity) {
-                setOpen(true);
+        if(inputs.product_input_id && inputs.destination_base_id) {
+            setOpen(true);
         }
     }
 
@@ -174,27 +175,56 @@ export default function EditTransfer(props: RouteChildrenProps) {
                 />
             </GridToolbar>
             <GridContent>
-                {loading ? <Loading /> : (
-                    processing ? <Processing title="Processando..." msg="Por favor, aguarde!" /> : (
+                {processing ? <Processing title="Processando..." msg="Por favor, aguarde!" /> : (
+                    loading ? <Loading /> : (
                         <View padding="15">
                             <TransferForm onSubmit={handleSubmit}>
                                 <Row>
-                                    <Col sm="3">
-                                        <InputLabel>Base de origem</InputLabel>
-                                        <Autocomplete
-                                            fieldName="name"
-                                            name="origin_base_id"
-                                            endpoint="/bases/autocomplete"
-                                            renderOption={(option) => (
-                                                <div>{option.name}</div>
-                                            )}
-                                            onOptionSelected={handleChange}
-                                            inputText={inputs.origin_base?.name}
-                                            placeholder="Selecione a origem"
-                                            error={submitted && !inputs.origin_base_id}
-                                        />
+                                    <Col sm="6">
+                                        {!edit ? (
+                                            <React.Fragment>
+                                                    <InputLabel>Selecione o lote</InputLabel>
+                                                    <Autocomplete
+                                                        name="product_input_id"
+                                                        fieldName="serial_number"
+                                                        endpoint="/lots/autocomplete"
+                                                        placeholder="Seleção do lote"
+                                                        inputText={inputs.product_input?.lot?.serial_number}
+                                                        onOptionSelected={handleChange}
+                                                        renderOption={(option: Lot) => (
+                                                            <LotOptionView>
+                                                                <LotOptionData>
+                                                                    <LotSerialNumber><strong>{option.serial_number.toUpperCase()}</strong>, possui {option.product_outputs?.length} saidas.</LotSerialNumber>
+                                                                    <LotProductName>{option.product_input?.product?.name}</LotProductName>
+                                                                </LotOptionData>
+                                                                <LotBaseData>
+                                                                    <LotBaseText>{option.product_input?.base?.name}</LotBaseText>
+                                                                </LotBaseData>
+                                                            </LotOptionView>
+                                                        )}
+                                                        error={submitted && !inputs.product_input_id}
+                                                    />
+                                                    {lot.id && (
+                                                        <React.Fragment>
+                                                            <SelectedLot><strong>*{lot.product_input?.product?.name}</strong>, {lot.product_input?.base?.name}</SelectedLot>
+                                                        </React.Fragment>
+                                                    )}
+                                            </React.Fragment>
+                                        ) : (
+                                            <LotTransferredView>
+                                                <LotTransferredData>
+                                                    <LotTransferredSerialNumber>#{lot.serial_number.toUpperCase()}</LotTransferredSerialNumber>
+                                                </LotTransferredData>
+                                                <LotBaseData>
+                                                    <LotTransferredProductText>
+                                                        <strong>{inputs.product_input?.product?.name}</strong>, {inputs.origin_base?.name}
+                                                    </LotTransferredProductText>
+                                                </LotBaseData>
+                                            </LotTransferredView>
+                                        )}
+                                        
                                     </Col>
-                                    <Col sm="3">
+                                    <Col sm="6">
                                         <InputLabel>Base de destino</InputLabel>
                                         <Autocomplete
                                             fieldName="name"
@@ -209,42 +239,22 @@ export default function EditTransfer(props: RouteChildrenProps) {
                                             error={submitted && !inputs.destination_base_id}
                                         />
                                     </Col>
-                                    <Col sm="3">
-                                        <InputLabel>Selecione o lote</InputLabel>
-                                        <Autocomplete
-                                            name="product_input_id"
-                                            fieldName="serial_number"
-                                            endpoint="/lots/autocomplete"
-                                            placeholder="Seleção do lote"
-                                            onOptionSelected={handleChange}
-                                            renderOption={(option: Lot) => (
-                                                <LotOptionView>
-                                                    <LotSerialNumber>{option.serial_number}</LotSerialNumber>
-                                                    <LotProductName>{option.product_input?.product?.name}</LotProductName>
-                                                </LotOptionView>
-                                            )}
-                                            error={submitted && !inputs.product_input_id}
+                                </Row>
+                                <Row>
+                                    <Col sm="12">
+                                        <InputLabel>Motivo</InputLabel>
+                                        <TextArea 
+                                            name="description" 
+                                            value={inputs.description} 
+                                            onChange={handleChange} 
+                                            placeholder="Motivo da transferência" 
                                         />
-                                        {lot.id && (<SelectedLot>*{lot.product_input?.product?.name}</SelectedLot>)}
                                     </Col>
-                                    {lot.id && (
-                                        <Col sm="3">
-                                            <InputLabel>{`Quantidade (máximo de ${maximum_quantity})`}</InputLabel>
-                                            <Input 
-                                                name="quantity" 
-                                                value={inputs.quantity} 
-                                                onChange={handleChange}
-                                                placeholder="Quantidade"
-                                                type="number"
-                                                error={submitted && !inputs.quantity}
-                                            />
-                                        </Col>
-                                    )}
                                 </Row>
 
                                 <Button type="submit">Salvar</Button>
                             </TransferForm>
-                        </View>  
+                        </View> 
                     )
                 )}
             </GridContent>

@@ -10,7 +10,7 @@ interface PaginationResponse {
 class TransferService {
     constructor() {}
 
-    async getById(id: string) {
+    async getById(id: string): Promise<Transfer> {
         const response = await api.get(`/transfers/${id}/show`);
         return response.data;
     }
@@ -34,6 +34,11 @@ class TransferService {
 
     async delete(id: string) {
         const response = await api.delete(`/transfers/${id}/delete`);
+        return response.data;
+    }
+
+    async reverse(id: string) {
+        const response = await api.put(`/transfers/${id}/reverse`);
         return response.data;
     }
 

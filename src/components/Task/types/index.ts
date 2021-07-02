@@ -80,12 +80,19 @@ interface TableRowComponentProps {
     onHoverClick?(): void;
 };
 
+interface TableRowViewProps {
+    selected?: boolean;
+    enableHover?: boolean;
+    hoverSelected?: boolean;
+};
+
 export type {
     RowProps,
     TableProps, 
     TableRowProps,
     TableHeadProps,
     TableCellProps, 
+    TableRowViewProps,
     TableHeadCellProps,
     TableRowComponentProps,
     TableHeadComponentProps,

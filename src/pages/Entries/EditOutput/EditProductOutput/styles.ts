@@ -17,14 +17,20 @@ const FormActions = styled.div`
     align-items: center;
 `;
 
-const LotOptionView = styled.div``;
+const LotOptionView = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+`;
 
 const LotSerialNumber = styled.p`
     font-size: 16px;
-    font-weight: bold;
     color: #444444;
 `;
-
+const LotBaseData = styled.div`
+    display: flex;
+    align-items: center;
+`;
 const LotProductName = styled.p`
     font-size: 14px;
     color: #666666;
@@ -33,6 +39,12 @@ const LotProductName = styled.p`
 const SelectedLot = styled.p`
     font-size: 16px;
     color: #333333;
+`;
+
+const LotOptionData = styled.div``;
+
+const LotBaseText = styled.div`
+    font-size: 14px;
 `;
 
 export {
@@ -44,4 +56,7 @@ export {
     LotOptionView,
     LotSerialNumber,
     LotProductName,
+    LotOptionData,
+    LotBaseData,
+    LotBaseText,
 };

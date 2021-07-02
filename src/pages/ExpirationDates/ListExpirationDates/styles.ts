@@ -13,7 +13,10 @@ function getStatusColor(days: number, out_of_stock?: boolean) {
     else if(days <= 30 && days > 10) {
         color = "#ffa500";
     }
-    else if(days <= 10) {
+    else if(days <= 10 && days > 1) {
+        color = "#f74d4d";
+    }
+    else {
         color = "#f74d4d";
     }
 
