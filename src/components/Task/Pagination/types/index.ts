@@ -11,9 +11,10 @@ interface PaginationProps {
 };
 
 interface TablePaginationProps {
-    limit: number, 
-    page: number,
-    count: number,
+    limit: number;
+    page: number;
+    count: number;
+    labelRowsPerPage?: string;
     handleChangePage(new_page: number): void;
     handleChangeRowsPerPage(event: any): void;
 };

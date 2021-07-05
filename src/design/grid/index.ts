@@ -1,6 +1,7 @@
 import styled from "styled-components";
+import {GridContainerProps, GridContainerTCFProps} from "./types";
 
-const GridContainer = styled.div`
+const GridContainer = styled.div<GridContainerProps>`
     display: grid;
     position: absolute;
     top: 0;
@@ -13,7 +14,38 @@ const GridContainer = styled.div`
                          "footer footer";
 `;
 
-const GridContainerSlim = styled.div`
+const GridContainerTCF = styled.div` // Toolbar, Content and Footer
+    display: grid;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    grid-template-rows: 55px auto 55px;
+    grid-template-areas: "nav nav"
+                         "data data"
+                         "footer footer";
+`;
+
+const GridContainerTSC = styled.div<GridContainerTCFProps>` // Toolbar, Sidebar and Content
+    display: grid;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    grid-template-columns: 1fr 5fr;
+    grid-template-rows: 55px auto;
+    ${props => props.sidenavVisible ? `
+        grid-template-areas: "nav nav"
+                             "sidenav data";
+    ` : `
+        grid-template-areas: "nav nav"
+                             "data data";
+    `}
+`;
+
+const GridContainerCF = styled.div` // Content and Footer
     display: grid;
     position: absolute;
     top: 55px;
@@ -23,6 +55,54 @@ const GridContainerSlim = styled.div`
     grid-template-rows: auto 55px;
     grid-template-areas: "data data"
                          "footer footer";
+`;
+
+const GridContainerSidenav = styled.div`
+    grid-area: sidenav;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.23);
+    position: relative;
+`;
+
+const GridContainerSidenavView = styled.div`
+    display: grid;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    grid-template-rows: 55px auto 55px;
+    grid-template-areas: "sidenav-toolbar sidenav-toolbar"
+                         "sidenav-content sidenav-content"
+                         "sidenav-footer sidenav-footer";
+`;
+
+const GridContainerSidenavToolbar = styled.div`
+    grid-area: sidenav-toolbar;
+    border-bottom: 1px solid #eeeeee;
+    background-color: #fafafa;
+    display: flex;
+    align-items: center;
+
+    .icon {
+        color: #444444;
+    }
+`;
+
+const GridContainerSidenavContent = styled.div`
+    grid-area: sidenav-content;
+    overflow-y: auto;
+    position: relative;
+    width: 100%;
+    z-index: 5;
+    background-color: #fafafa;
+`;
+
+const GridContainerSidenavFooter = styled.div`
+    grid-area: sidenav-footer;
+    background-color: #ffffff;
+    z-index: 10;
+    border-top: 1px solid #eeeeee;
 `;
 
 const GridToolbar = styled.nav`
@@ -58,7 +138,14 @@ const GridFooter = styled.footer`
 
 export {
     GridContainer,
-    GridContainerSlim,
+    GridContainerCF,
+    GridContainerTCF,
+    GridContainerTSC,
+    GridContainerSidenav,
+    GridContainerSidenavView,
+    GridContainerSidenavContent,
+    GridContainerSidenavFooter,
+    GridContainerSidenavToolbar,
     GridToolbar,
     GridContent,
     GridFooter,

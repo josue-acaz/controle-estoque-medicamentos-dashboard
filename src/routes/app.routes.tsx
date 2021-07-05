@@ -24,6 +24,9 @@ import ExpirationDates from "../pages/ExpirationDates";
 import Stocks from "../pages/Stocks";
 import Transfers from "../pages/Transfers";
 
+// dashboard
+import ExpirationDate from "../pages/Dashboard/ExpirationDate";
+
 // icons
 import TrendingUpOutlinedIcon from "@material-ui/icons/TrendingUpOutlined";
 import AllInboxIcon from '@material-ui/icons/AllInbox';
@@ -38,8 +41,15 @@ import AirplanemodeActiveIcon from '@material-ui/icons/AirplanemodeActive';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import ViewListIcon from '@material-ui/icons/ViewList';
 import SwapHorizontalCircleIcon from '@material-ui/icons/SwapHorizontalCircle';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 const routes: Array<RouteProps> = [
+    {
+        path: "/dashboard/expiration-date",
+        exact: false,
+        component: ExpirationDate,
+    },
     {
         path: "/entries",
         exact: false,
@@ -98,6 +108,31 @@ const routes: Array<RouteProps> = [
 ];
 
 const sidebarOptions: Array<SidebarOption> = [
+    {
+        to: "/dashboard",
+        label: "Dashboard",
+        icon: <DashboardIcon className="icon" />,
+        childs: [
+            {
+                to: "/dashboard/main",
+                label: "Geral",
+                icon: <FiberManualRecordIcon className="icon sub-option" />,
+                childs: []
+            },
+            {
+                to: "/dashboard/individual",
+                label: "Individual",
+                icon: <FiberManualRecordIcon className="icon sub-option" />,
+                childs: []
+            },
+            {
+                to: "/dashboard/expiration-date",
+                label: "Prazo de Validade",
+                icon: <FiberManualRecordIcon className="icon sub-option" />,
+                childs: []
+            },
+        ],
+    },
     {
         to: "/entries",
         label: "Lançamentos",

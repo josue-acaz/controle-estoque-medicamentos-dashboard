@@ -17,11 +17,11 @@ export default function Input(props: React.InputHTMLAttributes<HTMLInputElement>
     return(
         <InputView>
             {adorment && (
-                <Adorment position={adormentPosition}>
+                <Adorment className="adorment" position={adormentPosition}>
                     {adorment}
                 </Adorment>
             )}
-            <InputElement {...props} />
+            <InputElement className="input" {...props} />
             {error && <ErrorText>Este campo é obrigatório.</ErrorText>}
         </InputView>
     );

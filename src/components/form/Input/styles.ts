@@ -12,6 +12,7 @@ const InputElement = styled.input<React.InputHTMLAttributes<HTMLInputElement> & 
     color: #444444;
     font-size: 14px;
     border: none;
+    outline: none;
     border: 1px solid #c0c0c0;
     padding-left: ${props => props.adormentPosition === "start" ? "35px" : "10px"};
     padding-right: ${props => props.adormentPosition === "end" ? "35px" : "10px"};

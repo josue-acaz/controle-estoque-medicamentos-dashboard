@@ -21,6 +21,14 @@ class MinimumStockService {
         return response.data;
     }
 
+    async index(base_id: string) {
+        const response = await api.get("/minimum-stocks", {
+            headers: {base_id}
+        });
+        
+        return response.data;
+    }
+
     async create(data: MinimumStock) {
         const response = await api.post("/minimum-stocks", data, {
             headers: {

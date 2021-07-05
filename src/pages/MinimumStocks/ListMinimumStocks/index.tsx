@@ -148,7 +148,7 @@ export default function ListMinimumStocks(props: RouteChildrenProps) {
                 onClose={handleCloseAlert}
             />
             <GridToolbar>
-                <ToolbarActions title="Estoque mínimo" action={EnumActions.LIST} onAdd={handleAdd} />
+                <ToolbarActions title="Estoque mínimo" action={EnumActions.LIST} />
             </GridToolbar>
             <GridContent>
                 {loading ? <Loading /> : (

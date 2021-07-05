@@ -21,7 +21,7 @@ import Pagination from "../../../components/Task/Pagination";
 
 // styles
 import {
-    GridContainerSlim, 
+    GridContainerCF, 
     GridContent, 
     GridFooter,
 } from "../../../design/grid";
@@ -129,7 +129,7 @@ export default function ListLots(props: ListLotsProps) {
     }
 
     return(
-        <GridContainerSlim>
+        <GridContainerCF>
             <GridContent style={{overflowY: "hidden"}}>
                 <ListLotsView>
                     <ListLotsContent>
@@ -154,6 +154,6 @@ export default function ListLots(props: ListLotsProps) {
                     handleChangeRowsPerPage={handleChangeRowsPerPage}
                 />
             </GridFooter>
-        </GridContainerSlim>
+        </GridContainerCF>
     );
 }

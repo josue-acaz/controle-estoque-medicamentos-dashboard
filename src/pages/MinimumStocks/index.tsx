@@ -17,11 +17,11 @@ export default function MinimumStocks(props: RouteComponentProps) {
             exact: true,
             component: ListMinimumStocks,
         },
-        {
+        /**{
             exact: false,
             path: `${path}/:id/edit`,
             component: EditMinimumStock,
-        }
+        } */
     ];
 
     return(

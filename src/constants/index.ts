@@ -3,6 +3,7 @@ enum EnumAppColors {
     ERROR = "#f74d4d",
     SUCCESS = "#4CAF50",
     SECONDARY = "#CCCCCC",
+    ORANGE = "#ffa500",
 };
 
 enum EnumActions {

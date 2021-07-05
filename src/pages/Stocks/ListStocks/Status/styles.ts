@@ -8,7 +8,7 @@ function getStatusColor(status: string) {
         color = "#4CAF50";
     }
     else if(status === "med") {
-        color = "#efeeb4";
+        color = "#99af4c";
     }
     else if(status === "low") {
         color = "#ffa500";

@@ -41,9 +41,18 @@ class ProductService {
                 limit: params.limit,
                 offset: params.offset,
                 text: params.text,
+                base_id: params.base_id ? params.base_id : "",
             },
         });
 
+        return response.data;
+    }
+
+    async monit(id: string, base_id: string) {
+        const response = await api.get(`/products/${id}/monit`, {
+            headers: {base_id}
+        });
+        
         return response.data;
     }
 }

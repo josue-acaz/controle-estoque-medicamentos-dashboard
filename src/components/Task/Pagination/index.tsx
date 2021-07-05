@@ -9,6 +9,7 @@ export default function Pagination(props: TablePaginationProps) {
         count, 
         limit, 
         page, 
+        labelRowsPerPage = "Registros por página",
         handleChangePage, 
         handleChangeRowsPerPage,
     } = props;
@@ -21,7 +22,7 @@ export default function Pagination(props: TablePaginationProps) {
             count={count}
             rowsPerPage={limit}
             page={page}
-            labelRowsPerPage="Registros por página"
+            labelRowsPerPage={labelRowsPerPage}
             labelDisplayedRows={({ from, to }) => (`${from}-${to} de ${count !== -1 ? count : `${to}`}`)}
             onChangePage={(e: any, new_page) => handleChangePage(new_page)}
             onChangeRowsPerPage={handleChangeRowsPerPage}
