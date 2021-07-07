@@ -21,7 +21,7 @@ const Header = styled.div`
 
 const List = styled.div`
     grid-area: output-list;
-    overflow-y: scroll;
+    overflow-y: auto;
     border: 1px solid #cccccc;
     /**border: inset;
     border-width: 3px; */

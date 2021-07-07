@@ -13,6 +13,11 @@ class Product {
     expired_quantity?: number | string;
     under_30_days_quantity?: number | string;
     over_30_days_quantity?: number | string;
+    registered_lots_quantity?: number | string;
+    exhausted_lots_quantity?: number | string;
+    stock_quantity?: number | string;
+    input_quantity?: number | string;
+    output_quantity?: number | string;
     category?: Category;
     minimum_stocks?: Array<MinimumStock>;
     product_inputs?: Array<ProductInput>;

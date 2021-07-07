@@ -113,7 +113,7 @@ const sidebarOptions: Array<SidebarOption> = [
         label: "Dashboard",
         icon: <DashboardIcon className="icon" />,
         childs: [
-            {
+            /**{
                 to: "/dashboard/main",
                 label: "Geral",
                 icon: <FiberManualRecordIcon className="icon sub-option" />,
@@ -124,7 +124,7 @@ const sidebarOptions: Array<SidebarOption> = [
                 label: "Individual",
                 icon: <FiberManualRecordIcon className="icon sub-option" />,
                 childs: []
-            },
+            }, */
             {
                 to: "/dashboard/expiration-date",
                 label: "Prazo de Validade",
@@ -153,13 +153,13 @@ const sidebarOptions: Array<SidebarOption> = [
             {
                 to: "/stocks",
                 label: "Geral",
-                icon: <ViewListIcon className="icon" />,
+                icon: <FiberManualRecordIcon className="icon sub-option" />,
                 childs: []
             },
             {
                 to: "/expiration-dates",
-                label: "Prazos de validade",
-                icon: <CalendarTodayIcon className="icon" />,
+                label: "Prazo de validade",
+                icon: <FiberManualRecordIcon className="icon sub-option" />,
                 childs: []
             },
         ]

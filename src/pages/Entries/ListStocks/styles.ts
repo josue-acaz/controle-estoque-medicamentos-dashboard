@@ -32,7 +32,7 @@ const Header = styled.div`
 const List = styled.div`
     grid-area: stock-list;
     margin-right: 10px;
-    overflow-y: scroll;
+    overflow-y: auto;
     border: 1px solid #cccccc;
     /**
     border: inset;

@@ -43,6 +43,11 @@ const GridContainerTSC = styled.div<GridContainerTCFProps>` // Toolbar, Sidebar 
         grid-template-areas: "nav nav"
                              "data data";
     `}
+
+    @media screen and (max-width: 1200px) {
+        grid-template-areas: "nav nav"
+                             "data data";
+    }
 `;
 
 const GridContainerCF = styled.div` // Content and Footer
@@ -62,6 +67,15 @@ const GridContainerSidenav = styled.div`
     background-color: #ffffff;
     box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.23);
     position: relative;
+
+    @media screen and (max-width: 1200px) {
+        position: absolute;
+        top: 55px;
+        left: 0px;
+        bottom: 0px;
+        width: 100%;
+        z-index: 10;
+    }
 `;
 
 const GridContainerSidenavView = styled.div`
@@ -113,7 +127,7 @@ const GridToolbar = styled.nav`
     box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.23);
     z-index: 10;
     position: relative;
-    z-index: 20;
+    z-index: 30;
 `;
 
 const GridContent = styled.data`

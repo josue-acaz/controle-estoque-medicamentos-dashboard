@@ -4,6 +4,7 @@ enum EnumAppColors {
     SUCCESS = "#4CAF50",
     SECONDARY = "#CCCCCC",
     ORANGE = "#ffa500",
+    BLUE = "#4698eb",
 };
 
 enum EnumActions {

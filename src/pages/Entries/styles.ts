@@ -29,7 +29,7 @@ const Form = styled.div`
     grid-area: form;
     background-color: #ffffff;
     padding: 10px 10px;
-    overflow-y: scroll;
+    overflow-y: auto;
 `;
 
 const List = styled.div`

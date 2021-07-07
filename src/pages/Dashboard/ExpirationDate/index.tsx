@@ -10,9 +10,13 @@ import productService from "../../../services/product.service";
 
 // components
 import Toolbar from "./Toolbar";
-import PieGraph from "./PieGraph";
 import Loading from "../../../components/spinners/Loading";
 import Pagination from "../../../components/Task/Pagination";
+
+// graphs
+import PieGraph from "./PieGraph";
+import BarGraph from "./BarGraph";
+import RecGraph from "./RecGraph";
 
 // types
 import {PaginationProps} from "../../../components/Task/Pagination/types";
@@ -36,6 +40,7 @@ import {
   Subtitle, 
   ProductText, 
   SearchInput,
+  RowBootstrap,
 } from "./styles";
 
 // icons
@@ -95,6 +100,7 @@ export default function ExpirationDate() {
 
   function handleChangeBase(base: Base) {
     setBase(base);
+    setSelectedProduct(null);
     index(base.id);
   }
 
@@ -123,6 +129,13 @@ export default function ExpirationDate() {
       product.expired_quantity = monit_product.expired_quantity;
       product.under_30_days_quantity = monit_product.under_30_days_quantity;
       product.over_30_days_quantity = monit_product.over_30_days_quantity;
+      product.registered_lots_quantity = monit_product.registered_lots_quantity;
+      product.exhausted_lots_quantity = monit_product.exhausted_lots_quantity;
+      product.expired_quantity = monit_product.expired_quantity;
+      product.input_quantity = monit_product.input_quantity;
+      product.output_quantity = monit_product.output_quantity;
+      product.stock_quantity = monit_product.stock_quantity;
+
       handleChangeProduct(product);
       setLoading(false);
     } catch (error) {
@@ -135,7 +148,7 @@ export default function ExpirationDate() {
     <GridContainerTSC sidenavVisible={visible}>
         <GridToolbar>
             <Toolbar 
-              title="Análise da validade" 
+              title="Prazo de validade" 
               onChange={handleChangeBase} 
               onChangeSidenavVisible={toggleVisible} 
             />
@@ -181,15 +194,29 @@ export default function ExpirationDate() {
         </GridContainerSidenav>
         <GridContent>
             {selectedProduct && base && (
-              <Row>
+              <RowBootstrap>
                 <Col sm="4">
-                  <View style={{padding: 10}}>
+                  <View style={{padding: 10, marginBottom: 10}}>
+                    <Title>Panorama</Title>
+                    <Subtitle>{selectedProduct.name}</Subtitle>
+                    <RecGraph product={selectedProduct} />
+                  </View>
+                </Col>
+                <Col sm="4">
+                  <View style={{padding: 10, marginBottom: 10}}>
                     <Title>Status da validade</Title>
                     <Subtitle>{selectedProduct.name}</Subtitle>
                     <PieGraph product={selectedProduct} />
                   </View>
                 </Col>
-              </Row>
+                <Col sm="4">
+                  <View style={{padding: 10}}>
+                    <Title>Lotes x Produtos Esgotados</Title>
+                    <Subtitle>{selectedProduct.name}</Subtitle>
+                    <BarGraph product={selectedProduct} />
+                  </View>
+                </Col>
+              </RowBootstrap>
             )}
         </GridContent>
     </GridContainerTSC>

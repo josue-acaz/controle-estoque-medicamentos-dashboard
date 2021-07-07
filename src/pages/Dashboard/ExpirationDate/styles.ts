@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {Row} from "react-bootstrap";
 import Input from "../../../components/form/Input";
 
 const ExpirationDateView = styled.div`
@@ -46,6 +47,27 @@ const ProductText = styled.p`
     color: #444444;
 `;
 
+const RowBootstrap = styled(Row)`
+    margin-left: 0px;
+    margin-right: 0px;
+    
+    div:first-child {
+        padding-left: 0px;
+    }
+    div:last-child {
+        padding-right: 0px;
+    }
+
+    @media screen and (max-width: 1200px) {
+        div:first-child {
+            padding-left: 5px;
+        }
+        div:last-child {
+            padding-right: 5px;
+        }
+    }
+`;
+
 export {
     Title,
     Subtitle,
@@ -53,4 +75,5 @@ export {
     ProductOption,
     ExpirationDateView,
     SearchInput,
+    RowBootstrap,
 };

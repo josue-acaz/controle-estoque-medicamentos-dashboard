@@ -1,6 +1,6 @@
 import React from "react";
 import * as _ from "lodash";
-import {PieChart, Pie, Legend, Cell, ResponsiveContainer} from "recharts";
+import {PieChart, Pie, Legend, Cell, ResponsiveContainer, Tooltip} from "recharts";
 import {EnumAppColors} from "../../../../constants";
 
 // types
@@ -50,6 +50,7 @@ export default function PieGraph(props: PieGraphProps) {
         <PieGraphView>
             <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
+                    <Tooltip />
                     <Legend verticalAlign="bottom" />
                     <Pie
                         data={data02}
