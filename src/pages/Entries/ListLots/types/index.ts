@@ -1,7 +1,8 @@
 import ProductInput from "../../../../models/ProductInput";
 
 interface ListLotsProps {
-    product_input: ProductInput;
+    base_id: string;
+    product_id: string;
 };
 
 export type {ListLotsProps};

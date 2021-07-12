@@ -9,4 +9,11 @@ interface StockProps {
     show: boolean;
 };
 
-export type {RefreshProps, StockProps};
+interface SelectedStockProps {
+    base_name: string;
+    product_name: string;
+    base_id: string;
+    product_id: string;
+};
+
+export type {RefreshProps, StockProps, SelectedStockProps};

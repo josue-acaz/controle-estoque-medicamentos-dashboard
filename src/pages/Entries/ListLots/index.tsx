@@ -28,7 +28,7 @@ import {
 import {ListLotsView, ListLotsContent} from "./styles";
 
 export default function ListLots(props: ListLotsProps) {
-    const {product_input} = props;
+    const {base_id, product_id} = props;
 
     const headLabels: Array<TableHeadProps> = [
         {
@@ -87,23 +87,23 @@ export default function ListLots(props: ListLotsProps) {
         try {
             const lots = await stockService.lots({
                 ...pagination,
-                base_id: product_input.base_id,
-                product_id: product_input.product_id,
+                base_id: base_id,
+                product_id: product_id,
             });
+            
             const {count, rows} = lots;
             handleChangePagination("count", count);
             setLots(rows);
             setLoading(false);
         } catch (error) {
+            setLoading(false);
             console.error(error);
         }
     }
 
     useEffect(() => {
-        if(product_input.id) {
-            index();
-        }
-    }, [product_input]);
+        index();
+    }, []);
 
     function createRows(lots: Array<Lot>) {
         const rows: Array<RowProps> = lots.map(lot => {

@@ -1,9 +1,10 @@
 import ProductInput from "../../../../models/ProductInput";
 import MinimumStock from "../../../../models/MinimumStock";
+import {SelectedStockProps} from "../../types"
 
 interface ListStocksProps {
     refresh: boolean;
-    onStockSelected(product_input: ProductInput): void;
+    onStockSelected(selectedStock: SelectedStockProps): void;
     onClose(): void;
 };
 

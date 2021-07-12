@@ -65,10 +65,11 @@ export default function Select(props: SelectProps) {
                 setOpen(false);
             }
         }}>
-            <SelectView style={style}>
+            <SelectView>
                 <SelectInput>
                     {initializing ? <SkeletonLoader variant="rect" animation="wave" /> : (
                         <InputElement 
+                            style={style}
                             name={props.name} 
                             value={selectedOption ? selectedOption.label : ""} 
                             onClick={toggleOpen} 

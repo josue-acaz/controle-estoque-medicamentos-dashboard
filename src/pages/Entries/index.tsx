@@ -16,7 +16,7 @@ import Output from "../../models/Output";
 import ProductInput from "../../models/ProductInput";
 
 // types
-import {RefreshProps} from "./types";
+import {RefreshProps, SelectedStockProps} from "./types";
 import {OptionProps} from "../../components/form/Select/types";
 
 // styles
@@ -72,7 +72,7 @@ export default function Entries() {
 
     const [selectedInput, setSelectedInput] = useState<Input>(new Input());
     const [selectedOutput, setSelectedOutput] = useState<Output>(new Output());
-    const [selectedStock, setSelectedStock] = useState<ProductInput>(new ProductInput());
+    const [selectedStock, setSelectedStock] = useState<SelectedStockProps | null>(null);
 
     function toggleRefresh(key: string) {
         setRefresh(refresh => ({...refresh, [key]: !refresh[key]}));
@@ -130,9 +130,9 @@ export default function Entries() {
         toggleRefresh("stock_list");
     }
 
-    function handleStockSelected(product_input: ProductInput) {
+    function handleStockSelected(selectedStock: SelectedStockProps) {
         handleOpen();
-        setSelectedStock(product_input);
+        setSelectedStock(selectedStock);
     }
 
     function toggleShowStock() {
@@ -207,8 +207,10 @@ export default function Entries() {
                     </ListView>
                 </List>
             </EntryView>
-            <Drawer open={open} title={`Estoque em ${selectedStock.base?.name}`} subtitle={selectedStock.product?.name} onClose={handleClose}>
-                <ListLots product_input={selectedStock} />
+            <Drawer open={open} title={`Estoque em ${selectedStock?.base_name}`} subtitle={selectedStock?.product_name} onClose={handleClose}>
+                {selectedStock && (
+                    <ListLots base_id={selectedStock.base_id} product_id={selectedStock.product_id} />
+                )}
             </Drawer>
         </React.Fragment>
     );

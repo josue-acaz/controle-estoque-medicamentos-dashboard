@@ -24,8 +24,8 @@ import {
 // icons
 import DeleteIcon from '@material-ui/icons/Delete';
 
-export default function Toolbar(props: ToolbarProps) {
-    const {title, subtitle, search=true, padding, numSelected, onAdd, onDelete} = props;
+const Toolbar: React.FC<ToolbarProps> = (props) => {
+    const {title, subtitle, search=true, padding, numSelected, children, onAdd, onDelete} = props;
     const activeSelection = numSelected > 0;
 
     return(
@@ -60,6 +60,7 @@ export default function Toolbar(props: ToolbarProps) {
                     ) : (
                         <React.Fragment>
                             {onAdd && <AddButton onClick={onAdd}>Adicionar</AddButton>}
+                            {children}
                         </React.Fragment>
                     )}
                 </NumSelectedActions>
@@ -67,3 +68,5 @@ export default function Toolbar(props: ToolbarProps) {
         </ToolbarView>
     );
 }
+
+export default Toolbar;

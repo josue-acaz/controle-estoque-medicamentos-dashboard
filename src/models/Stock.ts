@@ -1,5 +1,6 @@
+import Base from "./Base";
 import Product from "./Product";
-import MinimumStock from "./MinimumStock";
+import ProductInput from "./ProductInput";
 
 class Stock extends Product {
     input_quantity: number = 0;

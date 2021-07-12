@@ -3,6 +3,7 @@ import {formatDatetime} from "../../../../tools/dates";
 import {EnumDateFormatTypes, EnumAppColors} from "../../../../constants";
 
 // models
+import Discard from "../../../../models/Discard";
 import ProductInput from "../../../../models/ProductInput";
 
 // contexts
@@ -10,6 +11,7 @@ import {useFeedback} from "../../../../contexts/feedback/feedback.context";
 
 // services
 import productInputService from "../../../../services/product-input.service";
+import discardService from "../../../../services/discard.service";
 
 // icons
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
@@ -23,6 +25,7 @@ import {PaginationProps} from "../../../../components/Task/Pagination/types";
 import Task from "../../../../components/Task";
 import Toolbar from "../../../../components/Task/Toolbar";
 import Alert from "../../../../components/Alert";
+import DiscardAlert from "../../../../components/DiscardAlert";
 
 // styles
 import {
@@ -88,12 +91,18 @@ export default function ListProducts(props: ListProductInputsProps) {
         }
     ];
 
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState({
+        delete: false,
+        discard: false,
+        individualDiscard: false,
+    });
+
     const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(true);
     const [processing, setProcessing] = useState(false);
     const [selecteds, setSelecteds] = useState<Array<string>>([]);
     const [productInputs, setProductInputs] = useState<Array<ProductInput>>([]);
+    const [productInput, setProductInput] = useState<ProductInput | null>(null);
     const [pagination, setPagination] = useState<PaginationProps>({
         limit: 10, 
         offset: 0, 
@@ -109,16 +118,16 @@ export default function ListProducts(props: ListProductInputsProps) {
         setRefresh(!refresh);
     }
 
-    function handleOpenAlert() {
-        setOpen(true);
+    function handleOpenAlert(name: string) {
+        setOpen(open => ({...open, [name]: true}));
     }
 
-    function handleCloseAlert() {
-        setOpen(false);
+    function handleCloseAlert(name: string) {
+        setOpen(open => ({...open, [name]: false}));
     }
 
     async function handleRemoveSelecteds() {
-        handleCloseAlert();
+        handleCloseAlert("delete");
         setProcessing(true);
         
         try {
@@ -175,7 +184,6 @@ export default function ListProducts(props: ListProductInputsProps) {
                 ...pagination,
             });
             const {count, rows} = product_inputs;
-            console.log(rows);
             handleChangePagination("count", count);
             setProductInputs(rows);
             setLoading(false);
@@ -192,6 +200,71 @@ export default function ListProducts(props: ListProductInputsProps) {
         const product_input = productInputs.find(product_input => product_input.id === id);
         if(product_input) {
             onEdit(product_input);
+        }
+    }
+
+    function onDiscard(id: string, expired: boolean) {
+        const product_input = productInputs.find(product_input => product_input.id === id);
+        
+        if(product_input) {
+            setProductInput(product_input);
+
+            if(expired) {
+                handleOpenAlert("discard");
+            } else {
+                handleOpenAlert("individualDiscard");
+            }
+        }
+    }
+
+    async function handleDiscard() {
+        setProcessing(true);
+        handleCloseAlert("discard");
+
+        let discard = new Discard();
+        if(productInput) {
+            discard.lot_id = productInput.lot_id;
+            discard.quantity = productInput.current_quantity ? productInput.current_quantity : productInput.quantity;
+            discard.description = "Lote com validade vencida.";
+        }
+
+        try {
+            const discarded = await discardService.create(discard);
+            setProcessing(false);
+            feedback.open({severity: "success"});
+            index();
+        } catch (error) {
+            setProcessing(false);
+            if(error.response) {
+                feedback.open({
+                    severity: "error",
+                    msg: error.response.data.msg,
+                });
+            } else {
+                feedback.open({severity: "error"});
+            }
+        }
+    }
+
+    async function handleIndividualDiscard(discard: Discard) {
+        handleCloseAlert("individualDiscard");
+        setProcessing(true);
+
+        try {
+            const discarded = await discardService.create(discard);
+            setProcessing(false);
+            feedback.open({severity: "success"});
+            index();
+        } catch (error) {
+            setProcessing(false);
+            if(error.response) {
+                feedback.open({
+                    severity: "error",
+                    msg: error.response.data.msg,
+                });
+            } else {
+                feedback.open({severity: "error"});
+            }
         }
     }
 
@@ -242,16 +315,16 @@ export default function ListProducts(props: ListProductInputsProps) {
                 ]
             };
 
-            if(expired && current_quantity !== "Esgotado") {
+            if(current_quantity !== "Esgotado") {
                 row.actions = [
                     {
                         label: "Descartar",
                         icon: <DeleteForeverIcon className="icon" />,
-                        onClick: (id: string) => {},
+                        onClick: (id: string) => onDiscard(id, expired),
                     }
                 ];
             }
-
+            
             return row;
         });
 
@@ -261,19 +334,37 @@ export default function ListProducts(props: ListProductInputsProps) {
     return(
         <ListProductInputsView>
             <Alert 
-                open={open} 
+                open={open.delete} 
                 theme="danger" 
-                title="Deseja excluir os itens selecionados?"
+                title="Excluir os itens selecionados permanentemente?"
                 msg="Esta ação não poderá ser desfeita"
                 onConfirm={handleRemoveSelecteds}
-                onCancel={handleCloseAlert}
-                onClose={handleCloseAlert}
+                onCancel={() => handleCloseAlert("delete")}
+                onClose={() => handleCloseAlert("delete")}
             />
+            <Alert 
+                open={open.discard} 
+                theme="danger" 
+                title="Deseja descartar este lote?"
+                msg="Esta ação não poderá ser desfeita"
+                onConfirm={handleDiscard}
+                onCancel={() => handleCloseAlert("discard")}
+                onClose={() => handleCloseAlert("discard")}
+            />
+            {productInput && (
+                <DiscardAlert 
+                    open={open.individualDiscard} 
+                    productInput={productInput}
+                    onConfirm={handleIndividualDiscard}
+                    onCancel={() => handleCloseAlert("individualDiscard")}
+                    onClose={() => handleCloseAlert("individualDiscard")}
+                />
+            )}
             <Toolbar 
                 search={false} 
                 padding="overview"
                 title="Relação de itens" 
-                onDelete={handleOpenAlert}
+                onDelete={() => handleOpenAlert("delete")}
                 numSelected={selecteds.length}
             />
             <ListProductInputsContent>
