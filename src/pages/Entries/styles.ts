@@ -15,6 +15,10 @@ const EntryView = styled.div`
     grid-template-rows: 3fr 2.5fr;
     grid-template-areas: "form"
                          "list";
+
+    @media screen and (max-width: 1200px) {
+        grid-template-rows: 3fr 3fr;
+    }
 `;
 
 const Toolbar = styled.div`

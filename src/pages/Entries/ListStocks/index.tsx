@@ -129,7 +129,7 @@ export default function ListStocks(props: ListStocksProps) {
                             base_name: selectedBase?.name,
                             product_name: stock.name,
                             base_id: selectedBase.id,
-                            product_id: selectedBase.id,
+                            product_id: stock.id,
                         });
                     }
                 },
@@ -176,13 +176,13 @@ export default function ListStocks(props: ListStocksProps) {
             <CloseButton onClick={onClose}>Fechar</CloseButton>
             <Header>
                 <Toolbar 
-                    padding="overview" 
+                    padding="none" 
                     search={false} 
                     title="Estoque" 
                     subtitle="Lotes dentro da data de validade"
                     numSelected={selecteds.length}
                 >
-                    <Select style={{border: "none", padding: 0, outline: "none"}} name="base_id" onChange={handleChangeBase} options={bases.map(base => ({
+                    <Select name="base_id" onChange={handleChangeBase} options={bases.map(base => ({
                         value: base.id,
                         label: base.name,
                     }))} />

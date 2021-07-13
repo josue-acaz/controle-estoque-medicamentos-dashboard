@@ -103,7 +103,7 @@ export default function ListLots(props: ListLotsProps) {
 
     useEffect(() => {
         index();
-    }, []);
+    }, [product_id, base_id]);
 
     function createRows(lots: Array<Lot>) {
         const rows: Array<RowProps> = lots.map(lot => {

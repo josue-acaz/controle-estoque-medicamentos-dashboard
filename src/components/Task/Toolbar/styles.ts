@@ -9,8 +9,16 @@ const ToolbarView = styled.div<ToolbarViewProps>`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-left: ${props => props.padding === "overview" ? "0px" : "10px"};
-    padding-right: 10px;
+    ${props => props.padding === "overview" ? `
+        padding-left: 0px;
+        padding-right: 10px
+    ` : props.padding === "none" ? `
+        padding-left: 0px;
+        padding-right: 0px
+    ` : `
+        padding-left: 10px;
+        padding-right: 10px
+    `};
     color: ${props => props.activeSelection ? "#f50057" : "#444444"};
     background-color: ${props => props.activeSelection ? "rgb(255, 226, 236)" : "#ffffff"};
 `;
@@ -44,7 +52,8 @@ const NumSelectedText = styled.p`
     padding-left: 10px;
 `;
 
-const NumSelectedActions = styled.div``;
+const NumSelectedActions = styled.div`
+`;
 
 const AddButton = styled.button`
     border: none;

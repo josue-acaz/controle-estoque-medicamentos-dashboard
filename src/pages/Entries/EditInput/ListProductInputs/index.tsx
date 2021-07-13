@@ -273,6 +273,7 @@ export default function ListProducts(props: ListProductInputsProps) {
     }
 
     function createRows(product_inputs: Array<ProductInput>) {
+        console.log(product_inputs)
         const rows: Array<RowProps> = product_inputs.map(product_input => {
 
             const validity = Number(product_input.lot ? product_input.lot.validity?.days : 1);

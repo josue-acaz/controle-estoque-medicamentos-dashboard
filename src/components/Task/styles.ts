@@ -40,7 +40,7 @@ const TableHeadCell = styled.th<TableHeadCellProps>`
     border-right: 1px solid #eeeeee;
     border-bottom: 1px solid #eeeeee;
     @media screen and (max-width: 1200px) {
-        font-size: 12px;
+        font-size: 10px;
         border-top: 1px solid #eeeeee;
     }
     text-align: ${props => props.align ? props.align : "left"};
@@ -57,12 +57,13 @@ const TableCell = styled.td<TableCellProps>`
     vertical-align: middle;
     position: relative;
     font-size: 14px;
-    @media screen and (max-width: 1200px) {
-        font-size: 12px;
-    }
     color: ${props => props.color ? props.color : "#333333"};
     text-align: ${props => props.align ? props.align : "left"};
     ${props => props.padding === "checkbox" ? "width: 55px; padding: 0 0 0 5px" : ""};
+
+    @media screen and (max-width: 1200px) {
+        font-size: 10px;
+    }
 `;
 
 const TableRow = styled.tr<TableRowViewProps>`
